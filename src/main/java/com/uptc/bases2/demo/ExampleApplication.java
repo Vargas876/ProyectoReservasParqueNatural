@@ -16,7 +16,11 @@ public class ExampleApplication {
         SpringApplication.run(ExampleApplication.class, args);
         System.out.println("=========================================");
         System.out.println("Sistema de Reservas - Parque Natural");
-        System.out.println("Servidor iniciado en: http://localhost:8081/");
+        System.out.println("Servidor iniciado en: http://localhost:8081/api");
+        System.out.println("Endpoints disponibles:");
+        System.out.println("  - API Base: http://localhost:8081/api");
+        System.out.println("  - Swagger UI: http://localhost:8081/api/swagger-ui.html");
+        System.out.println("  - API Docs: http://localhost:8081/api/api-docs");
         System.out.println("=========================================");
     }
 

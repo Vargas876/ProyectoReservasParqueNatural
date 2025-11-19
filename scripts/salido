@@ -1,0 +1,509 @@
+
+Sequence SEQ_VISITANTE creado.
+
+
+Sequence SEQ_SENDERO creado.
+
+
+Sequence SEQ_RESERVA creado.
+
+
+Sequence SEQ_GUIA creado.
+
+
+Sequence SEQ_ASIGNACION creado.
+
+
+Sequence SEQ_HORARIO creado.
+
+
+Table VISITANTE creado.
+
+
+Table SENDERO creado.
+
+
+Table RESERVA creado.
+
+
+Table GUIA creado.
+
+
+Table ASIGNACION_GUIA creado.
+
+
+Table HORARIO_DISPONIBLE creado.
+
+
+Table VISITANTE alterado.
+
+
+Table SENDERO alterado.
+
+
+Table RESERVA alterado.
+
+
+Table GUIA alterado.
+
+
+Table ASIGNACION_GUIA alterado.
+
+
+Table HORARIO_DISPONIBLE alterado.
+
+
+Table RESERVA alterado.
+
+
+Table RESERVA alterado.
+
+
+Table ASIGNACION_GUIA alterado.
+
+
+Table ASIGNACION_GUIA alterado.
+
+
+Table HORARIO_DISPONIBLE alterado.
+
+
+Table VISITANTE alterado.
+
+
+Table VISITANTE alterado.
+
+
+Table GUIA alterado.
+
+
+Table GUIA alterado.
+
+
+Table SENDERO alterado.
+
+
+Table VISITANTE alterado.
+
+
+Table SENDERO alterado.
+
+
+Table SENDERO alterado.
+
+
+Table SENDERO alterado.
+
+
+Table SENDERO alterado.
+
+
+Table SENDERO alterado.
+
+
+Table SENDERO alterado.
+
+
+Table RESERVA alterado.
+
+
+Table RESERVA alterado.
+
+
+Error que empieza en la línea: 271 del comando :
+ALTER TABLE RESERVA
+    ADD CONSTRAINT CHK_RESERVA_FECHA_VISITA
+    CHECK (FECHA_VISITA >= TRUNC(SYSDATE))
+Informe de error -
+ORA-02436: variable de sistema o de fecha especificada erróneamente en restricción de control (CHECK)
+
+https://docs.oracle.com/error-help/db/ora-02436/02436. 00000 -  "date or system variable wrongly specified in CHECK constraint"
+*Cause:    An attempt was made to use a date constant or system variable,
+           such as USER, in a check constraint that was not completely
+           specified in a CREATE TABLE or ALTER TABLE statement.  For
+           example, a date was specified without the century.
+*Action:   Completely specify the date constant or system variable.
+           Setting the event 10149 allows constraints like "a1 > '10-MAY-96'",
+           which a bug permitted to be created before version 8.
+
+Table RESERVA alterado.
+
+
+Table GUIA alterado.
+
+
+Table GUIA alterado.
+
+
+Table ASIGNACION_GUIA alterado.
+
+
+Table HORARIO_DISPONIBLE alterado.
+
+
+Table HORARIO_DISPONIBLE alterado.
+
+
+Error que empieza en la línea: 304 del comando :
+CREATE INDEX IDX_VISITANTE_CEDULA ON VISITANTE(CEDULA)
+Informe de error -
+ORA-01408: esta lista de columnas ya está indexada
+
+https://docs.oracle.com/error-help/db/ora-01408/01408. 00000 -  "such column list already indexed"
+*Cause:    A CREATE INDEX statement specified a column that was
+           already indexed. A single column may be indexed only once.
+           Additional indexes may be created on the column if it was used
+           as a portion of a concatenated index, that was, if the index
+           consists of multiple columns.
+*Action:   Do not attempt to re-index the column, as it is
+           unnecessary. To create a concatenated key, specify one or more
+           additional columns in the CREATE INDEX statement.
+
+Error que empieza en la línea: 305 del comando :
+CREATE INDEX IDX_VISITANTE_EMAIL ON VISITANTE(EMAIL)
+Informe de error -
+ORA-01408: esta lista de columnas ya está indexada
+
+https://docs.oracle.com/error-help/db/ora-01408/01408. 00000 -  "such column list already indexed"
+*Cause:    A CREATE INDEX statement specified a column that was
+           already indexed. A single column may be indexed only once.
+           Additional indexes may be created on the column if it was used
+           as a portion of a concatenated index, that was, if the index
+           consists of multiple columns.
+*Action:   Do not attempt to re-index the column, as it is
+           unnecessary. To create a concatenated key, specify one or more
+           additional columns in the CREATE INDEX statement.
+
+Index IDX_VISITANTE_ESTADO creado.
+
+
+Error que empieza en la línea: 308 del comando :
+CREATE INDEX IDX_SENDERO_NOMBRE ON SENDERO(NOMBRE)
+Informe de error -
+ORA-01408: esta lista de columnas ya está indexada
+
+https://docs.oracle.com/error-help/db/ora-01408/01408. 00000 -  "such column list already indexed"
+*Cause:    A CREATE INDEX statement specified a column that was
+           already indexed. A single column may be indexed only once.
+           Additional indexes may be created on the column if it was used
+           as a portion of a concatenated index, that was, if the index
+           consists of multiple columns.
+*Action:   Do not attempt to re-index the column, as it is
+           unnecessary. To create a concatenated key, specify one or more
+           additional columns in the CREATE INDEX statement.
+
+Index IDX_SENDERO_ESTADO creado.
+
+
+Index IDX_SENDERO_DIFICULTAD creado.
+
+
+Error que empieza en la línea: 312 del comando :
+CREATE INDEX IDX_GUIA_CEDULA ON GUIA(CEDULA)
+Informe de error -
+ORA-01408: esta lista de columnas ya está indexada
+
+https://docs.oracle.com/error-help/db/ora-01408/01408. 00000 -  "such column list already indexed"
+*Cause:    A CREATE INDEX statement specified a column that was
+           already indexed. A single column may be indexed only once.
+           Additional indexes may be created on the column if it was used
+           as a portion of a concatenated index, that was, if the index
+           consists of multiple columns.
+*Action:   Do not attempt to re-index the column, as it is
+           unnecessary. To create a concatenated key, specify one or more
+           additional columns in the CREATE INDEX statement.
+
+Index IDX_GUIA_ESTADO creado.
+
+
+Index IDX_RESERVA_SENDERO_FECHA creado.
+
+
+Index IDX_RESERVA_VISITANTE_FECHA creado.
+
+
+Index IDX_RESERVA_ESTADO_FECHA creado.
+
+
+Index IDX_RESERVA_FECHA_VISITA creado.
+
+
+Index IDX_ASIGNACION_GUIA creado.
+
+
+Index IDX_ASIGNACION_RESERVA creado.
+
+
+Index IDX_HORARIO_SENDERO creado.
+
+
+Trigger TRG_VISITANTE_BI compilado
+
+
+Trigger TRG_SENDERO_BI compilado
+
+
+Trigger TRG_RESERVA_BI compilado
+
+
+Trigger TRG_RESERVA_BU compilado
+
+
+Trigger TRG_GUIA_BI compilado
+
+
+Trigger TRG_ASIGNACION_BI compilado
+
+
+Trigger TRG_HORARIO_BI compilado
+
+
+Trigger TRG_VALIDAR_CAPACIDAD compilado
+
+
+Trigger TRG_VALIDAR_GUIA_DISPONIBLE compilado
+
+
+Trigger TRG_VALIDAR_HORARIO compilado
+
+
+Trigger TRG_ACTUALIZAR_CALIFICACION_GUIA compilado
+
+
+View V_DISPONIBILIDAD_SENDERO creado.
+
+
+View V_RESERVAS_COMPLETAS creado.
+
+
+View V_ESTADISTICAS_SENDERO creado.
+
+
+View V_DESEMPENO_GUIAS creado.
+
+
+View V_RESERVAS_PROXIMAS creado.
+
+
+Procedure SP_CREAR_RESERVA compilado
+
+LINE/COL  ERROR
+--------- -------------------------------------------------------------
+54/10     PLS-00103: Se ha encontrado el símbolo "SELECT" cuando se esperaba uno de los siguientes:     ( - + case for mod new not null <an identifier>    <a double-quoted delimited-identifier> <a bind variable>    continue avg count current exists max min prior sql stddev    sum variance execute forall merge standard time timestamp    interval date    <a string literal with character set specification>    <a number> <a single-quoted SQL string> pipe    <an alternatively-quoted string literal with character set spe
+54/77     PLS-00103: Se ha encontrado el símbolo ")" cuando se esperaba uno de los siguientes:     . ( * @ % & - + ; / at for mod remainder rem    <an exponent (**)> and or group having intersect minus order    start union where connect || multiset 
+Errores: comprobar log de compilador
+
+Procedure SP_ASIGNAR_GUIA_AUTO compilado
+
+
+Procedure SP_CANCELAR_RESERVA compilado
+
+
+Procedure SP_CONFIRMAR_RESERVA compilado
+
+
+Procedure SP_COMPLETAR_RESERVA compilado
+
+
+Function FN_CUPOS_DISPONIBLES compilado
+
+
+Function FN_GUIA_DISPONIBLE compilado
+
+
+Role ROL_ADMIN_PARQUE creado.
+
+
+Role ROL_GUIA creado.
+
+
+Role ROL_RECEPCIONISTA creado.
+
+
+Role ROL_VISITANTE_WEB creado.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+Grant correcto.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+
+1 fila insertadas.
+
+Confirmación terminada.
+Procedimiento PL/SQL terminado correctamente.

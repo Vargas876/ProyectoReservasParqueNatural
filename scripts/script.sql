@@ -1,3359 +1,1188 @@
 --------------------------------------------------------
--- Archivo creado  - jueves-octubre-02-2025   
---------------------------------------------------------
---------------------------------------------------------
---  DDL for Sequence DBOBJECTID_SEQUENCE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "PRUEBA"."DBOBJECTID_SEQUENCE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 50 START WITH 1 CACHE 50 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_ASIGNACION_GUIA
---------------------------------------------------------
-
-   CREATE SEQUENCE  "PRUEBA"."SEQ_ASIGNACION_GUIA"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 5 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_GUIA
---------------------------------------------------------
-
-   CREATE SEQUENCE  "PRUEBA"."SEQ_GUIA"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 5 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_HORARIO_DISPONIBLE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "PRUEBA"."SEQ_HORARIO_DISPONIBLE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 8 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_RESERVA
---------------------------------------------------------
-
-   CREATE SEQUENCE  "PRUEBA"."SEQ_RESERVA"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 7 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_SENDERO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "PRUEBA"."SEQ_SENDERO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 5 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_VISITANTE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "PRUEBA"."SEQ_VISITANTE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 7 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Table ASIGNACION_GUIA
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."ASIGNACION_GUIA" 
-   (	"ID_ASIGNACION" NUMBER, 
-	"ID_RESERVA" NUMBER, 
-	"ID_GUIA" NUMBER, 
-	"FECHA_ASIGNACION" DATE DEFAULT SYSDATE, 
-	"HORA_INICIO_REAL" TIMESTAMP (6), 
-	"HORA_FIN_REAL" TIMESTAMP (6), 
-	"OBSERVACIONES_GUIA" VARCHAR2(500 BYTE)
-   ) SEGMENT CREATION IMMEDIATE 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Table GUIA
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."GUIA" 
-   (	"ID_GUIA" NUMBER, 
-	"CEDULA" VARCHAR2(20 BYTE), 
-	"NOMBRE" VARCHAR2(100 BYTE), 
-	"APELLIDO" VARCHAR2(100 BYTE), 
-	"TELEFONO" VARCHAR2(15 BYTE), 
-	"EMAIL" VARCHAR2(100 BYTE), 
-	"ESPECIALIDADES" VARCHAR2(200 BYTE), 
-	"MAX_PERSONAS_GRUPO" NUMBER(2,0) DEFAULT 15, 
-	"ESTADO" VARCHAR2(10 BYTE) DEFAULT 'ACTIVO', 
-	"FECHA_INGRESO" DATE DEFAULT SYSDATE
-   ) SEGMENT CREATION IMMEDIATE 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Table HORARIO_DISPONIBLE
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."HORARIO_DISPONIBLE" 
-   (	"ID_HORARIO" NUMBER, 
-	"ID_SENDERO" NUMBER, 
-	"HORA_INICIO" VARCHAR2(5 BYTE), 
-	"HORA_FIN" VARCHAR2(5 BYTE), 
-	"CUPO_HORARIO" NUMBER(2,0), 
-	"DIAS_SEMANA" VARCHAR2(20 BYTE) DEFAULT 'L,M,MI,J,V,S,D'
-   ) SEGMENT CREATION IMMEDIATE 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Table MD_ADDITIONAL_PROPERTIES
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_ADDITIONAL_PROPERTIES" 
-   (	"ID" NUMBER, 
-	"CONNECTION_ID_FK" NUMBER, 
-	"REF_ID_FK" NUMBER, 
-	"REF_TYPE" VARCHAR2(4000 BYTE), 
-	"PROPERTY_ORDER" NUMBER, 
-	"PROP_KEY" VARCHAR2(4000 BYTE), 
-	"VALUE" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_ADDITIONAL_PROPERTIES"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_ADDITIONAL_PROPERTIES"."CONNECTION_ID_FK" IS 'Connection to which this belongs //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_ADDITIONAL_PROPERTIES"."REF_ID_FK" IS 'The object to which this property blongs';
-   COMMENT ON COLUMN "PRUEBA"."MD_ADDITIONAL_PROPERTIES"."REF_TYPE" IS 'Type of object that this property belongs to';
-   COMMENT ON COLUMN "PRUEBA"."MD_ADDITIONAL_PROPERTIES"."PROPERTY_ORDER" IS 'This is to handle a situation where multiple properties have a relevant order, or multiple properties have multiple values';
-   COMMENT ON COLUMN "PRUEBA"."MD_ADDITIONAL_PROPERTIES"."PROP_KEY" IS 'The keyname for this property';
-   COMMENT ON COLUMN "PRUEBA"."MD_ADDITIONAL_PROPERTIES"."VALUE" IS 'The value for this property';
-   COMMENT ON TABLE "PRUEBA"."MD_ADDITIONAL_PROPERTIES"  IS 'This table is used to store additional properties in key-value pairs.  It is designed to store "other information" that is not supported in the main database object table.';
---------------------------------------------------------
---  DDL for Table MD_APPLICATIONFILES
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_APPLICATIONFILES" 
-   (	"ID" NUMBER, 
-	"APPLICATIONS_ID_FK" NUMBER, 
-	"NAME" VARCHAR2(200 BYTE), 
-	"URI" VARCHAR2(4000 BYTE), 
-	"TYPE" VARCHAR2(100 BYTE), 
-	"STATE" VARCHAR2(100 BYTE), 
-	"LANGUAGE" VARCHAR2(100 BYTE), 
-	"LOC" NUMBER, 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(4000 BYTE), 
-	"UPDATED_ON" DATE, 
-	"UPDATED_BY" VARCHAR2(4000 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONFILES"."NAME" IS 'file name  //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONFILES"."URI" IS 'The uri is the part of the file url after the base dir has been removed.  See MD_APPLICATION for base dir';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONFILES"."TYPE" IS 'This will denote the type of file we have, including DIR, FILE (text), BINARY, IGNORE (where we choose to ignore files)';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONFILES"."STATE" IS 'State will be how this file is operated on.  For example. it will be OPEN, NEW, FIXED, IGNORED, REVIEWED, COMPLETE';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONFILES"."LANGUAGE" IS 'Language of the file that has been processed.';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONFILES"."SECURITY_GROUP_ID" IS 'APEX';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONFILES"."CREATED_ON" IS 'APEX';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONFILES"."CREATED_BY" IS 'APEX';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONFILES"."UPDATED_ON" IS 'APEX';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONFILES"."UPDATED_BY" IS 'APEX';
-   COMMENT ON TABLE "PRUEBA"."MD_APPLICATIONFILES"  IS 'Holds a tuple for each file that is being processed whether it is changed or not.';
---------------------------------------------------------
---  DDL for Table MD_APPLICATIONS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_APPLICATIONS" 
-   (	"ID" NUMBER, 
-	"NAME" VARCHAR2(4000 BYTE), 
-	"DESCRIPTION" VARCHAR2(4000 BYTE), 
-	"BASE_DIR" VARCHAR2(4000 BYTE), 
-	"OUTPUT_DIR" VARCHAR2(4000 BYTE), 
-	"BACKUP_DIR" VARCHAR2(4000 BYTE), 
-	"INPLACE" NUMBER, 
-	"PROJECT_ID_FK" NUMBER, 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONS"."NAME" IS 'Name of the application suite  //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONS"."DESCRIPTION" IS 'Overview of what the application does.';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONS"."BASE_DIR" IS 'This is the base src directory for the application.  It could be an svn checkout, a clearcase view or something similar';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONS"."OUTPUT_DIR" IS 'This is the output directory where the scanner will present the converted files, if there are converted or modified.';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONS"."BACKUP_DIR" IS 'This is the directory in which the application files are backed up if a backp is chosen';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONS"."INPLACE" IS 'Designates whether the changes have been made inplace, in the source directory or not';
-   COMMENT ON COLUMN "PRUEBA"."MD_APPLICATIONS"."PROJECT_ID_FK" IS 'project of the database(s) this application relates to';
-   COMMENT ON TABLE "PRUEBA"."MD_APPLICATIONS"  IS 'This is the base table for application projects.  It holds the base information for applications associated with a database';
---------------------------------------------------------
---  DDL for Table MD_CATALOGS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_CATALOGS" 
-   (	"ID" NUMBER, 
-	"CONNECTION_ID_FK" NUMBER, 
-	"CATALOG_NAME" VARCHAR2(4000 BYTE), 
-	"DUMMY_FLAG" CHAR(1 BYTE) DEFAULT 'N', 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_CATALOGS"."CONNECTION_ID_FK" IS 'Foreign key into the connections table - Shows what connection this catalog belongs to //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_CATALOGS"."CATALOG_NAME" IS 'Name of the catalog //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_CATALOGS"."DUMMY_FLAG" IS 'Flag to show if this catalog is a "dummy" catalog which is used as a placeholder for those platforms that do not support catalogs.  ''N'' signifies that this is NOT a dummy catalog, while ''Y'' signifies that it is.';
-   COMMENT ON COLUMN "PRUEBA"."MD_CATALOGS"."NATIVE_SQL" IS 'THe SQL used to create this catalog';
-   COMMENT ON COLUMN "PRUEBA"."MD_CATALOGS"."NATIVE_KEY" IS 'A unique identifier used to identify the catalog at source.';
-   COMMENT ON TABLE "PRUEBA"."MD_CATALOGS"  IS 'Store catalogs in this table.';
---------------------------------------------------------
---  DDL for Table MD_CODE_REGEX
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_CODE_REGEX" 
-   (	"ID" NUMBER, 
-	"REGEX" VARCHAR2(100 BYTE), 
-	"DESCRIPTION" VARCHAR2(200 BYTE)
-   ) SEGMENT CREATION IMMEDIATE 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_CODE_REGEX"."ID" IS 'ID of regex for searching source code';
-   COMMENT ON COLUMN "PRUEBA"."MD_CODE_REGEX"."REGEX" IS 'Regex to use in reports of artifiacts in code.  This will be used for customers to analyze what is in their code.';
---------------------------------------------------------
---  DDL for Table MD_COLUMNS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_COLUMNS" 
-   (	"ID" NUMBER, 
-	"TABLE_ID_FK" NUMBER, 
-	"COLUMN_NAME" VARCHAR2(4000 BYTE), 
-	"COLUMN_ORDER" NUMBER, 
-	"COLUMN_TYPE" VARCHAR2(4000 BYTE), 
-	"PRECISION" NUMBER, 
-	"SCALE" NUMBER, 
-	"NULLABLE" CHAR(1 BYTE), 
-	"DEFAULT_VALUE" VARCHAR2(4000 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"DATATYPE_TRANSFORMED_FLAG" CHAR(1 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_COLUMNS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_COLUMNS"."TABLE_ID_FK" IS 'The table that this column is part of //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_COLUMNS"."COLUMN_NAME" IS 'The name of the column //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_COLUMNS"."COLUMN_ORDER" IS 'The order this appears in the table';
-   COMMENT ON COLUMN "PRUEBA"."MD_COLUMNS"."COLUMN_TYPE" IS 'The type of the column';
-   COMMENT ON COLUMN "PRUEBA"."MD_COLUMNS"."PRECISION" IS 'The precision on the column';
-   COMMENT ON COLUMN "PRUEBA"."MD_COLUMNS"."SCALE" IS 'The scale of the column';
-   COMMENT ON COLUMN "PRUEBA"."MD_COLUMNS"."NULLABLE" IS 'Yes or No.  Null signifies NO';
-   COMMENT ON COLUMN "PRUEBA"."MD_COLUMNS"."DEFAULT_VALUE" IS 'Default value on the column';
-   COMMENT ON COLUMN "PRUEBA"."MD_COLUMNS"."NATIVE_SQL" IS 'The SQL used to create this column at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_COLUMNS"."NATIVE_KEY" IS 'Unique identifier for this object at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_COLUMNS"."DATATYPE_TRANSFORMED_FLAG" IS 'This is set to ''Y'' to show if the data type was transformed.  This is useful so we don''t apply more than 1 datatype transformation to a column';
-   COMMENT ON TABLE "PRUEBA"."MD_COLUMNS"  IS 'Column information is stored in this table.';
---------------------------------------------------------
---  DDL for Table MD_CONNECTIONS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_CONNECTIONS" 
-   (	"ID" NUMBER, 
-	"PROJECT_ID_FK" NUMBER, 
-	"TYPE" VARCHAR2(4000 BYTE), 
-	"HOST" VARCHAR2(4000 BYTE), 
-	"PORT" NUMBER, 
-	"USERNAME" VARCHAR2(4000 BYTE), 
-	"PASSWORD" VARCHAR2(4000 BYTE), 
-	"DBURL" VARCHAR2(4000 BYTE), 
-	"NAME" VARCHAR2(255 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"STATUS" VARCHAR2(30 BYTE), 
-	"NUM_CATALOGS" NUMBER, 
-	"NUM_COLUMNS" NUMBER, 
-	"NUM_CONSTRAINTS" NUMBER, 
-	"NUM_GROUPS" NUMBER, 
-	"NUM_ROLES" NUMBER, 
-	"NUM_INDEXES" NUMBER, 
-	"NUM_OTHER_OBJECTS" NUMBER, 
-	"NUM_PACKAGES" NUMBER, 
-	"NUM_PRIVILEGES" NUMBER, 
-	"NUM_SCHEMAS" NUMBER, 
-	"NUM_SEQUENCES" NUMBER, 
-	"NUM_STORED_PROGRAMS" NUMBER, 
-	"NUM_SYNONYMS" NUMBER, 
-	"NUM_TABLES" NUMBER, 
-	"NUM_TABLESPACES" NUMBER, 
-	"NUM_TRIGGERS" NUMBER, 
-	"NUM_USER_DEFINED_DATA_TYPES" NUMBER, 
-	"NUM_USERS" NUMBER, 
-	"NUM_VIEWS" NUMBER, 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_CONNECTIONS"."ID" IS 'Primary key';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONNECTIONS"."PROJECT_ID_FK" IS 'The project to which this connection belongs //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONNECTIONS"."TYPE" IS 'The type of the connection - For example it could be used to store "ORACLE" or "MYSQL"';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONNECTIONS"."HOST" IS 'The host to which this connection connects.';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONNECTIONS"."PORT" IS 'The port to which this connection connects';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONNECTIONS"."USERNAME" IS 'The username used to make the connection';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONNECTIONS"."PASSWORD" IS 'The password used to make this connection';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONNECTIONS"."DBURL" IS 'The database url used to make this connection';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONNECTIONS"."NAME" IS '//OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONNECTIONS"."NATIVE_SQL" IS 'The native sql used to create this connection';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONNECTIONS"."STATUS" IS 'Status of Migration, = captured,converted,generated,datamoved';
-   COMMENT ON TABLE "PRUEBA"."MD_CONNECTIONS"  IS 'This table is used to store connection information.  For example, in migrations, we could be carrying out a consolidation which occurs across many connections.';
---------------------------------------------------------
---  DDL for Table MD_CONSTRAINT_DETAILS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_CONSTRAINT_DETAILS" 
-   (	"ID" NUMBER, 
-	"REF_FLAG" CHAR(1 BYTE) DEFAULT 'N', 
-	"CONSTRAINT_ID_FK" NUMBER, 
-	"COLUMN_ID_FK" NUMBER, 
-	"COLUMN_PORTION" NUMBER, 
-	"CONSTRAINT_TEXT" CLOB, 
-	"DETAIL_ORDER" NUMBER, 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("CONSTRAINT_TEXT") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_CONSTRAINT_DETAILS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONSTRAINT_DETAILS"."REF_FLAG" IS '"N" or Null signify that this column is the colum that is used in the constraint.  A flag of Y signifies that the colum is a referenced column (i.e. part of a foreign key constraint)';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONSTRAINT_DETAILS"."CONSTRAINT_ID_FK" IS 'Constraint that this detail belongs to //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONSTRAINT_DETAILS"."COLUMN_PORTION" IS 'The portion of a column this detail belongs (e.g. for constrints on substrings)';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONSTRAINT_DETAILS"."CONSTRAINT_TEXT" IS 'The text of the constraint';
-   COMMENT ON TABLE "PRUEBA"."MD_CONSTRAINT_DETAILS"  IS 'Constraint details show what columns are "involved" in a constraint.';
---------------------------------------------------------
---  DDL for Table MD_CONSTRAINTS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_CONSTRAINTS" 
-   (	"ID" NUMBER, 
-	"DELETE_CLAUSE" VARCHAR2(4000 BYTE), 
-	"NAME" VARCHAR2(4000 BYTE), 
-	"CONSTRAINT_TYPE" VARCHAR2(4000 BYTE), 
-	"TABLE_ID_FK" NUMBER, 
-	"REFTABLE_ID_FK" NUMBER, 
-	"CONSTRAINT_TEXT" CLOB, 
-	"LANGUAGE" VARCHAR2(40 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("CONSTRAINT_TEXT") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_CONSTRAINTS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONSTRAINTS"."DELETE_CLAUSE" IS 'delete option , can be either CASCADE, RESTRICT or NULL';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONSTRAINTS"."NAME" IS 'Name of the constraint //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONSTRAINTS"."CONSTRAINT_TYPE" IS 'Type of the constraint (e.g. CHECK)';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONSTRAINTS"."TABLE_ID_FK" IS 'Table on which this constraint exists //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONSTRAINTS"."REFTABLE_ID_FK" IS 'Used in foreign keys - this gives the table that we refer to.';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONSTRAINTS"."CONSTRAINT_TEXT" IS 'The text of the constraint';
-   COMMENT ON COLUMN "PRUEBA"."MD_CONSTRAINTS"."LANGUAGE" IS '//PUBLIC';
-   COMMENT ON TABLE "PRUEBA"."MD_CONSTRAINTS"  IS 'Table for storing information about a constraint';
---------------------------------------------------------
---  DDL for Table MD_DERIVATIVES
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_DERIVATIVES" 
-   (	"ID" NUMBER, 
-	"SRC_ID" NUMBER, 
-	"SRC_TYPE" VARCHAR2(4000 BYTE), 
-	"DERIVED_ID" NUMBER, 
-	"DERIVED_TYPE" VARCHAR2(4000 BYTE), 
-	"DERIVED_CONNECTION_ID_FK" NUMBER, 
-	"TRANSFORMED" CHAR(1 BYTE), 
-	"ORIGINAL_IDENTIFIER" VARCHAR2(4000 BYTE), 
-	"NEW_IDENTIFIER" VARCHAR2(4000 BYTE), 
-	"DERIVED_OBJECT_NAMESPACE" VARCHAR2(40 BYTE), 
-	"DERIVATIVE_REASON" VARCHAR2(10 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE), 
-	"ENABLED" CHAR(1 BYTE) DEFAULT 'Y'
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_DERIVATIVES"."TRANSFORMED" IS 'Set this field to ''Y'' if we carry out any sort of transformation on teh derived object.';
-   COMMENT ON TABLE "PRUEBA"."MD_DERIVATIVES"  IS 'This table is used to store objects that are derived from each other.  For example in a migration an auto-increment column in a source model could be mapped to a primary key, and a sequence, and a trigger.  The MD_DERIVATIVES table would store the fact that these 3 objects are derived from the auto-increment column.';
---------------------------------------------------------
---  DDL for Table MD_FILE_ARTIFACTS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_FILE_ARTIFACTS" 
-   (	"ID" NUMBER, 
-	"APPLICATIONFILES_ID" NUMBER, 
-	"PATTERN" VARCHAR2(4000 BYTE), 
-	"STRING_FOUND" VARCHAR2(4000 BYTE), 
-	"STRING_REPLACED" VARCHAR2(4000 BYTE), 
-	"TYPE" VARCHAR2(200 BYTE), 
-	"STATUS" VARCHAR2(4000 BYTE), 
-	"LINE" NUMBER, 
-	"PATTERN_START" NUMBER, 
-	"PATTERN_END" NUMBER, 
-	"DUE_DATE" DATE, 
-	"DB_TYPE" VARCHAR2(100 BYTE), 
-	"CODE_TYPE" VARCHAR2(1000 BYTE), 
-	"DESCRIPTION" VARCHAR2(4000 BYTE), 
-	"PRIORITY" NUMBER(*,0), 
-	"SECURITY_GROUP_ID" VARCHAR2(20 BYTE) DEFAULT '0', 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(4000 BYTE), 
-	"LAST_UPDATED" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(4000 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_FILE_ARTIFACTS"."PATTERN" IS 'Pattern used to search source file for interesting artifiacts';
-   COMMENT ON COLUMN "PRUEBA"."MD_FILE_ARTIFACTS"."STRING_FOUND" IS 'String found in source from the pattern supplied';
-   COMMENT ON COLUMN "PRUEBA"."MD_FILE_ARTIFACTS"."STRING_REPLACED" IS 'This is the string which replace the string found if it was replaced.';
-   COMMENT ON COLUMN "PRUEBA"."MD_FILE_ARTIFACTS"."TYPE" IS 'This is the type of the replacement.  It could be a straight replace from a replacement pattern, or we could have passed the string to a translator which would change the string depending on the database.';
-   COMMENT ON COLUMN "PRUEBA"."MD_FILE_ARTIFACTS"."STATUS" IS 'Pattern used to search source file for interesting artifiacts';
-   COMMENT ON COLUMN "PRUEBA"."MD_FILE_ARTIFACTS"."DUE_DATE" IS 'Due date is used by the TODO mechanism to manage the validation and work to complete this change';
-   COMMENT ON COLUMN "PRUEBA"."MD_FILE_ARTIFACTS"."DB_TYPE" IS 'Source database calls type';
-   COMMENT ON COLUMN "PRUEBA"."MD_FILE_ARTIFACTS"."CODE_TYPE" IS 'Source code db api, like dblib, jdbc';
-   COMMENT ON COLUMN "PRUEBA"."MD_FILE_ARTIFACTS"."DESCRIPTION" IS 'This is a description of the artifact which will have a default generated by the scanner and then can be modified by the user to be more appropriate for their use';
-   COMMENT ON COLUMN "PRUEBA"."MD_FILE_ARTIFACTS"."PRIORITY" IS 'The priority is set for the TODOs so they can be managed by the user';
-   COMMENT ON TABLE "PRUEBA"."MD_FILE_ARTIFACTS"  IS 'Holds a tuple for each interesting thing the scanner finds in a file';
---------------------------------------------------------
---  DDL for Table MD_GROUP_MEMBERS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_GROUP_MEMBERS" 
-   (	"ID" NUMBER, 
-	"GROUP_ID_FK" NUMBER, 
-	"USER_ID_FK" NUMBER, 
-	"GROUP_MEMBER_ID_FK" NUMBER, 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_GROUP_MEMBERS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_GROUP_MEMBERS"."USER_ID_FK" IS 'Id of member';
-   COMMENT ON COLUMN "PRUEBA"."MD_GROUP_MEMBERS"."GROUP_MEMBER_ID_FK" IS 'groups can be members of groups';
-   COMMENT ON TABLE "PRUEBA"."MD_GROUP_MEMBERS"  IS 'This table is used to store the members of a group.';
---------------------------------------------------------
---  DDL for Table MD_GROUP_PRIVILEGES
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_GROUP_PRIVILEGES" 
-   (	"ID" NUMBER, 
-	"GROUP_ID_FK" NUMBER, 
-	"PRIVILEGE_ID_FK" NUMBER, 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON TABLE "PRUEBA"."MD_GROUP_PRIVILEGES"  IS 'This table stores the privileges granted to a group (or role)';
---------------------------------------------------------
---  DDL for Table MD_GROUPS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_GROUPS" 
-   (	"ID" NUMBER, 
-	"SCHEMA_ID_FK" NUMBER, 
-	"GROUP_NAME" VARCHAR2(4000 BYTE), 
-	"GROUP_FLAG" CHAR(1 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_GROUPS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_GROUPS"."SCHEMA_ID_FK" IS 'Schema in which this object belongs //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_GROUPS"."GROUP_NAME" IS 'Name of the group //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_GROUPS"."GROUP_FLAG" IS 'This is a flag to signify a group or a role.  If this is ''R'' it means the group is known as a Role.  Any other value means it is known as a group.';
-   COMMENT ON COLUMN "PRUEBA"."MD_GROUPS"."NATIVE_SQL" IS 'SQL Used to generate this object at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_GROUPS"."NATIVE_KEY" IS 'Unique id for this object at source';
-   COMMENT ON TABLE "PRUEBA"."MD_GROUPS"  IS 'Groups of users in a schema';
---------------------------------------------------------
---  DDL for Table MD_INDEX_DETAILS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_INDEX_DETAILS" 
-   (	"ID" NUMBER, 
-	"INDEX_ID_FK" NUMBER, 
-	"COLUMN_ID_FK" NUMBER, 
-	"INDEX_PORTION" NUMBER, 
-	"DETAIL_ORDER" NUMBER, 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_INDEX_DETAILS"."INDEX_ID_FK" IS 'The index to which this detail belongs. //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_INDEX_DETAILS"."INDEX_PORTION" IS 'To support indexing on part of a field';
-   COMMENT ON TABLE "PRUEBA"."MD_INDEX_DETAILS"  IS 'This table stores the details of an index.  It shows what columns are "part" of the index.';
---------------------------------------------------------
---  DDL for Table MD_INDEXES
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_INDEXES" 
-   (	"ID" NUMBER, 
-	"INDEX_TYPE" VARCHAR2(4000 BYTE), 
-	"TABLE_ID_FK" NUMBER, 
-	"INDEX_NAME" VARCHAR2(4000 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(4000 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_INDEXES"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_INDEXES"."INDEX_TYPE" IS 'Type of the index e.g. PRIMARY';
-   COMMENT ON COLUMN "PRUEBA"."MD_INDEXES"."TABLE_ID_FK" IS 'Table that this index is on //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_INDEXES"."INDEX_NAME" IS 'Name of the index //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_INDEXES"."NATIVE_SQL" IS 'SQL used to create the index at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_INDEXES"."NATIVE_KEY" IS 'A unique identifier for this object at the source';
-   COMMENT ON TABLE "PRUEBA"."MD_INDEXES"  IS 'This table is used to store information about the indexes in a schema';
---------------------------------------------------------
---  DDL for Table MD_MIGR_DEPENDENCY
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_MIGR_DEPENDENCY" 
-   (	"ID" NUMBER, 
-	"CONNECTION_ID_FK" NUMBER, 
-	"PARENT_ID" NUMBER, 
-	"CHILD_ID" NUMBER, 
-	"PARENT_OBJECT_TYPE" VARCHAR2(4000 BYTE), 
-	"CHILD_OBJECT_TYPE" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_MIGR_DEPENDENCY"."CONNECTION_ID_FK" IS 'The connection that this exists in //PARENTFIELD';
---------------------------------------------------------
---  DDL for Table MD_MIGR_PARAMETER
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_MIGR_PARAMETER" 
-   (	"ID" NUMBER, 
-	"CONNECTION_ID_FK" NUMBER, 
-	"OBJECT_ID" NUMBER, 
-	"OBJECT_TYPE" VARCHAR2(4000 BYTE), 
-	"PARAM_EXISTING" NUMBER, 
-	"PARAM_ORDER" NUMBER, 
-	"PARAM_NAME" VARCHAR2(4000 BYTE), 
-	"PARAM_TYPE" VARCHAR2(4000 BYTE), 
-	"PARAM_DATA_TYPE" VARCHAR2(4000 BYTE), 
-	"PERCISION" NUMBER, 
-	"SCALE" NUMBER, 
-	"NULLABLE" CHAR(1 BYTE), 
-	"DEFAULT_VALUE" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_MIGR_PARAMETER"."CONNECTION_ID_FK" IS 'the connection in which this belongs //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_MIGR_PARAMETER"."PARAM_EXISTING" IS '1 represents a new parameter for PL/SQL that was not present in the origional. 0 represents a n existing parameter that was present in the origional';
-   COMMENT ON COLUMN "PRUEBA"."MD_MIGR_PARAMETER"."PARAM_ORDER" IS 'IF -1 THEN THIS PARAM IS A RETURN PARAMETER. 1 WILL BE THE FIRST PARAMETER IN THE PARAMETER LIST';
---------------------------------------------------------
---  DDL for Table MD_MIGR_WEAKDEP
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_MIGR_WEAKDEP" 
-   (	"ID" NUMBER, 
-	"CONNECTION_ID_FK" NUMBER, 
-	"SCHEMA_ID_FK" NUMBER, 
-	"PARENT_ID" NUMBER, 
-	"CHILD_NAME" VARCHAR2(4000 BYTE), 
-	"PARENT_TYPE" VARCHAR2(4000 BYTE), 
-	"CHILD_TYPE" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_MIGR_WEAKDEP"."CHILD_NAME" IS 'name of the child,  as weak dependencies dont have reference to child id';
-   COMMENT ON COLUMN "PRUEBA"."MD_MIGR_WEAKDEP"."PARENT_TYPE" IS 'MD_<tablename>';
-   COMMENT ON COLUMN "PRUEBA"."MD_MIGR_WEAKDEP"."CHILD_TYPE" IS 'Generic Type (not MD_<tablename>)';
---------------------------------------------------------
---  DDL for Table MD_NUMROW$SOURCE
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_NUMROW$SOURCE" 
-   (	"NUMROWS" NUMBER(10,0), 
-	"NAME" VARCHAR2(4000 BYTE), 
-	"OBJID" NUMBER(10,0)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Table MD_NUMROW$TARGET
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_NUMROW$TARGET" 
-   (	"NUMROWS" NUMBER(10,0), 
-	"NAME" VARCHAR2(4000 BYTE), 
-	"OBJID" NUMBER(10,0)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Table MD_OTHER_OBJECTS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_OTHER_OBJECTS" 
-   (	"ID" NUMBER, 
-	"SCHEMA_ID_FK" NUMBER, 
-	"NAME" VARCHAR2(4000 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_OTHER_OBJECTS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_OTHER_OBJECTS"."SCHEMA_ID_FK" IS 'Schema to which this object blongs. //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_OTHER_OBJECTS"."NAME" IS 'Name of this object //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_OTHER_OBJECTS"."NATIVE_SQL" IS 'The native SQL used to create this object';
-   COMMENT ON COLUMN "PRUEBA"."MD_OTHER_OBJECTS"."NATIVE_KEY" IS 'A key that identifies this object at source.';
-   COMMENT ON TABLE "PRUEBA"."MD_OTHER_OBJECTS"  IS 'For storing objects that don''''t belong anywhere else';
---------------------------------------------------------
---  DDL for Table MD_PACKAGES
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_PACKAGES" 
-   (	"ID" NUMBER, 
-	"SCHEMA_ID_FK" NUMBER, 
-	"NAME" VARCHAR2(4000 BYTE), 
-	"PACKAGE_HEADER" CLOB, 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"LANGUAGE" VARCHAR2(40 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("PACKAGE_HEADER") STORE AS SECUREFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192
-  NOCACHE LOGGING  NOCOMPRESS  KEEP_DUPLICATES ) 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_PACKAGES"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_PACKAGES"."SCHEMA_ID_FK" IS 'the schema in which this package resides //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_PACKAGES"."NAME" IS 'Name of this package //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_PACKAGES"."NATIVE_SQL" IS 'The SQL used to create this package at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_PACKAGES"."NATIVE_KEY" IS 'A unique identifer for this object at source.';
-   COMMENT ON COLUMN "PRUEBA"."MD_PACKAGES"."LANGUAGE" IS '//PUBLIC';
-   COMMENT ON TABLE "PRUEBA"."MD_PACKAGES"  IS 'For storing packages';
---------------------------------------------------------
---  DDL for Table MD_PARTITIONS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_PARTITIONS" 
-   (	"ID" NUMBER, 
-	"TABLE_ID_FK" NUMBER, 
-	"NATIVE_SQL" CLOB, 
-	"PARTITION_EXPRESSION" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_PARTITIONS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_PARTITIONS"."TABLE_ID_FK" IS 'The table that this partition refers to //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_PARTITIONS"."NATIVE_SQL" IS 'The SQL used to create this partition at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_PARTITIONS"."PARTITION_EXPRESSION" IS 'The partition expression';
-   COMMENT ON TABLE "PRUEBA"."MD_PARTITIONS"  IS 'Partition information is stored in this table.';
---------------------------------------------------------
---  DDL for Table MD_PRIVILEGES
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_PRIVILEGES" 
-   (	"ID" NUMBER, 
-	"SCHEMA_ID_FK" NUMBER, 
-	"PRIVILEGE_NAME" VARCHAR2(4000 BYTE), 
-	"PRIVELEGE_OBJECT_ID" NUMBER, 
-	"PRIVELEGEOBJECTTYPE" VARCHAR2(4000 BYTE), 
-	"PRIVELEGE_TYPE" VARCHAR2(4000 BYTE), 
-	"ADMIN_OPTION" CHAR(1 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_PRIVILEGES"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_PRIVILEGES"."SCHEMA_ID_FK" IS 'The schema to which this object belongs //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_PRIVILEGES"."PRIVILEGE_NAME" IS 'The name of the privilege //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_PRIVILEGES"."PRIVELEGE_OBJECT_ID" IS 'This references the table, view, etc on which the privelege exists.  This can be NULL for things like system wide privileges';
-   COMMENT ON COLUMN "PRUEBA"."MD_PRIVILEGES"."PRIVELEGEOBJECTTYPE" IS 'The type the privelege is on (e.g. INDEX)';
-   COMMENT ON COLUMN "PRUEBA"."MD_PRIVILEGES"."PRIVELEGE_TYPE" IS 'e.g.select';
-   COMMENT ON COLUMN "PRUEBA"."MD_PRIVILEGES"."ADMIN_OPTION" IS 'Flag to show if this was granted with admin option.  ''Y'' means it was granted with admin option ''N'' means it was NOT granted with admin option.  NULL means not applicable (e.g. not known, not supported by source platform, etc.)';
-   COMMENT ON COLUMN "PRUEBA"."MD_PRIVILEGES"."NATIVE_SQL" IS 'The SQL used to create this privilege at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_PRIVILEGES"."NATIVE_KEY" IS 'An identifier for this object at source.';
-   COMMENT ON TABLE "PRUEBA"."MD_PRIVILEGES"  IS 'This table stores privilege information';
---------------------------------------------------------
---  DDL for Table MD_PROJECTS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_PROJECTS" 
-   (	"ID" NUMBER, 
-	"PROJECT_NAME" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_PROJECTS"."ID" IS 'Primary key';
-   COMMENT ON COLUMN "PRUEBA"."MD_PROJECTS"."PROJECT_NAME" IS 'Name of the project //OBJECTNAME';
-   COMMENT ON TABLE "PRUEBA"."MD_PROJECTS"  IS 'This is a top level container for a set of connections.';
---------------------------------------------------------
---  DDL for Table MD_REGISTRY
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_REGISTRY" 
-   (	"OBJECT_TYPE" VARCHAR2(30 BYTE), 
-	"OBJECT_NAME" VARCHAR2(30 BYTE), 
-	"DESC_OBJECT_NAME" VARCHAR2(30 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON TABLE "PRUEBA"."MD_REGISTRY"  IS 'Table to store information on the MD_ repository.  This lists the objects to be dropped if you wish to remove the repository';
---------------------------------------------------------
---  DDL for Table MD_REPOVERSIONS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_REPOVERSIONS" 
-   (	"REVISION" NUMBER
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON TABLE "PRUEBA"."MD_REPOVERSIONS"  IS 'This table is used to version this schema for future requirements.';
---------------------------------------------------------
---  DDL for Table MD_SCHEMAS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_SCHEMAS" 
-   (	"ID" NUMBER, 
-	"CATALOG_ID_FK" NUMBER, 
-	"NAME" VARCHAR2(4000 BYTE), 
-	"TYPE" CHAR(1 BYTE), 
-	"CHARACTER_SET" VARCHAR2(4000 BYTE), 
-	"VERSION_TAG" VARCHAR2(40 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_SCHEMAS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_SCHEMAS"."CATALOG_ID_FK" IS 'Catalog to which this schema blongs //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_SCHEMAS"."NAME" IS 'Name of the schema //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_SCHEMAS"."TYPE" IS 'Type of this schema.  Eaxamples are ''CAPTURED'' OR ''CONVERTED''';
-   COMMENT ON COLUMN "PRUEBA"."MD_SCHEMAS"."CHARACTER_SET" IS 'The characterset of this schema';
-   COMMENT ON COLUMN "PRUEBA"."MD_SCHEMAS"."VERSION_TAG" IS 'A version string that can be used for tagging/baseling a schema';
-   COMMENT ON COLUMN "PRUEBA"."MD_SCHEMAS"."NATIVE_SQL" IS 'The native SQL used to create this schema';
-   COMMENT ON COLUMN "PRUEBA"."MD_SCHEMAS"."NATIVE_KEY" IS 'A unique identifier that this schema is known as in its source state.';
-   COMMENT ON TABLE "PRUEBA"."MD_SCHEMAS"  IS 'This is the holder for schemas';
---------------------------------------------------------
---  DDL for Table MD_SEQUENCES
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_SEQUENCES" 
-   (	"ID" NUMBER, 
-	"SCHEMA_ID_FK" NUMBER, 
-	"NAME" VARCHAR2(4000 BYTE), 
-	"SEQ_START" NUMBER, 
-	"INCR" NUMBER DEFAULT 1, 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE) DEFAULT '0', 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_SEQUENCES"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_SEQUENCES"."SCHEMA_ID_FK" IS 'The schema to which this object belongs. //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_SEQUENCES"."NAME" IS 'Name of this sequence //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_SEQUENCES"."SEQ_START" IS 'Starting point of the sequence';
-   COMMENT ON COLUMN "PRUEBA"."MD_SEQUENCES"."INCR" IS 'Increment value of the sequence';
-   COMMENT ON COLUMN "PRUEBA"."MD_SEQUENCES"."NATIVE_SQL" IS 'SQL used to create this object at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_SEQUENCES"."NATIVE_KEY" IS 'Identifier for this object at source.';
-   COMMENT ON TABLE "PRUEBA"."MD_SEQUENCES"  IS 'For storing information on sequences.';
---------------------------------------------------------
---  DDL for Table MD_STORED_PROGRAMS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_STORED_PROGRAMS" 
-   (	"ID" NUMBER, 
-	"SCHEMA_ID_FK" NUMBER, 
-	"PROGRAMTYPE" VARCHAR2(20 BYTE), 
-	"NAME" VARCHAR2(4000 BYTE), 
-	"PACKAGE_ID_FK" NUMBER, 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"LANGUAGE" VARCHAR2(40 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"LINECOUNT" NUMBER, 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_STORED_PROGRAMS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_STORED_PROGRAMS"."SCHEMA_ID_FK" IS 'Schema to which this object belongs.  Note that the PACKAGE_ID_FK (if present also leads us to the relevant schema), however a stored program may or may not belong in a package.  If it is in a package, then the SCHEMA_ID_FK and the SCHEME_ID_FK in the parent package should match //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_STORED_PROGRAMS"."PROGRAMTYPE" IS 'Java/TSQL/PLSQL, etc.';
-   COMMENT ON COLUMN "PRUEBA"."MD_STORED_PROGRAMS"."NAME" IS 'Name of the stored program //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_STORED_PROGRAMS"."PACKAGE_ID_FK" IS 'The package to which this object belongs';
-   COMMENT ON COLUMN "PRUEBA"."MD_STORED_PROGRAMS"."NATIVE_SQL" IS 'The SQL used to create this object at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_STORED_PROGRAMS"."NATIVE_KEY" IS 'A unique indetifier for this object at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_STORED_PROGRAMS"."LANGUAGE" IS '//PUBLIC';
-   COMMENT ON TABLE "PRUEBA"."MD_STORED_PROGRAMS"  IS 'Container for stored programs.';
---------------------------------------------------------
---  DDL for Table MD_SYNONYMS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_SYNONYMS" 
-   (	"ID" NUMBER, 
-	"SCHEMA_ID_FK" NUMBER, 
-	"NAME" VARCHAR2(4000 BYTE), 
-	"SYNONYM_FOR_ID" NUMBER, 
-	"FOR_OBJECT_TYPE" VARCHAR2(4000 BYTE), 
-	"PRIVATE_VISIBILITY" CHAR(1 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_SYNONYMS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_SYNONYMS"."SCHEMA_ID_FK" IS 'The schema to which this object belongs //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_SYNONYMS"."NAME" IS 'Synonym name //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_SYNONYMS"."SYNONYM_FOR_ID" IS 'What object this is a synonym for';
-   COMMENT ON COLUMN "PRUEBA"."MD_SYNONYMS"."FOR_OBJECT_TYPE" IS 'The type this is a synonym for (e.g. INDEX)';
-   COMMENT ON COLUMN "PRUEBA"."MD_SYNONYMS"."PRIVATE_VISIBILITY" IS 'Visibility - Private or Public.  If Private_visibility = ''Y'' means this is a private synonym.  Anything else means it is a public synonym';
-   COMMENT ON COLUMN "PRUEBA"."MD_SYNONYMS"."NATIVE_SQL" IS 'The SQL used to create this object at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_SYNONYMS"."NATIVE_KEY" IS 'An identifier for this object at source.';
-   COMMENT ON TABLE "PRUEBA"."MD_SYNONYMS"  IS 'For storing synonym information.';
---------------------------------------------------------
---  DDL for Table MD_TABLES
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_TABLES" 
-   (	"ID" NUMBER, 
-	"SCHEMA_ID_FK" NUMBER, 
-	"TABLE_NAME" VARCHAR2(4000 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"QUALIFIED_NATIVE_NAME" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_TABLES"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_TABLES"."SCHEMA_ID_FK" IS 'Schema in which this table resides //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_TABLES"."TABLE_NAME" IS 'Name of the table //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_TABLES"."NATIVE_SQL" IS 'SQL Used to create this table at soruce';
-   COMMENT ON COLUMN "PRUEBA"."MD_TABLES"."NATIVE_KEY" IS 'Unique identifier for this table at source';
-   COMMENT ON TABLE "PRUEBA"."MD_TABLES"  IS 'Table used to store information about tables.';
---------------------------------------------------------
---  DDL for Table MD_TABLESPACES
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_TABLESPACES" 
-   (	"ID" NUMBER, 
-	"SCHEMA_ID_FK" NUMBER, 
-	"TABLESPACE_NAME" VARCHAR2(4000 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_TABLESPACES"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_TABLESPACES"."SCHEMA_ID_FK" IS 'Schema to which this tablespace belongs //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_TABLESPACES"."TABLESPACE_NAME" IS 'Name of the table space //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_TABLESPACES"."NATIVE_SQL" IS 'The SQL used to create this tablespace';
-   COMMENT ON COLUMN "PRUEBA"."MD_TABLESPACES"."NATIVE_KEY" IS 'A unique identifier for this object at source';
-   COMMENT ON TABLE "PRUEBA"."MD_TABLESPACES"  IS 'For storing information about tablespaces.';
---------------------------------------------------------
---  DDL for Table MD_TRIGGERS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_TRIGGERS" 
-   (	"ID" NUMBER, 
-	"TABLE_OR_VIEW_ID_FK" NUMBER, 
-	"TRIGGER_ON_FLAG" CHAR(1 BYTE), 
-	"TRIGGER_NAME" VARCHAR2(4000 BYTE), 
-	"TRIGGER_TIMING" VARCHAR2(4000 BYTE), 
-	"TRIGGER_OPERATION" VARCHAR2(4000 BYTE), 
-	"TRIGGER_EVENT" VARCHAR2(4000 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"LANGUAGE" VARCHAR2(40 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"LINECOUNT" NUMBER, 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_TRIGGERS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_TRIGGERS"."TABLE_OR_VIEW_ID_FK" IS 'Table on which this trigger fires';
-   COMMENT ON COLUMN "PRUEBA"."MD_TRIGGERS"."TRIGGER_ON_FLAG" IS 'Flag to show iif the trigger is on a table or a view.  If it is a table this should be ''T''. If it is on a view this should be ''V''';
-   COMMENT ON COLUMN "PRUEBA"."MD_TRIGGERS"."TRIGGER_NAME" IS 'Name of the trigger //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_TRIGGERS"."TRIGGER_TIMING" IS 'before, after ,etc.';
-   COMMENT ON COLUMN "PRUEBA"."MD_TRIGGERS"."TRIGGER_OPERATION" IS 'insert, delete, etc.';
-   COMMENT ON COLUMN "PRUEBA"."MD_TRIGGERS"."TRIGGER_EVENT" IS 'The actual trigger that gets fired ';
-   COMMENT ON COLUMN "PRUEBA"."MD_TRIGGERS"."NATIVE_SQL" IS 'The full definition ';
-   COMMENT ON COLUMN "PRUEBA"."MD_TRIGGERS"."NATIVE_KEY" IS 'UInique identifer for this object at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_TRIGGERS"."LANGUAGE" IS '//PUBLIC';
-   COMMENT ON TABLE "PRUEBA"."MD_TRIGGERS"  IS 'For storing information about triggers.';
---------------------------------------------------------
---  DDL for Table MD_USER_DEFINED_DATA_TYPES
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_USER_DEFINED_DATA_TYPES" 
-   (	"ID" NUMBER, 
-	"SCHEMA_ID_FK" NUMBER, 
-	"DATA_TYPE_NAME" VARCHAR2(4000 BYTE), 
-	"DEFINITION" VARCHAR2(4000 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_USER_DEFINED_DATA_TYPES"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_USER_DEFINED_DATA_TYPES"."SCHEMA_ID_FK" IS 'Schema to which this object blongs. //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_USER_DEFINED_DATA_TYPES"."DATA_TYPE_NAME" IS 'The name of the data type //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_USER_DEFINED_DATA_TYPES"."DEFINITION" IS 'The definition of the data type';
-   COMMENT ON COLUMN "PRUEBA"."MD_USER_DEFINED_DATA_TYPES"."NATIVE_SQL" IS 'The native SQL used to create this object';
-   COMMENT ON COLUMN "PRUEBA"."MD_USER_DEFINED_DATA_TYPES"."NATIVE_KEY" IS 'An unique identifier for this object at source.';
-   COMMENT ON TABLE "PRUEBA"."MD_USER_DEFINED_DATA_TYPES"  IS 'For storing information on user defined data types.';
---------------------------------------------------------
---  DDL for Table MD_USER_PRIVILEGES
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_USER_PRIVILEGES" 
-   (	"ID" NUMBER, 
-	"USER_ID_FK" NUMBER, 
-	"PRIVILEGE_ID_FK" NUMBER, 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UDPATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_USER_PRIVILEGES"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_USER_PRIVILEGES"."USER_ID_FK" IS 'User';
-   COMMENT ON COLUMN "PRUEBA"."MD_USER_PRIVILEGES"."PRIVILEGE_ID_FK" IS 'Privilege';
-   COMMENT ON TABLE "PRUEBA"."MD_USER_PRIVILEGES"  IS 'This table stores privileges granted to individual users';
---------------------------------------------------------
---  DDL for Table MD_USERS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_USERS" 
-   (	"ID" NUMBER, 
-	"SCHEMA_ID_FK" NUMBER, 
-	"USERNAME" VARCHAR2(4000 BYTE), 
-	"PASSWORD" VARCHAR2(4000 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_USERS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_USERS"."SCHEMA_ID_FK" IS 'Shema in which this object belongs //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_USERS"."USERNAME" IS 'Username for login //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_USERS"."PASSWORD" IS 'Password for login';
-   COMMENT ON COLUMN "PRUEBA"."MD_USERS"."NATIVE_SQL" IS 'SQL Used to create this object at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_USERS"."NATIVE_KEY" IS 'Unique identifier for this object at source.';
-   COMMENT ON TABLE "PRUEBA"."MD_USERS"  IS 'User information.';
---------------------------------------------------------
---  DDL for Table MD_VIEWS
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MD_VIEWS" 
-   (	"ID" NUMBER, 
-	"SCHEMA_ID_FK" NUMBER, 
-	"VIEW_NAME" VARCHAR2(4000 BYTE), 
-	"NATIVE_SQL" CLOB, 
-	"NATIVE_KEY" VARCHAR2(4000 BYTE), 
-	"LANGUAGE" VARCHAR2(40 BYTE), 
-	"COMMENTS" VARCHAR2(4000 BYTE), 
-	"LINECOUNT" NUMBER, 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" 
- LOB ("NATIVE_SQL") STORE AS BASICFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192 RETENTION 
-  CACHE READS LOGGING ) ;
-
-   COMMENT ON COLUMN "PRUEBA"."MD_VIEWS"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MD_VIEWS"."SCHEMA_ID_FK" IS 'The schema to which this obect blongs. //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MD_VIEWS"."VIEW_NAME" IS 'The name of the view //OBJECTNAME';
-   COMMENT ON COLUMN "PRUEBA"."MD_VIEWS"."NATIVE_SQL" IS 'The SQL used to create this object at source';
-   COMMENT ON COLUMN "PRUEBA"."MD_VIEWS"."NATIVE_KEY" IS 'An identifier for this object at source.';
-   COMMENT ON COLUMN "PRUEBA"."MD_VIEWS"."LANGUAGE" IS '//PUBLIC';
-   COMMENT ON TABLE "PRUEBA"."MD_VIEWS"  IS 'For storing information on views.';
---------------------------------------------------------
---  DDL for Table MIGR_DATATYPE_TRANSFORM_MAP
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_MAP" 
-   (	"ID" NUMBER, 
-	"PROJECT_ID_FK" NUMBER, 
-	"MAP_NAME" VARCHAR2(4000 BYTE), 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MIGR_DATATYPE_TRANSFORM_MAP"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MIGR_DATATYPE_TRANSFORM_MAP"."PROJECT_ID_FK" IS '//PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MIGR_DATATYPE_TRANSFORM_MAP"."MAP_NAME" IS 'A name for the map';
-   COMMENT ON TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_MAP"  IS 'Table for storing data type maps.  A map is simply a collection of rules';
---------------------------------------------------------
---  DDL for Table MIGR_DATATYPE_TRANSFORM_RULE
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE" 
-   (	"ID" NUMBER, 
-	"MAP_ID_FK" NUMBER, 
-	"SOURCE_DATA_TYPE_NAME" VARCHAR2(4000 BYTE), 
-	"SOURCE_PRECISION" NUMBER, 
-	"SOURCE_SCALE" NUMBER, 
-	"TARGET_DATA_TYPE_NAME" VARCHAR2(4000 BYTE), 
-	"TARGET_PRECISION" NUMBER, 
-	"TARGET_SCALE" NUMBER, 
-	"SECURITY_GROUP_ID" NUMBER DEFAULT 0, 
-	"CREATED_ON" DATE DEFAULT sysdate, 
-	"CREATED_BY" VARCHAR2(255 BYTE), 
-	"LAST_UPDATED_ON" DATE, 
-	"LAST_UPDATED_BY" VARCHAR2(255 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE"."ID" IS 'Primary Key';
-   COMMENT ON COLUMN "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE"."MAP_ID_FK" IS 'The map to which this rule belongs //PARENTFIELD';
-   COMMENT ON COLUMN "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE"."SOURCE_DATA_TYPE_NAME" IS 'Source data type';
-   COMMENT ON COLUMN "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE"."SOURCE_PRECISION" IS 'Precison to match';
-   COMMENT ON COLUMN "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE"."SOURCE_SCALE" IS 'scale to match';
-   COMMENT ON COLUMN "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE"."TARGET_DATA_TYPE_NAME" IS 'data type name to transform to';
-   COMMENT ON COLUMN "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE"."TARGET_PRECISION" IS 'precision to map to ';
-   COMMENT ON COLUMN "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE"."TARGET_SCALE" IS 'scale to map to';
---------------------------------------------------------
---  DDL for Table MIGR_GENERATION_ORDER
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MIGR_GENERATION_ORDER" 
-   (	"ID" NUMBER, 
-	"CONNECTION_ID_FK" NUMBER, 
-	"OBJECT_ID" NUMBER, 
-	"OBJECT_TYPE" VARCHAR2(4000 BYTE), 
-	"GENERATION_ORDER" NUMBER
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
-
-   COMMENT ON COLUMN "PRUEBA"."MIGR_GENERATION_ORDER"."CONNECTION_ID_FK" IS '//PARENTFIELD';
---------------------------------------------------------
---  DDL for Table MIGRLOG
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."MIGRLOG" 
-   (	"ID" NUMBER, 
-	"PARENT_LOG_ID" NUMBER, 
-	"LOG_DATE" TIMESTAMP (6), 
-	"SEVERITY" NUMBER(4,0), 
-	"LOGTEXT" VARCHAR2(4000 BYTE), 
-	"PHASE" VARCHAR2(100 BYTE), 
-	"REF_OBJECT_ID" NUMBER, 
-	"REF_OBJECT_TYPE" VARCHAR2(4000 BYTE), 
-	"CONNECTION_ID_FK" NUMBER
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Table RESERVA
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."RESERVA" 
-   (	"ID_RESERVA" NUMBER, 
-	"ID_VISITANTE" NUMBER, 
-	"ID_SENDERO" NUMBER, 
-	"FECHA_RESERVA" DATE DEFAULT SYSDATE, 
-	"FECHA_VISITA" DATE, 
-	"NUMERO_PERSONAS" NUMBER(2,0), 
-	"HORA_INICIO" VARCHAR2(5 BYTE) DEFAULT '08:00', 
-	"ESTADO" VARCHAR2(20 BYTE) DEFAULT 'PENDIENTE', 
-	"OBSERVACIONES" VARCHAR2(500 BYTE), 
-	"FECHA_CREACION" DATE DEFAULT SYSDATE, 
-	"FECHA_MODIFICACION" DATE
-   ) SEGMENT CREATION IMMEDIATE 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Table SENDERO
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."SENDERO" 
-   (	"ID_SENDERO" NUMBER, 
-	"NOMBRE" VARCHAR2(100 BYTE), 
-	"DESCRIPCION" CLOB, 
-	"DIFICULTAD" VARCHAR2(20 BYTE), 
-	"DURACION_HORAS" NUMBER(3,1), 
-	"CUPO_MAXIMO_DIA" NUMBER(3,0), 
-	"DISTANCIA_KM" NUMBER(5,2), 
-	"ESTADO" VARCHAR2(10 BYTE) DEFAULT 'ACTIVO', 
-	"FECHA_CREACION" DATE DEFAULT SYSDATE
-   ) SEGMENT CREATION IMMEDIATE 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" 
- LOB ("DESCRIPCION") STORE AS SECUREFILE (
-  TABLESPACE "USERS" ENABLE STORAGE IN ROW 4000 CHUNK 8192
-  NOCACHE LOGGING  NOCOMPRESS  KEEP_DUPLICATES 
-  STORAGE(INITIAL 262144 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
---------------------------------------------------------
---  DDL for Table STAGE_MIGRLOG
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."STAGE_MIGRLOG" 
-   (	"SVRID_FK" NUMBER, 
-	"DBID_GEN_FK" NUMBER, 
-	"ID" NUMBER, 
-	"REF_OBJECT_ID" NUMBER, 
-	"REF_OBJECT_TYPE" VARCHAR2(4000 BYTE), 
-	"LOG_DATE" TIMESTAMP (6), 
-	"SEVERITY" NUMBER(4,0), 
-	"LOGTEXT" VARCHAR2(4000 BYTE), 
-	"PHASE" VARCHAR2(20 BYTE)
-   ) SEGMENT CREATION DEFERRED 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Table VISITANTE
---------------------------------------------------------
-
-  CREATE TABLE "PRUEBA"."VISITANTE" 
-   (	"ID_VISITANTE" NUMBER, 
-	"CEDULA" VARCHAR2(20 BYTE), 
-	"NOMBRE" VARCHAR2(100 BYTE), 
-	"APELLIDO" VARCHAR2(100 BYTE), 
-	"TELEFONO" VARCHAR2(15 BYTE), 
-	"EMAIL" VARCHAR2(100 BYTE), 
-	"FECHA_REGISTRO" DATE DEFAULT SYSDATE, 
-	"ESTADO" VARCHAR2(10 BYTE) DEFAULT 'ACTIVO'
-   ) SEGMENT CREATION IMMEDIATE 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for View MGV_ALL_CATALOGS
---------------------------------------------------------
-
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "PRUEBA"."MGV_ALL_CATALOGS" ("PROJECT_ID", "PROJECT_NAME", "CONNECTION_ID", "HOST", "PORT", "USERNAME", "DBURL", "CATALOG_ID", "CATALOG_NAME") AS 
-  SELECT md_projects.id project_id ,
-    md_projects.project_name project_name,
-    md_connections.id connection_id ,
-    md_connections.host host ,
-    md_connections.port port ,
-    md_connections.username username ,
-    md_connections.dburl dburl ,
-    md_catalogs.id catalog_id ,
-    md_catalogs.catalog_name catalog_name
-  FROM md_projects ,
-    md_connections,
-    md_catalogs
-  WHERE md_catalogs.connection_id_fk = md_connections.id
-  AND md_connections.project_id_fk   = md_projects.id
-WITH READ ONLY
-;
---------------------------------------------------------
---  DDL for View MGV_ALL_CONNECTIONS
---------------------------------------------------------
-
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "PRUEBA"."MGV_ALL_CONNECTIONS" ("PROJECT_ID", "PROJECT_NAME", "CONNECTION_ID", "CONNECTION_NAME", "HOST", "PORT", "USERNAME", "DBURL") AS 
-  SELECT md_projects.id project_id ,
-    md_projects.project_name project_name,
-    MD_CONNECTIONS.ID CONNECTION_ID ,
-    MD_CONNECTIONS.NAME CONNECTION_NAME,
-    md_connections.host host ,
-    md_connections.port port ,
-    md_connections.username username ,
-    md_connections.dburl dburl
-  FROM md_projects,
-    md_connections
-  WHERE MD_CONNECTIONS.PROJECT_ID_FK = MD_PROJECTS.ID
-WITH READ ONLY
-;
---------------------------------------------------------
---  DDL for View MGV_ALL_SCHEMA
---------------------------------------------------------
-
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "PRUEBA"."MGV_ALL_SCHEMA" ("PROJECT_ID", "PROJECT_NAME", "CONNECTION_ID", "HOST", "PORT", "USERNAME", "CATALOG_ID", "CATALOG_NAME", "SCHEMA_ID", "SCHEMA_NAME") AS 
-  SELECT md_projects.id project_id ,
-    md_projects.project_name project_name,
-    md_connections.id connection_id ,
-    md_connections.host host ,
-    md_connections.port port ,
-    md_connections.username username ,
-    md_catalogs.id catalog_id ,
-    md_catalogs.catalog_name catalog_name,
-    md_schemas.id schema_id ,
-    md_schemas.name schema_name
-  FROM md_connections,
-    md_catalogs ,
-    md_schemas ,
-    md_projects
-  WHERE md_schemas.catalog_id_fk   = md_catalogs.id
-  AND md_catalogs.connection_id_fk = md_connections.id
-  AND md_connections.project_id_fk = md_projects.id
-WITH READ ONLY
-;
---------------------------------------------------------
---  DDL for View MGV_ALL_STORED_PROGRAMS
---------------------------------------------------------
-
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "PRUEBA"."MGV_ALL_STORED_PROGRAMS" ("PROJECT_ID", "PROJECT_NAME", "CONNECTION_ID", "HOST", "PORT", "USERNAME", "CATALOG_ID", "CATALOG_NAME", "SCHEMA_ID", "SCHEMA_NAME", "STORED_PROGRAM_ID", "PROGRAMTYPE", "STORED_PROGRAM_NAME", "PACKAGE_ID_FK") AS 
-  SELECT md_projects.id project_id ,
-    md_projects.project_name project_name ,
-    md_connections.id connection_id ,
-    md_connections.host host ,
-    md_connections.port port ,
-    md_connections.username username ,
-    md_catalogs.id catalog_id ,
-    md_catalogs.catalog_name catalog_name ,
-    md_schemas.id schema_id ,
-    md_schemas.name schema_name ,
-    md_stored_programs.id stored_program_id ,
-    md_stored_programs.programtype programtype ,
-    md_stored_programs.name stored_program_name,
-    md_stored_programs.package_id_fk package_id_fk
-  FROM md_projects ,
-    md_connections,
-    md_catalogs ,
-    md_schemas ,
-    md_stored_programs
-  WHERE md_stored_programs.schema_id_fk = md_schemas.id
-  AND md_schemas.catalog_id_fk          = md_catalogs.id
-  AND md_catalogs.connection_id_fk      = md_connections.id
-  AND md_connections.project_id_fk      = md_projects.id
-;
---------------------------------------------------------
---  DDL for View MGV_ALL_TABLES
---------------------------------------------------------
-
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "PRUEBA"."MGV_ALL_TABLES" ("PROJECT_ID", "PROJECT_NAME", "CONNECTION_ID", "HOST", "PORT", "USERNAME", "DBURL", "CATALOG_ID", "CATALOG_NAME", "SCHEMA_ID", "SCHEMA_NAME", "TABLE_ID", "TABLE_NAME") AS 
-  SELECT md_projects.id project_id ,
-    md_projects.project_name project_name,
-    md_connections.id connection_id ,
-    md_connections.host host ,
-    md_connections.port port ,
-    md_connections.username username ,
-    md_connections.dburl dburl ,
-    md_catalogs.id catalog_id ,
-    md_catalogs.catalog_name catalog_name,
-    md_schemas.id schema_id ,
-    md_schemas.name schema_name ,
-    md_tables.id table_id ,
-    md_tables.TABLE_NAME TABLE_NAME
-  FROM md_connections,
-    md_catalogs ,
-    md_schemas ,
-    md_tables ,
-    md_projects
-  WHERE md_tables.schema_id_fk     = md_schemas.id
-  AND md_schemas.catalog_id_fk     = md_catalogs.id
-  AND md_catalogs.connection_id_fk = md_connections.id
-  AND md_connections.project_id_fk = md_projects.id
-WITH READ ONLY
-;
---------------------------------------------------------
---  DDL for View MGV_ALL_TABLE_TRIGGERS
---------------------------------------------------------
-
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "PRUEBA"."MGV_ALL_TABLE_TRIGGERS" ("PROJECT_ID", "PROJECT_NAME", "CONNECTION_ID", "HOST", "PORT", "USERNAME", "CATALOG_ID", "CATALOG_NAME", "DUMMY_FLAG", "SCHEMA_ID", "SCHEMA_NAME", "TABLE_ID", "TABLE_NAME", "TRIGGER_ID", "TRIGGER_NAME") AS 
-  SELECT md_projects.id project_id ,
-    md_projects.project_name project_name,
-    md_connections.id connection_id ,
-    md_connections.host host ,
-    md_connections.port port ,
-    md_connections.username username ,
-    md_catalogs.id catalog_id ,
-    md_catalogs.catalog_name catalog_name,
-    md_catalogs.dummy_flag dummy_flag ,
-    md_schemas.id schema_id ,
-    md_schemas.name schema_name ,
-    md_tables.id table_id ,
-    md_tables.TABLE_NAME TABLE_NAME ,
-    md_triggers.id trigger_id ,
-    md_triggers.trigger_name trigger_name
-  FROM md_projects ,
-    md_connections,
-    md_catalogs ,
-    md_schemas ,
-    md_tables ,
-    md_triggers
-  WHERE md_triggers.table_or_view_id_fk = md_tables.id
-  AND md_tables.schema_id_fk            = md_schemas.id
-  AND md_schemas.catalog_id_fk          = md_catalogs.id
-  AND md_catalogs.connection_id_fk      = md_connections.id
-  AND md_connections.project_id_fk      = md_projects.id
-;
---------------------------------------------------------
---  DDL for View MGV_ALL_VIEWS
---------------------------------------------------------
-
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "PRUEBA"."MGV_ALL_VIEWS" ("PROJECT_ID", "PROJECT_NAME", "CONNECTION_ID", "HOST", "PORT", "USERNAME", "CATALOG_ID", "CATALOG_NAME", "DUMMY_FLAG", "SCHEMA_ID", "SCHEMA_NAME", "VIEW_ID", "VIEW_NAME") AS 
-  SELECT md_projects.id project_id ,
-    md_projects.project_name project_name,
-    md_connections.id connection_id ,
-    md_connections.host host ,
-    md_connections.port port ,
-    username username ,
-    md_catalogs.id catalog_id ,
-    md_catalogs.catalog_name catalog_name,
-    md_catalogs.dummy_flag dummy_flag ,
-    md_schemas.id schema_id ,
-    md_schemas.name schema_name ,
-    md_views.id view_id ,
-    md_views.view_name view_name
-  FROM md_projects ,
-    md_connections,
-    md_catalogs ,
-    md_schemas ,
-    md_views
-  WHERE md_views.schema_id_fk      = md_schemas.id
-  AND md_schemas.catalog_id_fk     = md_catalogs.id
-  AND md_catalogs.connection_id_fk = md_connections.id
-  AND md_connections.project_id_fk = md_projects.id
-WITH READ ONLY;
-
-   COMMENT ON TABLE "PRUEBA"."MGV_ALL_VIEWS"  IS 'View to iterate over all views in the system'
-;
---------------------------------------------------------
---  DDL for View MGV_ALL_VIEW_TRIGGERS
---------------------------------------------------------
-
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "PRUEBA"."MGV_ALL_VIEW_TRIGGERS" ("PROJECT_ID", "PROJECT_NAME", "CONNECTION_ID", "HOST", "PORT", "USERNAME", "CATALOG_ID", "CATALOG_NAME", "DUMMY_FLAG", "SCHEMA_ID", "SCHEMA_NAME", "VIEW_ID", "VIEW_NAME", "TRIGGER_ID", "TRIGGER_NAME") AS 
-  SELECT md_projects.id project_id ,
-    md_projects.project_name project_name,
-    md_connections.id connection_id ,
-    md_connections.host host ,
-    md_connections.port port ,
-    md_connections.username username ,
-    md_catalogs.id catalog_id ,
-    md_catalogs.catalog_name catalog_name,
-    md_catalogs.dummy_flag dummy_flag ,
-    md_schemas.id schema_id ,
-    md_schemas.name schema_name ,
-    md_views.id view_id ,
-    md_views.view_name view_name ,
-    md_triggers.id trigger_id ,
-    md_triggers.trigger_name trigger_name
-  FROM md_projects ,
-    md_connections,
-    md_catalogs ,
-    md_schemas ,
-    md_views ,
-    md_triggers
-  WHERE md_triggers.table_or_view_id_fk = md_views.id
-  AND md_views.schema_id_fk             = md_schemas.id
-  AND md_schemas.catalog_id_fk          = md_catalogs.id
-  AND md_catalogs.connection_id_fk      = md_connections.id
-  AND md_connections.project_id_fk      = md_projects.id
-;
-REM INSERTING into PRUEBA.ASIGNACION_GUIA
-SET DEFINE OFF;
-Insert into PRUEBA.ASIGNACION_GUIA (ID_ASIGNACION,ID_RESERVA,ID_GUIA,FECHA_ASIGNACION,HORA_INICIO_REAL,HORA_FIN_REAL,OBSERVACIONES_GUIA) values ('1','1','1',to_date('30/09/25','DD/MM/RR'),to_timestamp('01/10/25 12:08:02,024871000 AM','DD/MM/RR HH12:MI:SSXFF AM'),to_timestamp('01/10/25 12:08:36,504700000 AM','DD/MM/RR HH12:MI:SSXFF AM'),'Recorrido exitoso');
-Insert into PRUEBA.ASIGNACION_GUIA (ID_ASIGNACION,ID_RESERVA,ID_GUIA,FECHA_ASIGNACION,HORA_INICIO_REAL,HORA_FIN_REAL,OBSERVACIONES_GUIA) values ('2','2','2',to_date('30/09/25','DD/MM/RR'),null,null,null);
-Insert into PRUEBA.ASIGNACION_GUIA (ID_ASIGNACION,ID_RESERVA,ID_GUIA,FECHA_ASIGNACION,HORA_INICIO_REAL,HORA_FIN_REAL,OBSERVACIONES_GUIA) values ('3','4','3',to_date('12/09/25','DD/MM/RR'),null,null,null);
-Insert into PRUEBA.ASIGNACION_GUIA (ID_ASIGNACION,ID_RESERVA,ID_GUIA,FECHA_ASIGNACION,HORA_INICIO_REAL,HORA_FIN_REAL,OBSERVACIONES_GUIA) values ('4','5','1',to_date('30/09/25','DD/MM/RR'),null,null,null);
-REM INSERTING into PRUEBA.GUIA
-SET DEFINE OFF;
-Insert into PRUEBA.GUIA (ID_GUIA,CEDULA,NOMBRE,APELLIDO,TELEFONO,EMAIL,ESPECIALIDADES,MAX_PERSONAS_GRUPO,ESTADO,FECHA_INGRESO) values ('1','1234567890','Carlos','Rodríguez','3001234567','carlos.rodriguez@parque.com','Flora,Fauna','15','ACTIVO',to_date('30/09/25','DD/MM/RR'));
-Insert into PRUEBA.GUIA (ID_GUIA,CEDULA,NOMBRE,APELLIDO,TELEFONO,EMAIL,ESPECIALIDADES,MAX_PERSONAS_GRUPO,ESTADO,FECHA_INGRESO) values ('2','2345678901','María','González','3102345678','maria.gonzalez@parque.com','Montañismo,Supervivencia','12','ACTIVO',to_date('30/09/25','DD/MM/RR'));
-Insert into PRUEBA.GUIA (ID_GUIA,CEDULA,NOMBRE,APELLIDO,TELEFONO,EMAIL,ESPECIALIDADES,MAX_PERSONAS_GRUPO,ESTADO,FECHA_INGRESO) values ('3','3456789012','Pedro','Martínez','3203456789','pedro.martinez@parque.com','Aves,Fotografía','20','ACTIVO',to_date('30/09/25','DD/MM/RR'));
-Insert into PRUEBA.GUIA (ID_GUIA,CEDULA,NOMBRE,APELLIDO,TELEFONO,EMAIL,ESPECIALIDADES,MAX_PERSONAS_GRUPO,ESTADO,FECHA_INGRESO) values ('4','4567890123','Ana','López','3304567890','ana.lopez@parque.com','Historia,Geología','15','ACTIVO',to_date('30/09/25','DD/MM/RR'));
-REM INSERTING into PRUEBA.HORARIO_DISPONIBLE
-SET DEFINE OFF;
-Insert into PRUEBA.HORARIO_DISPONIBLE (ID_HORARIO,ID_SENDERO,HORA_INICIO,HORA_FIN,CUPO_HORARIO,DIAS_SEMANA) values ('1','1','08:00','10:30','15','L,M,MI,J,V,S,D');
-Insert into PRUEBA.HORARIO_DISPONIBLE (ID_HORARIO,ID_SENDERO,HORA_INICIO,HORA_FIN,CUPO_HORARIO,DIAS_SEMANA) values ('2','1','14:00','16:30','15','L,M,MI,J,V,S,D');
-Insert into PRUEBA.HORARIO_DISPONIBLE (ID_HORARIO,ID_SENDERO,HORA_INICIO,HORA_FIN,CUPO_HORARIO,DIAS_SEMANA) values ('3','2','07:00','12:00','15','S,D');
-Insert into PRUEBA.HORARIO_DISPONIBLE (ID_HORARIO,ID_SENDERO,HORA_INICIO,HORA_FIN,CUPO_HORARIO,DIAS_SEMANA) values ('4','3','09:00','12:30','12','L,M,MI,J,V');
-Insert into PRUEBA.HORARIO_DISPONIBLE (ID_HORARIO,ID_SENDERO,HORA_INICIO,HORA_FIN,CUPO_HORARIO,DIAS_SEMANA) values ('5','3','14:30','18:00','13','L,M,MI,J,V');
-Insert into PRUEBA.HORARIO_DISPONIBLE (ID_HORARIO,ID_SENDERO,HORA_INICIO,HORA_FIN,CUPO_HORARIO,DIAS_SEMANA) values ('6','4','08:00','09:30','20','L,M,MI,J,V,S,D');
-Insert into PRUEBA.HORARIO_DISPONIBLE (ID_HORARIO,ID_SENDERO,HORA_INICIO,HORA_FIN,CUPO_HORARIO,DIAS_SEMANA) values ('7','4','11:00','12:30','20','L,M,MI,J,V,S,D');
-REM INSERTING into PRUEBA.MD_ADDITIONAL_PROPERTIES
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_APPLICATIONFILES
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_APPLICATIONS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_CATALOGS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_CODE_REGEX
-SET DEFINE OFF;
-Insert into PRUEBA.MD_CODE_REGEX (ID,REGEX,DESCRIPTION) values ('1','\#[A-Z1-9\@\#\_]','Temporary tables');
-Insert into PRUEBA.MD_CODE_REGEX (ID,REGEX,DESCRIPTION) values ('2','INSERT','Insert statements');
-Insert into PRUEBA.MD_CODE_REGEX (ID,REGEX,DESCRIPTION) values ('3','SELECT','Select statements');
-Insert into PRUEBA.MD_CODE_REGEX (ID,REGEX,DESCRIPTION) values ('4','UPDATE','Update Statements');
-Insert into PRUEBA.MD_CODE_REGEX (ID,REGEX,DESCRIPTION) values ('5','DELETE','Delete Statements');
-REM INSERTING into PRUEBA.MD_COLUMNS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_CONNECTIONS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_CONSTRAINT_DETAILS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_CONSTRAINTS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_DERIVATIVES
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_FILE_ARTIFACTS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_GROUP_MEMBERS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_GROUP_PRIVILEGES
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_GROUPS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_INDEX_DETAILS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_INDEXES
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_MIGR_DEPENDENCY
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_MIGR_PARAMETER
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_MIGR_WEAKDEP
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_NUMROW$SOURCE
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_NUMROW$TARGET
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_OTHER_OBJECTS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_PACKAGES
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_PARTITIONS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_PRIVILEGES
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_PROJECTS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_REGISTRY
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_REPOVERSIONS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_SCHEMAS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_SEQUENCES
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_STORED_PROGRAMS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_SYNONYMS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_TABLES
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_TABLESPACES
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_TRIGGERS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_USER_DEFINED_DATA_TYPES
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_USER_PRIVILEGES
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_USERS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MD_VIEWS
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MIGR_DATATYPE_TRANSFORM_MAP
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MIGR_DATATYPE_TRANSFORM_RULE
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MIGR_GENERATION_ORDER
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.MIGRLOG
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.RESERVA
-SET DEFINE OFF;
-Insert into PRUEBA.RESERVA (ID_RESERVA,ID_VISITANTE,ID_SENDERO,FECHA_RESERVA,FECHA_VISITA,NUMERO_PERSONAS,HORA_INICIO,ESTADO,OBSERVACIONES,FECHA_CREACION,FECHA_MODIFICACION) values ('1','1','1',to_date('30/09/25','DD/MM/RR'),to_date('15/10/25','DD/MM/RR'),'2','08:00','COMPLETADA',null,to_date('30/09/25','DD/MM/RR'),to_date('01/10/25','DD/MM/RR'));
-Insert into PRUEBA.RESERVA (ID_RESERVA,ID_VISITANTE,ID_SENDERO,FECHA_RESERVA,FECHA_VISITA,NUMERO_PERSONAS,HORA_INICIO,ESTADO,OBSERVACIONES,FECHA_CREACION,FECHA_MODIFICACION) values ('2','2','2',to_date('30/09/25','DD/MM/RR'),to_date('20/10/25','DD/MM/RR'),'3','07:00','CONFIRMADA',null,to_date('30/09/25','DD/MM/RR'),null);
-Insert into PRUEBA.RESERVA (ID_RESERVA,ID_VISITANTE,ID_SENDERO,FECHA_RESERVA,FECHA_VISITA,NUMERO_PERSONAS,HORA_INICIO,ESTADO,OBSERVACIONES,FECHA_CREACION,FECHA_MODIFICACION) values ('3','3','3',to_date('30/09/25','DD/MM/RR'),to_date('18/10/25','DD/MM/RR'),'4','09:00','PENDIENTE',null,to_date('30/09/25','DD/MM/RR'),null);
-Insert into PRUEBA.RESERVA (ID_RESERVA,ID_VISITANTE,ID_SENDERO,FECHA_RESERVA,FECHA_VISITA,NUMERO_PERSONAS,HORA_INICIO,ESTADO,OBSERVACIONES,FECHA_CREACION,FECHA_MODIFICACION) values ('4','4','4',to_date('30/09/25','DD/MM/RR'),to_date('12/10/25','DD/MM/RR'),'2','08:00','COMPLETADA',null,to_date('30/09/25','DD/MM/RR'),null);
-Insert into PRUEBA.RESERVA (ID_RESERVA,ID_VISITANTE,ID_SENDERO,FECHA_RESERVA,FECHA_VISITA,NUMERO_PERSONAS,HORA_INICIO,ESTADO,OBSERVACIONES,FECHA_CREACION,FECHA_MODIFICACION) values ('5','5','1',to_date('30/09/25','DD/MM/RR'),to_date('22/10/25','DD/MM/RR'),'5','14:00','CONFIRMADA',null,to_date('30/09/25','DD/MM/RR'),null);
-Insert into PRUEBA.RESERVA (ID_RESERVA,ID_VISITANTE,ID_SENDERO,FECHA_RESERVA,FECHA_VISITA,NUMERO_PERSONAS,HORA_INICIO,ESTADO,OBSERVACIONES,FECHA_CREACION,FECHA_MODIFICACION) values ('6','1','1',to_date('01/10/25','DD/MM/RR'),to_date('15/10/25','DD/MM/RR'),'2','08:00','PENDIENTE',null,to_date('01/10/25','DD/MM/RR'),null);
-REM INSERTING into PRUEBA.SENDERO
-SET DEFINE OFF;
-Insert into PRUEBA.SENDERO (ID_SENDERO,NOMBRE,DIFICULTAD,DURACION_HORAS,CUPO_MAXIMO_DIA,DISTANCIA_KM,ESTADO,FECHA_CREACION) values ('1','Cascada El Paraíso','FACIL','2,5','30','3,5','ACTIVO',to_date('30/09/25','DD/MM/RR'));
-Insert into PRUEBA.SENDERO (ID_SENDERO,NOMBRE,DIFICULTAD,DURACION_HORAS,CUPO_MAXIMO_DIA,DISTANCIA_KM,ESTADO,FECHA_CREACION) values ('2','Pico del Águila','DIFICIL','5','15','8,2','ACTIVO',to_date('30/09/25','DD/MM/RR'));
-Insert into PRUEBA.SENDERO (ID_SENDERO,NOMBRE,DIFICULTAD,DURACION_HORAS,CUPO_MAXIMO_DIA,DISTANCIA_KM,ESTADO,FECHA_CREACION) values ('3','Bosque Encantado','MODERADO','3,5','25','5','ACTIVO',to_date('30/09/25','DD/MM/RR'));
-Insert into PRUEBA.SENDERO (ID_SENDERO,NOMBRE,DIFICULTAD,DURACION_HORAS,CUPO_MAXIMO_DIA,DISTANCIA_KM,ESTADO,FECHA_CREACION) values ('4','Mirador del Valle','FACIL','1,5','40','2','ACTIVO',to_date('30/09/25','DD/MM/RR'));
-REM INSERTING into PRUEBA.STAGE_MIGRLOG
-SET DEFINE OFF;
-REM INSERTING into PRUEBA.VISITANTE
-SET DEFINE OFF;
-Insert into PRUEBA.VISITANTE (ID_VISITANTE,CEDULA,NOMBRE,APELLIDO,TELEFONO,EMAIL,FECHA_REGISTRO,ESTADO) values ('1','5678901234','Juan','Vargas','3005678901','juan.vargas@email.com',to_date('30/09/25','DD/MM/RR'),'ACTIVO');
-Insert into PRUEBA.VISITANTE (ID_VISITANTE,CEDULA,NOMBRE,APELLIDO,TELEFONO,EMAIL,FECHA_REGISTRO,ESTADO) values ('2','6789012345','Juan','León','3106789012','juan.leon@email.com',to_date('30/09/25','DD/MM/RR'),'ACTIVO');
-Insert into PRUEBA.VISITANTE (ID_VISITANTE,CEDULA,NOMBRE,APELLIDO,TELEFONO,EMAIL,FECHA_REGISTRO,ESTADO) values ('3','7890123456','Camilo','Niño','3207890123','camilo.nino@email.com',to_date('30/09/25','DD/MM/RR'),'ACTIVO');
-Insert into PRUEBA.VISITANTE (ID_VISITANTE,CEDULA,NOMBRE,APELLIDO,TELEFONO,EMAIL,FECHA_REGISTRO,ESTADO) values ('4','8901234567','Laura','Pérez','3308901234','laura.perez@email.com',to_date('30/09/25','DD/MM/RR'),'ACTIVO');
-Insert into PRUEBA.VISITANTE (ID_VISITANTE,CEDULA,NOMBRE,APELLIDO,TELEFONO,EMAIL,FECHA_REGISTRO,ESTADO) values ('5','9012345678','Sofía','Ramírez','3409012345','sofia.ramirez@email.com',to_date('30/09/25','DD/MM/RR'),'ACTIVO');
-Insert into PRUEBA.VISITANTE (ID_VISITANTE,CEDULA,NOMBRE,APELLIDO,TELEFONO,EMAIL,FECHA_REGISTRO,ESTADO) values ('6','1234567890','Juan','Pérez','3001234567','juan.perez@email.com',to_date('01/10/25','DD/MM/RR'),'ACTIVO');
---------------------------------------------------------
---  DDL for Index MD_CONNECTIONS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_CONNECTIONS_PK" ON "PRUEBA"."MD_CONNECTIONS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_SCHEMAS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_SCHEMAS_PK" ON "PRUEBA"."MD_SCHEMAS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_STORED_PROGRAMS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_STORED_PROGRAMS_PK" ON "PRUEBA"."MD_STORED_PROGRAMS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_PARTITIONS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_PARTITIONS_PK" ON "PRUEBA"."MD_PARTITIONS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MIGRLOG_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MIGRLOG_PK" ON "PRUEBA"."MIGRLOG" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_INDEX_DETAILS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_INDEX_DETAILS_PK" ON "PRUEBA"."MD_INDEX_DETAILS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_TABLES_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_TABLES_PK" ON "PRUEBA"."MD_TABLES" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_SYNONYMS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_SYNONYMS_PK" ON "PRUEBA"."MD_SYNONYMS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_CONSTRAINTS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_CONSTRAINTS_PK" ON "PRUEBA"."MD_CONSTRAINTS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_REGISTRY_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_REGISTRY_PK" ON "PRUEBA"."MD_REGISTRY" ("OBJECT_TYPE", "OBJECT_NAME") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_HORARIO_SENDERO
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_HORARIO_SENDERO" ON "PRUEBA"."HORARIO_DISPONIBLE" ("ID_SENDERO") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_GROUPS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_GROUPS_PK" ON "PRUEBA"."MD_GROUPS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MIGRDREIVATIVES_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MIGRDREIVATIVES_PK" ON "PRUEBA"."MD_DERIVATIVES" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_TRIGGERS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_TRIGGERS_PK" ON "PRUEBA"."MD_TRIGGERS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_RESERVA_ESTADO
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_RESERVA_ESTADO" ON "PRUEBA"."RESERVA" ("ESTADO") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_VISITANTE_ESTADO
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_VISITANTE_ESTADO" ON "PRUEBA"."VISITANTE" ("ESTADO") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_SEQUENCES_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_SEQUENCES_PK" ON "PRUEBA"."MD_SEQUENCES" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_COLUMNS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_COLUMNS_PK" ON "PRUEBA"."MD_COLUMNS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_RESERVA_FECHA_VISITA
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_RESERVA_FECHA_VISITA" ON "PRUEBA"."RESERVA" ("FECHA_VISITA") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_TABLESPACES_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_TABLESPACES_PK" ON "PRUEBA"."MD_TABLESPACES" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_INDEXES_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_INDEXES_PK" ON "PRUEBA"."MD_INDEXES" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_CONSTRAINT_DETAILS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_CONSTRAINT_DETAILS_PK" ON "PRUEBA"."MD_CONSTRAINT_DETAILS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MIGR_DEPENDENCY_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MIGR_DEPENDENCY_PK" ON "PRUEBA"."MD_MIGR_DEPENDENCY" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_SENDERO_ESTADO
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_SENDERO_ESTADO" ON "PRUEBA"."SENDERO" ("ESTADO") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_USERS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_USERS_PK" ON "PRUEBA"."MD_USERS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_PRIVILEGES_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_PRIVILEGES_PK" ON "PRUEBA"."MD_PRIVILEGES" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MIGR_GENERATION_ORDER_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MIGR_GENERATION_ORDER_PK" ON "PRUEBA"."MIGR_GENERATION_ORDER" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MIGR_WEAKDEP_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MIGR_WEAKDEP_PK" ON "PRUEBA"."MD_MIGR_WEAKDEP" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index STAGE_MIGRLOG_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."STAGE_MIGRLOG_PK" ON "PRUEBA"."STAGE_MIGRLOG" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_GROUP_MEMBERS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_GROUP_MEMBERS_PK" ON "PRUEBA"."MD_GROUP_MEMBERS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MIGR_DATATYPE_TRANSFORM_M_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MIGR_DATATYPE_TRANSFORM_M_PK" ON "PRUEBA"."MIGR_DATATYPE_TRANSFORM_MAP" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_PACKAGES_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_PACKAGES_PK" ON "PRUEBA"."MD_PACKAGES" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_VIEWS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_VIEWS_PK" ON "PRUEBA"."MD_VIEWS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_RESERVA_VISITANTE
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_RESERVA_VISITANTE" ON "PRUEBA"."RESERVA" ("ID_VISITANTE") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_APP_FILE_TYPE_IDX
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."MD_APP_FILE_TYPE_IDX" ON "PRUEBA"."MD_APPLICATIONFILES" ("TYPE", "ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_GUIA_ESTADO
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_GUIA_ESTADO" ON "PRUEBA"."GUIA" ("ESTADO") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_STATE_TYPE__ID
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."MD_STATE_TYPE__ID" ON "PRUEBA"."MD_APPLICATIONFILES" ("STATE", "TYPE", "ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_USER_DEFINED_DATA_TYPES_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_USER_DEFINED_DATA_TYPES_PK" ON "PRUEBA"."MD_USER_DEFINED_DATA_TYPES" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_GUIA_EMAIL
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_GUIA_EMAIL" ON "PRUEBA"."GUIA" ("EMAIL") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_OTHER_OBJECTS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_OTHER_OBJECTS_PK" ON "PRUEBA"."MD_OTHER_OBJECTS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MIGR_DATATYPE_TRANSFORM_R_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MIGR_DATATYPE_TRANSFORM_R_PK" ON "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MIGR_GENERATION_ORDER_UK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MIGR_GENERATION_ORDER_UK" ON "PRUEBA"."MIGR_GENERATION_ORDER" ("OBJECT_ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_SENDERO_DIFICULTAD
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_SENDERO_DIFICULTAD" ON "PRUEBA"."SENDERO" ("DIFICULTAD") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_APPLICATIONS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_APPLICATIONS_PK" ON "PRUEBA"."MD_APPLICATIONS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MIGR_PARAMETER_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MIGR_PARAMETER_PK" ON "PRUEBA"."MD_MIGR_PARAMETER" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_ADDITIONAL_PROPERTIES_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_ADDITIONAL_PROPERTIES_PK" ON "PRUEBA"."MD_ADDITIONAL_PROPERTIES" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_RESERVA_FECHA_CREACION
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_RESERVA_FECHA_CREACION" ON "PRUEBA"."RESERVA" ("FECHA_CREACION") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_SENDERO_NOMBRE
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_SENDERO_NOMBRE" ON "PRUEBA"."SENDERO" ("NOMBRE") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_PROJECTS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_PROJECTS_PK" ON "PRUEBA"."MD_PROJECTS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_GROUP_PRIVILEGES_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_GROUP_PRIVILEGES_PK" ON "PRUEBA"."MD_GROUP_PRIVILEGES" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_ASIGNACION_FECHA
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_ASIGNACION_FECHA" ON "PRUEBA"."ASIGNACION_GUIA" ("FECHA_ASIGNACION") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_APPLICATIONFILES_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_APPLICATIONFILES_PK" ON "PRUEBA"."MD_APPLICATIONFILES" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_FILE_ARTIFACTS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_FILE_ARTIFACTS_PK" ON "PRUEBA"."MD_FILE_ARTIFACTS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_USER_PRIVILEGES_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_USER_PRIVILEGES_PK" ON "PRUEBA"."MD_USER_PRIVILEGES" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index MD_CATALOGS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PRUEBA"."MD_CATALOGS_PK" ON "PRUEBA"."MD_CATALOGS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_ASIGNACION_GUIA
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_ASIGNACION_GUIA" ON "PRUEBA"."ASIGNACION_GUIA" ("ID_GUIA") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index IDX_RESERVA_SENDERO
---------------------------------------------------------
-
-  CREATE INDEX "PRUEBA"."IDX_RESERVA_SENDERO" ON "PRUEBA"."RESERVA" ("ID_SENDERO") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Trigger TRG_ASIGNACION_ID
---------------------------------------------------------
-
-  CREATE OR REPLACE EDITIONABLE TRIGGER "PRUEBA"."TRG_ASIGNACION_ID" 
-BEFORE INSERT ON asignacion_guia
-FOR EACH ROW
+-- Script Completo: Sistema de Gestión de Reservas
+-- Parque Natural - Base de Datos Oracle
+-- Versión Mejorada: Noviembre 2025
+-- Incluye: Constraints, Triggers, Vistas, Procedures, Roles
+--------------------------------------------------------
+
+-- =====================================================
+-- SECCIÓN 1: LIMPIEZA (Opcional - Cuidado en producción)
+-- =====================================================
+/*
 BEGIN
-    IF :NEW.id_asignacion IS NULL THEN
-        SELECT seq_asignacion_guia.NEXTVAL INTO :NEW.id_asignacion FROM dual;
+    FOR c IN (SELECT table_name FROM user_tables WHERE table_name IN 
+              ('ASIGNACION_GUIA','RESERVA','HORARIO_DISPONIBLE','GUIA','SENDERO','VISITANTE')) 
+    LOOP
+        EXECUTE IMMEDIATE 'DROP TABLE ' || c.table_name || ' CASCADE CONSTRAINTS';
+    END LOOP;
+    
+    FOR s IN (SELECT sequence_name FROM user_sequences WHERE sequence_name LIKE 'SEQ_%')
+    LOOP
+        EXECUTE IMMEDIATE 'DROP SEQUENCE ' || s.sequence_name;
+    END LOOP;
+END;
+/
+*/
+
+-- =====================================================
+-- SECCIÓN 2: SECUENCIAS
+-- =====================================================
+
+CREATE SEQUENCE SEQ_VISITANTE
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+CREATE SEQUENCE SEQ_SENDERO
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+CREATE SEQUENCE SEQ_RESERVA
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+CREATE SEQUENCE SEQ_GUIA
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+CREATE SEQUENCE SEQ_ASIGNACION
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+CREATE SEQUENCE SEQ_HORARIO
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+-- =====================================================
+-- SECCIÓN 3: TABLAS
+-- =====================================================
+
+-- Tabla: VISITANTE
+CREATE TABLE VISITANTE (
+    ID_VISITANTE        NUMBER(10) NOT NULL,
+    CEDULA              VARCHAR2(20) NOT NULL,
+    NOMBRE              VARCHAR2(100) NOT NULL,
+    APELLIDO            VARCHAR2(100) NOT NULL,
+    EMAIL               VARCHAR2(150) NOT NULL,
+    TELEFONO            VARCHAR2(20),
+    FECHA_REGISTRO      DATE DEFAULT SYSDATE,
+    ESTADO              VARCHAR2(20) DEFAULT 'ACTIVO',
+    FECHA_NACIMIENTO    DATE,
+    DIRECCION           VARCHAR2(200)
+);
+
+-- Tabla: SENDERO
+CREATE TABLE SENDERO (
+    ID_SENDERO          NUMBER(10) NOT NULL,
+    NOMBRE              VARCHAR2(200) NOT NULL,
+    DESCRIPCION         CLOB,
+    DIFICULTAD          VARCHAR2(20) NOT NULL,
+    DISTANCIA_KM        NUMBER(5,2),
+    DURACION_HORAS      NUMBER(4,2) NOT NULL,
+    CUPO_MAXIMO_DIA     NUMBER(5) DEFAULT 50,
+    ESTADO              VARCHAR2(20) DEFAULT 'ACTIVO',
+    REQUIERE_GUIA       CHAR(1) DEFAULT 'N',
+    ALTITUD_MAXIMA      NUMBER(6),
+    FECHA_CREACION      DATE DEFAULT SYSDATE,
+    FECHA_MODIFICACION  DATE
+);
+
+-- Tabla: RESERVA
+CREATE TABLE RESERVA (
+    ID_RESERVA          NUMBER(10) NOT NULL,
+    ID_VISITANTE        NUMBER(10) NOT NULL,
+    ID_SENDERO          NUMBER(10) NOT NULL,
+    FECHA_RESERVA       DATE DEFAULT SYSDATE,
+    FECHA_VISITA        DATE NOT NULL,
+    NUMERO_PERSONAS     NUMBER(3) NOT NULL,
+    HORA_INICIO         VARCHAR2(5),
+    ESTADO              VARCHAR2(20) DEFAULT 'PENDIENTE',
+    OBSERVACIONES       VARCHAR2(500),
+    FECHA_CREACION      DATE DEFAULT SYSDATE,
+    FECHA_MODIFICACION  DATE,
+    COSTO_TOTAL         NUMBER(10,2),
+    CODIGO_CONFIRMACION VARCHAR2(50)
+);
+
+-- Tabla: GUIA
+CREATE TABLE GUIA (
+    ID_GUIA             NUMBER(10) NOT NULL,
+    CEDULA              VARCHAR2(20) NOT NULL,
+    NOMBRE              VARCHAR2(100) NOT NULL,
+    APELLIDO            VARCHAR2(100) NOT NULL,
+    EMAIL               VARCHAR2(150) NOT NULL,
+    TELEFONO            VARCHAR2(20) NOT NULL,
+    ESPECIALIDAD        VARCHAR2(200),
+    FECHA_CONTRATACION  DATE DEFAULT SYSDATE,
+    ESTADO              VARCHAR2(20) DEFAULT 'ACTIVO',
+    CERTIFICACIONES     VARCHAR2(500),
+    CALIFICACION_PROMEDIO NUMBER(3,2)
+);
+
+-- Tabla: ASIGNACION_GUIA
+CREATE TABLE ASIGNACION_GUIA (
+    ID_ASIGNACION       NUMBER(10) NOT NULL,
+    ID_RESERVA          NUMBER(10) NOT NULL,
+    ID_GUIA             NUMBER(10) NOT NULL,
+    FECHA_ASIGNACION    DATE DEFAULT SYSDATE,
+    OBSERVACIONES_GUIA  VARCHAR2(500),
+    HORA_INICIO_REAL    VARCHAR2(5),
+    HORA_FIN_REAL       VARCHAR2(5),
+    CALIFICACION        NUMBER(2)
+);
+
+-- Tabla: HORARIO_DISPONIBLE
+CREATE TABLE HORARIO_DISPONIBLE (
+    ID_HORARIO          NUMBER(10) NOT NULL,
+    ID_SENDERO          NUMBER(10) NOT NULL,
+    DIA_SEMANA          VARCHAR2(20),
+    HORA_INICIO         VARCHAR2(5) NOT NULL,
+    HORA_FIN            VARCHAR2(5) NOT NULL,
+    CUPO_POR_HORARIO    NUMBER(3),
+    ESTADO              VARCHAR2(20) DEFAULT 'ACTIVO'
+);
+
+-- =====================================================
+-- SECCIÓN 4: CONSTRAINTS - PRIMARY KEYS
+-- =====================================================
+
+ALTER TABLE VISITANTE 
+    ADD CONSTRAINT PK_VISITANTE PRIMARY KEY (ID_VISITANTE);
+
+ALTER TABLE SENDERO 
+    ADD CONSTRAINT PK_SENDERO PRIMARY KEY (ID_SENDERO);
+
+ALTER TABLE RESERVA 
+    ADD CONSTRAINT PK_RESERVA PRIMARY KEY (ID_RESERVA);
+
+ALTER TABLE GUIA 
+    ADD CONSTRAINT PK_GUIA PRIMARY KEY (ID_GUIA);
+
+ALTER TABLE ASIGNACION_GUIA 
+    ADD CONSTRAINT PK_ASIGNACION_GUIA PRIMARY KEY (ID_ASIGNACION);
+
+ALTER TABLE HORARIO_DISPONIBLE 
+    ADD CONSTRAINT PK_HORARIO_DISPONIBLE PRIMARY KEY (ID_HORARIO);
+
+-- =====================================================
+-- SECCIÓN 5: CONSTRAINTS - FOREIGN KEYS
+-- =====================================================
+
+ALTER TABLE RESERVA 
+    ADD CONSTRAINT FK_RESERVA_VISITANTE 
+    FOREIGN KEY (ID_VISITANTE) 
+    REFERENCES VISITANTE(ID_VISITANTE)
+    ON DELETE CASCADE;
+
+ALTER TABLE RESERVA 
+    ADD CONSTRAINT FK_RESERVA_SENDERO 
+    FOREIGN KEY (ID_SENDERO) 
+    REFERENCES SENDERO(ID_SENDERO)
+    ON DELETE CASCADE;
+
+ALTER TABLE ASIGNACION_GUIA 
+    ADD CONSTRAINT FK_ASIGNACION_RESERVA 
+    FOREIGN KEY (ID_RESERVA) 
+    REFERENCES RESERVA(ID_RESERVA)
+    ON DELETE CASCADE;
+
+ALTER TABLE ASIGNACION_GUIA 
+    ADD CONSTRAINT FK_ASIGNACION_GUIA 
+    FOREIGN KEY (ID_GUIA) 
+    REFERENCES GUIA(ID_GUIA)
+    ON DELETE CASCADE;
+
+ALTER TABLE HORARIO_DISPONIBLE 
+    ADD CONSTRAINT FK_HORARIO_SENDERO 
+    FOREIGN KEY (ID_SENDERO) 
+    REFERENCES SENDERO(ID_SENDERO)
+    ON DELETE CASCADE;
+
+-- =====================================================
+-- SECCIÓN 6: CONSTRAINTS - UNIQUE
+-- =====================================================
+
+ALTER TABLE VISITANTE 
+    ADD CONSTRAINT UK_VISITANTE_CEDULA UNIQUE (CEDULA);
+
+ALTER TABLE VISITANTE 
+    ADD CONSTRAINT UK_VISITANTE_EMAIL UNIQUE (EMAIL);
+
+ALTER TABLE GUIA 
+    ADD CONSTRAINT UK_GUIA_CEDULA UNIQUE (CEDULA);
+
+ALTER TABLE GUIA 
+    ADD CONSTRAINT UK_GUIA_EMAIL UNIQUE (EMAIL);
+
+ALTER TABLE SENDERO 
+    ADD CONSTRAINT UK_SENDERO_NOMBRE UNIQUE (NOMBRE);
+
+-- =====================================================
+-- SECCIÓN 7: CONSTRAINTS - CHECK
+-- =====================================================
+
+ALTER TABLE VISITANTE 
+    ADD CONSTRAINT CHK_VISITANTE_ESTADO 
+    CHECK (ESTADO IN ('ACTIVO', 'INACTIVO', 'BLOQUEADO'));
+
+ALTER TABLE SENDERO 
+    ADD CONSTRAINT CHK_SENDERO_DIFICULTAD 
+    CHECK (DIFICULTAD IN ('FACIL', 'MODERADO', 'DIFICIL', 'EXTREMO'));
+
+ALTER TABLE SENDERO 
+    ADD CONSTRAINT CHK_SENDERO_ESTADO 
+    CHECK (ESTADO IN ('ACTIVO', 'INACTIVO', 'MANTENIMIENTO'));
+
+ALTER TABLE SENDERO 
+    ADD CONSTRAINT CHK_SENDERO_REQUIERE_GUIA 
+    CHECK (REQUIERE_GUIA IN ('S', 'N'));
+
+ALTER TABLE SENDERO
+    ADD CONSTRAINT CHK_SENDERO_DISTANCIA
+    CHECK (DISTANCIA_KM > 0);
+
+ALTER TABLE SENDERO
+    ADD CONSTRAINT CHK_SENDERO_DURACION
+    CHECK (DURACION_HORAS > 0);
+
+ALTER TABLE SENDERO
+    ADD CONSTRAINT CHK_SENDERO_CUPO
+    CHECK (CUPO_MAXIMO_DIA > 0 AND CUPO_MAXIMO_DIA <= 500);
+
+ALTER TABLE RESERVA 
+    ADD CONSTRAINT CHK_RESERVA_ESTADO 
+    CHECK (ESTADO IN ('PENDIENTE', 'CONFIRMADA', 'COMPLETADA', 'CANCELADA'));
+
+ALTER TABLE RESERVA 
+    ADD CONSTRAINT CHK_RESERVA_PERSONAS 
+    CHECK (NUMERO_PERSONAS > 0 AND NUMERO_PERSONAS <= 20);
+
+ALTER TABLE RESERVA
+    ADD CONSTRAINT CHK_RESERVA_FECHA_VISITA
+    CHECK (FECHA_VISITA >= TRUNC(SYSDATE));
+
+ALTER TABLE RESERVA
+    ADD CONSTRAINT CHK_RESERVA_COSTO
+    CHECK (COSTO_TOTAL >= 0);
+
+ALTER TABLE GUIA 
+    ADD CONSTRAINT CHK_GUIA_ESTADO 
+    CHECK (ESTADO IN ('ACTIVO', 'INACTIVO', 'VACACIONES', 'LICENCIA'));
+
+ALTER TABLE GUIA
+    ADD CONSTRAINT CHK_GUIA_CALIFICACION
+    CHECK (CALIFICACION_PROMEDIO IS NULL OR (CALIFICACION_PROMEDIO >= 0 AND CALIFICACION_PROMEDIO <= 5));
+
+ALTER TABLE ASIGNACION_GUIA
+    ADD CONSTRAINT CHK_ASIGNACION_CALIFICACION
+    CHECK (CALIFICACION IS NULL OR (CALIFICACION >= 1 AND CALIFICACION <= 5));
+
+ALTER TABLE HORARIO_DISPONIBLE
+    ADD CONSTRAINT CHK_HORARIO_DIA_SEMANA
+    CHECK (DIA_SEMANA IN ('LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'DOMINGO'));
+
+ALTER TABLE HORARIO_DISPONIBLE
+    ADD CONSTRAINT CHK_HORARIO_ESTADO
+    CHECK (ESTADO IN ('ACTIVO', 'INACTIVO'));
+
+-- =====================================================
+-- SECCIÓN 8: ÍNDICES PARA OPTIMIZACIÓN
+-- =====================================================
+
+-- Índices en columnas de búsqueda frecuente
+CREATE INDEX IDX_VISITANTE_CEDULA ON VISITANTE(CEDULA);
+CREATE INDEX IDX_VISITANTE_EMAIL ON VISITANTE(EMAIL);
+CREATE INDEX IDX_VISITANTE_ESTADO ON VISITANTE(ESTADO);
+
+CREATE INDEX IDX_SENDERO_NOMBRE ON SENDERO(NOMBRE);
+CREATE INDEX IDX_SENDERO_ESTADO ON SENDERO(ESTADO);
+CREATE INDEX IDX_SENDERO_DIFICULTAD ON SENDERO(DIFICULTAD);
+
+CREATE INDEX IDX_GUIA_CEDULA ON GUIA(CEDULA);
+CREATE INDEX IDX_GUIA_ESTADO ON GUIA(ESTADO);
+
+-- Índices compuestos para consultas complejas
+CREATE INDEX IDX_RESERVA_SENDERO_FECHA ON RESERVA(ID_SENDERO, FECHA_VISITA, ESTADO);
+CREATE INDEX IDX_RESERVA_VISITANTE_FECHA ON RESERVA(ID_VISITANTE, FECHA_VISITA);
+CREATE INDEX IDX_RESERVA_ESTADO_FECHA ON RESERVA(ESTADO, FECHA_VISITA);
+CREATE INDEX IDX_RESERVA_FECHA_VISITA ON RESERVA(FECHA_VISITA);
+
+CREATE INDEX IDX_ASIGNACION_GUIA ON ASIGNACION_GUIA(ID_GUIA, FECHA_ASIGNACION);
+CREATE INDEX IDX_ASIGNACION_RESERVA ON ASIGNACION_GUIA(ID_RESERVA);
+
+CREATE INDEX IDX_HORARIO_SENDERO ON HORARIO_DISPONIBLE(ID_SENDERO, DIA_SEMANA);
+
+-- =====================================================
+-- SECCIÓN 9: TRIGGERS - AUTO-INCREMENTO
+-- =====================================================
+
+-- Trigger: Auto-incremento ID_VISITANTE
+CREATE OR REPLACE TRIGGER TRG_VISITANTE_BI
+BEFORE INSERT ON VISITANTE
+FOR EACH ROW
+WHEN (NEW.ID_VISITANTE IS NULL)
+BEGIN
+    :NEW.ID_VISITANTE := SEQ_VISITANTE.NEXTVAL;
+    IF :NEW.FECHA_REGISTRO IS NULL THEN
+        :NEW.FECHA_REGISTRO := SYSDATE;
     END IF;
 END;
-
 /
-ALTER TRIGGER "PRUEBA"."TRG_ASIGNACION_ID" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_GUIA_ID
---------------------------------------------------------
 
-  CREATE OR REPLACE EDITIONABLE TRIGGER "PRUEBA"."TRG_GUIA_ID" 
-BEFORE INSERT ON guia
+-- Trigger: Auto-incremento ID_SENDERO
+CREATE OR REPLACE TRIGGER TRG_SENDERO_BI
+BEFORE INSERT ON SENDERO
 FOR EACH ROW
+WHEN (NEW.ID_SENDERO IS NULL)
 BEGIN
-    IF :NEW.id_guia IS NULL THEN
-        SELECT seq_guia.NEXTVAL INTO :NEW.id_guia FROM dual;
+    :NEW.ID_SENDERO := SEQ_SENDERO.NEXTVAL;
+    IF :NEW.FECHA_CREACION IS NULL THEN
+        :NEW.FECHA_CREACION := SYSDATE;
     END IF;
 END;
-
 /
-ALTER TRIGGER "PRUEBA"."TRG_GUIA_ID" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_HORARIO_ID
---------------------------------------------------------
 
-  CREATE OR REPLACE EDITIONABLE TRIGGER "PRUEBA"."TRG_HORARIO_ID" 
-BEFORE INSERT ON horario_disponible
-FOR EACH ROW
-BEGIN
-    IF :NEW.id_horario IS NULL THEN
-        SELECT seq_horario_disponible.NEXTVAL INTO :NEW.id_horario FROM dual;
-    END IF;
-END;
-
-/
-ALTER TRIGGER "PRUEBA"."TRG_HORARIO_ID" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_RESERVA_ID
---------------------------------------------------------
-
-  CREATE OR REPLACE EDITIONABLE TRIGGER "PRUEBA"."TRG_RESERVA_ID" 
-BEFORE INSERT ON reserva
-FOR EACH ROW
-BEGIN
-    IF :NEW.id_reserva IS NULL THEN
-        SELECT seq_reserva.NEXTVAL INTO :NEW.id_reserva FROM dual;
-    END IF;
-END;
-
-/
-ALTER TRIGGER "PRUEBA"."TRG_RESERVA_ID" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_RESERVA_MODIFICACION
---------------------------------------------------------
-
-  CREATE OR REPLACE EDITIONABLE TRIGGER "PRUEBA"."TRG_RESERVA_MODIFICACION" 
-BEFORE UPDATE ON reserva
-FOR EACH ROW
-BEGIN
-    :NEW.fecha_modificacion := SYSDATE;
-END;
-
-/
-ALTER TRIGGER "PRUEBA"."TRG_RESERVA_MODIFICACION" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_SENDERO_ID
---------------------------------------------------------
-
-  CREATE OR REPLACE EDITIONABLE TRIGGER "PRUEBA"."TRG_SENDERO_ID" 
-BEFORE INSERT ON sendero
-FOR EACH ROW
-BEGIN
-    IF :NEW.id_sendero IS NULL THEN
-        SELECT seq_sendero.NEXTVAL INTO :NEW.id_sendero FROM dual;
-    END IF;
-END;
-
-/
-ALTER TRIGGER "PRUEBA"."TRG_SENDERO_ID" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_VALIDAR_CUPO
---------------------------------------------------------
-
-  CREATE OR REPLACE EDITIONABLE TRIGGER "PRUEBA"."TRG_VALIDAR_CUPO" 
-BEFORE INSERT ON reserva
+-- Trigger: Auto-incremento ID_RESERVA y generación de código
+CREATE OR REPLACE TRIGGER TRG_RESERVA_BI
+BEFORE INSERT ON RESERVA
 FOR EACH ROW
 DECLARE
-    v_cupo_usado NUMBER;
-    v_cupo_maximo NUMBER;
+    v_codigo VARCHAR2(50);
 BEGIN
-    -- Obtener cupo máximo del sendero
-    SELECT cupo_maximo_dia INTO v_cupo_maximo
-    FROM sendero
-    WHERE id_sendero = :NEW.id_sendero;
-
-    -- Calcular cupo usado para esa fecha
-    SELECT NVL(SUM(numero_personas), 0) INTO v_cupo_usado
-    FROM reserva
-    WHERE id_sendero = :NEW.id_sendero
-    AND fecha_visita = :NEW.fecha_visita
-    AND estado IN ('PENDIENTE', 'CONFIRMADA');
-
-    -- Validar si hay cupo disponible
-    IF (v_cupo_usado + :NEW.numero_personas) > v_cupo_maximo THEN
-        RAISE_APPLICATION_ERROR(-20001, 
-            'No hay cupo disponible para esta fecha. Cupo disponible: ' || 
-            (v_cupo_maximo - v_cupo_usado));
+    IF :NEW.ID_RESERVA IS NULL THEN
+        :NEW.ID_RESERVA := SEQ_RESERVA.NEXTVAL;
+    END IF;
+    
+    IF :NEW.FECHA_CREACION IS NULL THEN
+        :NEW.FECHA_CREACION := SYSDATE;
+    END IF;
+    
+    IF :NEW.FECHA_RESERVA IS NULL THEN
+        :NEW.FECHA_RESERVA := SYSDATE;
+    END IF;
+    
+    -- Generar código de confirmación único
+    IF :NEW.CODIGO_CONFIRMACION IS NULL THEN
+        v_codigo := 'RES-' || TO_CHAR(SYSDATE, 'YYYYMMDD') || '-' || 
+                    LPAD(:NEW.ID_RESERVA, 6, '0');
+        :NEW.CODIGO_CONFIRMACION := v_codigo;
     END IF;
 END;
-
 /
-ALTER TRIGGER "PRUEBA"."TRG_VALIDAR_CUPO" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_VISITANTE_ID
---------------------------------------------------------
 
-  CREATE OR REPLACE EDITIONABLE TRIGGER "PRUEBA"."TRG_VISITANTE_ID" 
-BEFORE INSERT ON visitante
+-- Trigger: Actualizar fecha de modificación en RESERVA
+CREATE OR REPLACE TRIGGER TRG_RESERVA_BU
+BEFORE UPDATE ON RESERVA
 FOR EACH ROW
 BEGIN
-    IF :NEW.id_visitante IS NULL THEN
-        SELECT seq_visitante.NEXTVAL INTO :NEW.id_visitante FROM dual;
-    END IF;
+    :NEW.FECHA_MODIFICACION := SYSDATE;
 END;
-
 /
-ALTER TRIGGER "PRUEBA"."TRG_VISITANTE_ID" ENABLE;
---------------------------------------------------------
---  DDL for Procedure SP_ASIGNAR_GUIA
---------------------------------------------------------
-set define off;
 
-  CREATE OR REPLACE EDITIONABLE PROCEDURE "PRUEBA"."SP_ASIGNAR_GUIA" (
-    p_id_reserva IN NUMBER,
-    p_id_guia IN NUMBER
-)
-IS
-    v_estado_reserva VARCHAR2(20);
-    v_existe_asignacion NUMBER;
+-- Trigger: Auto-incremento ID_GUIA
+CREATE OR REPLACE TRIGGER TRG_GUIA_BI
+BEFORE INSERT ON GUIA
+FOR EACH ROW
+WHEN (NEW.ID_GUIA IS NULL)
 BEGIN
-    -- Validar estado de la reserva
-    SELECT estado INTO v_estado_reserva
-    FROM reserva
-    WHERE id_reserva = p_id_reserva;
-
-    IF v_estado_reserva != 'CONFIRMADA' THEN
-        RAISE_APPLICATION_ERROR(-20003, 'La reserva debe estar confirmada para asignar guía');
+    :NEW.ID_GUIA := SEQ_GUIA.NEXTVAL;
+    IF :NEW.FECHA_CONTRATACION IS NULL THEN
+        :NEW.FECHA_CONTRATACION := SYSDATE;
     END IF;
-
-    -- Verificar si ya tiene guía asignado
-    SELECT COUNT(*) INTO v_existe_asignacion
-    FROM asignacion_guia
-    WHERE id_reserva = p_id_reserva;
-
-    IF v_existe_asignacion > 0 THEN
-        RAISE_APPLICATION_ERROR(-20004, 'La reserva ya tiene un guía asignado');
-    END IF;
-
-    -- Crear asignación
-    INSERT INTO asignacion_guia (id_reserva, id_guia)
-    VALUES (p_id_reserva, p_id_guia);
-
-    COMMIT;
-    DBMS_OUTPUT.PUT_LINE('Guía asignado exitosamente');
 END;
-
 /
---------------------------------------------------------
---  DDL for Procedure SP_CANCELAR_RESERVA
---------------------------------------------------------
-set define off;
 
-  CREATE OR REPLACE EDITIONABLE PROCEDURE "PRUEBA"."SP_CANCELAR_RESERVA" (
+-- Trigger: Auto-incremento ID_ASIGNACION
+CREATE OR REPLACE TRIGGER TRG_ASIGNACION_BI
+BEFORE INSERT ON ASIGNACION_GUIA
+FOR EACH ROW
+WHEN (NEW.ID_ASIGNACION IS NULL)
+BEGIN
+    :NEW.ID_ASIGNACION := SEQ_ASIGNACION.NEXTVAL;
+    IF :NEW.FECHA_ASIGNACION IS NULL THEN
+        :NEW.FECHA_ASIGNACION := SYSDATE;
+    END IF;
+END;
+/
+
+-- Trigger: Auto-incremento ID_HORARIO
+CREATE OR REPLACE TRIGGER TRG_HORARIO_BI
+BEFORE INSERT ON HORARIO_DISPONIBLE
+FOR EACH ROW
+WHEN (NEW.ID_HORARIO IS NULL)
+BEGIN
+    :NEW.ID_HORARIO := SEQ_HORARIO.NEXTVAL;
+END;
+/
+
+-- =====================================================
+-- SECCIÓN 10: TRIGGERS - VALIDACIONES (COMPOUND)
+-- =====================================================
+
+-- Trigger Compuesto: Validar capacidad del sendero (Optimizado)
+CREATE OR REPLACE TRIGGER TRG_VALIDAR_CAPACIDAD
+FOR INSERT OR UPDATE OF ID_SENDERO, FECHA_VISITA, NUMERO_PERSONAS, ESTADO ON RESERVA
+COMPOUND TRIGGER
+    
+    -- Colección para almacenar reservas a validar
+    TYPE t_reserva_validar IS RECORD (
+        id_sendero      NUMBER,
+        fecha_visita    DATE,
+        numero_personas NUMBER,
+        estado          VARCHAR2(20),
+        id_reserva      NUMBER
+    );
+    
+    TYPE t_reservas IS TABLE OF t_reserva_validar INDEX BY PLS_INTEGER;
+    v_reservas_validar t_reservas;
+    v_index PLS_INTEGER := 0;
+    
+    -- Antes de cada fila, recopilar datos
+    BEFORE EACH ROW IS
+    BEGIN
+        IF :NEW.ESTADO IN ('CONFIRMADA', 'PENDIENTE') THEN
+            v_index := v_index + 1;
+            v_reservas_validar(v_index).id_sendero := :NEW.ID_SENDERO;
+            v_reservas_validar(v_index).fecha_visita := :NEW.FECHA_VISITA;
+            v_reservas_validar(v_index).numero_personas := :NEW.NUMERO_PERSONAS;
+            v_reservas_validar(v_index).estado := :NEW.ESTADO;
+            v_reservas_validar(v_index).id_reserva := NVL(:NEW.ID_RESERVA, -1);
+        END IF;
+    END BEFORE EACH ROW;
+    
+    -- Después del statement, validar capacidad
+    AFTER STATEMENT IS
+        v_total_personas NUMBER;
+        v_cupo_maximo NUMBER;
+    BEGIN
+        FOR i IN 1..v_reservas_validar.COUNT LOOP
+            -- Obtener capacidad del sendero
+            SELECT CUPO_MAXIMO_DIA 
+            INTO v_cupo_maximo
+            FROM SENDERO
+            WHERE ID_SENDERO = v_reservas_validar(i).id_sendero;
+            
+            -- Calcular total de personas reservadas para esa fecha
+            SELECT NVL(SUM(NUMERO_PERSONAS), 0) 
+            INTO v_total_personas
+            FROM RESERVA
+            WHERE ID_SENDERO = v_reservas_validar(i).id_sendero
+              AND FECHA_VISITA = v_reservas_validar(i).fecha_visita
+              AND ESTADO IN ('CONFIRMADA', 'PENDIENTE')
+              AND ID_RESERVA != v_reservas_validar(i).id_reserva;
+            
+            -- Validar capacidad
+            IF (v_total_personas + v_reservas_validar(i).numero_personas) > v_cupo_maximo THEN
+                RAISE_APPLICATION_ERROR(-20001, 
+                    'Capacidad excedida para el sendero en la fecha ' || 
+                    TO_CHAR(v_reservas_validar(i).fecha_visita, 'DD/MM/YYYY') ||
+                    '. Cupo máximo: ' || v_cupo_maximo || 
+                    ', Ya reservado: ' || v_total_personas ||
+                    ', Solicitado: ' || v_reservas_validar(i).numero_personas ||
+                    ', Disponible: ' || (v_cupo_maximo - v_total_personas));
+            END IF;
+        END LOOP;
+        
+        -- Limpiar colección para la siguiente operación
+        v_reservas_validar.DELETE;
+        v_index := 0;
+    END AFTER STATEMENT;
+    
+END TRG_VALIDAR_CAPACIDAD;
+/
+
+-- Trigger: Validar disponibilidad de guía
+CREATE OR REPLACE TRIGGER TRG_VALIDAR_GUIA_DISPONIBLE
+BEFORE INSERT OR UPDATE ON ASIGNACION_GUIA
+FOR EACH ROW
+DECLARE
+    v_conflictos NUMBER;
+    v_fecha_visita DATE;
+    v_hora_inicio VARCHAR2(5);
+    v_estado_guia VARCHAR2(20);
+BEGIN
+    -- Verificar estado del guía
+    SELECT ESTADO INTO v_estado_guia
+    FROM GUIA
+    WHERE ID_GUIA = :NEW.ID_GUIA;
+    
+    IF v_estado_guia != 'ACTIVO' THEN
+        RAISE_APPLICATION_ERROR(-20002, 
+            'El guía no está disponible. Estado actual: ' || v_estado_guia);
+    END IF;
+    
+    -- Obtener fecha y hora de la reserva
+    SELECT FECHA_VISITA, HORA_INICIO 
+    INTO v_fecha_visita, v_hora_inicio
+    FROM RESERVA
+    WHERE ID_RESERVA = :NEW.ID_RESERVA;
+    
+    -- Verificar conflictos de horario
+    SELECT COUNT(*)
+    INTO v_conflictos
+    FROM ASIGNACION_GUIA ag
+    JOIN RESERVA r ON ag.ID_RESERVA = r.ID_RESERVA
+    WHERE ag.ID_GUIA = :NEW.ID_GUIA
+      AND ag.ID_ASIGNACION != NVL(:NEW.ID_ASIGNACION, -1)
+      AND r.FECHA_VISITA = v_fecha_visita
+      AND r.HORA_INICIO = v_hora_inicio
+      AND r.ESTADO IN ('CONFIRMADA', 'PENDIENTE');
+    
+    IF v_conflictos > 0 THEN
+        RAISE_APPLICATION_ERROR(-20003, 
+            'El guía ya tiene una asignación para la fecha ' ||
+            TO_CHAR(v_fecha_visita, 'DD/MM/YYYY') || ' a las ' || v_hora_inicio);
+    END IF;
+END;
+/
+
+-- Trigger: Validar horario disponible
+CREATE OR REPLACE TRIGGER TRG_VALIDAR_HORARIO
+BEFORE INSERT OR UPDATE OF HORA_INICIO, ID_SENDERO ON RESERVA
+FOR EACH ROW
+DECLARE
+    v_horario_valido NUMBER;
+    v_dia_semana VARCHAR2(20);
+BEGIN
+    IF :NEW.ESTADO IN ('PENDIENTE', 'CONFIRMADA') AND :NEW.HORA_INICIO IS NOT NULL THEN
+        -- Obtener día de la semana
+        SELECT UPPER(TO_CHAR(:NEW.FECHA_VISITA, 'DAY', 'NLS_DATE_LANGUAGE=SPANISH'))
+        INTO v_dia_semana
+        FROM DUAL;
+        
+        v_dia_semana := TRIM(v_dia_semana);
+        
+        -- Verificar si existe horario disponible
+        SELECT COUNT(*)
+        INTO v_horario_valido
+        FROM HORARIO_DISPONIBLE
+        WHERE ID_SENDERO = :NEW.ID_SENDERO
+          AND DIA_SEMANA = v_dia_semana
+          AND :NEW.HORA_INICIO >= HORA_INICIO
+          AND :NEW.HORA_INICIO < HORA_FIN
+          AND ESTADO = 'ACTIVO';
+        
+        IF v_horario_valido = 0 THEN
+            RAISE_APPLICATION_ERROR(-20004, 
+                'La hora ' || :NEW.HORA_INICIO || ' no está disponible para este sendero el día ' || v_dia_semana);
+        END IF;
+    END IF;
+END;
+/
+
+-- Trigger: Actualizar calificación promedio del guía
+CREATE OR REPLACE TRIGGER TRG_ACTUALIZAR_CALIFICACION_GUIA
+AFTER INSERT OR UPDATE OF CALIFICACION ON ASIGNACION_GUIA
+FOR EACH ROW
+WHEN (NEW.CALIFICACION IS NOT NULL)
+DECLARE
+    v_promedio NUMBER(3,2);
+BEGIN
+    -- Calcular nuevo promedio
+    SELECT ROUND(AVG(CALIFICACION), 2)
+    INTO v_promedio
+    FROM ASIGNACION_GUIA
+    WHERE ID_GUIA = :NEW.ID_GUIA
+      AND CALIFICACION IS NOT NULL;
+    
+    -- Actualizar calificación del guía
+    UPDATE GUIA
+    SET CALIFICACION_PROMEDIO = v_promedio
+    WHERE ID_GUIA = :NEW.ID_GUIA;
+END;
+/
+
+-- =====================================================
+-- SECCIÓN 11: VISTAS
+-- =====================================================
+
+-- Vista: Disponibilidad por sendero y fecha
+CREATE OR REPLACE VIEW V_DISPONIBILIDAD_SENDERO AS
+SELECT 
+    s.ID_SENDERO,
+    s.NOMBRE AS SENDERO_NOMBRE,
+    s.DIFICULTAD,
+    s.DURACION_HORAS,
+    s.CUPO_MAXIMO_DIA,
+    r.FECHA_VISITA,
+    NVL(SUM(CASE WHEN r.ESTADO IN ('CONFIRMADA', 'PENDIENTE') 
+        THEN r.NUMERO_PERSONAS ELSE 0 END), 0) AS PERSONAS_RESERVADAS,
+    s.CUPO_MAXIMO_DIA - NVL(SUM(CASE WHEN r.ESTADO IN ('CONFIRMADA', 'PENDIENTE') 
+        THEN r.NUMERO_PERSONAS ELSE 0 END), 0) AS CUPOS_DISPONIBLES
+FROM SENDERO s
+LEFT JOIN RESERVA r ON s.ID_SENDERO = r.ID_SENDERO
+WHERE s.ESTADO = 'ACTIVO'
+GROUP BY s.ID_SENDERO, s.NOMBRE, s.DIFICULTAD, s.DURACION_HORAS, s.CUPO_MAXIMO_DIA, r.FECHA_VISITA;
+
+-- Vista: Reservas completas con toda la información
+CREATE OR REPLACE VIEW V_RESERVAS_COMPLETAS AS
+SELECT 
+    r.ID_RESERVA,
+    r.CODIGO_CONFIRMACION,
+    r.FECHA_RESERVA,
+    r.FECHA_VISITA,
+    r.HORA_INICIO,
+    r.ESTADO,
+    r.NUMERO_PERSONAS,
+    r.COSTO_TOTAL,
+    r.OBSERVACIONES,
+    v.ID_VISITANTE,
+    v.CEDULA AS VISITANTE_CEDULA,
+    v.NOMBRE || ' ' || v.APELLIDO AS VISITANTE_NOMBRE_COMPLETO,
+    v.EMAIL AS VISITANTE_EMAIL,
+    v.TELEFONO AS VISITANTE_TELEFONO,
+    s.ID_SENDERO,
+    s.NOMBRE AS SENDERO_NOMBRE,
+    s.DIFICULTAD AS SENDERO_DIFICULTAD,
+    s.DISTANCIA_KM AS SENDERO_DISTANCIA,
+    s.DURACION_HORAS AS SENDERO_DURACION,
+    s.REQUIERE_GUIA,
+    g.ID_GUIA,
+    g.NOMBRE || ' ' || g.APELLIDO AS GUIA_NOMBRE_COMPLETO,
+    g.TELEFONO AS GUIA_TELEFONO,
+    g.ESPECIALIDAD AS GUIA_ESPECIALIDAD,
+    ag.CALIFICACION AS CALIFICACION_GUIA,
+    ag.OBSERVACIONES_GUIA
+FROM RESERVA r
+JOIN VISITANTE v ON r.ID_VISITANTE = v.ID_VISITANTE
+JOIN SENDERO s ON r.ID_SENDERO = s.ID_SENDERO
+LEFT JOIN ASIGNACION_GUIA ag ON r.ID_RESERVA = ag.ID_RESERVA
+LEFT JOIN GUIA g ON ag.ID_GUIA = g.ID_GUIA;
+
+-- Vista: Estadísticas por sendero
+CREATE OR REPLACE VIEW V_ESTADISTICAS_SENDERO AS
+SELECT 
+    s.ID_SENDERO,
+    s.NOMBRE,
+    s.DIFICULTAD,
+    s.DISTANCIA_KM,
+    s.DURACION_HORAS,
+    s.ESTADO,
+    COUNT(DISTINCT r.ID_RESERVA) AS TOTAL_RESERVAS,
+    SUM(CASE WHEN r.ESTADO = 'COMPLETADA' THEN 1 ELSE 0 END) AS RESERVAS_COMPLETADAS,
+    SUM(CASE WHEN r.ESTADO = 'CANCELADA' THEN 1 ELSE 0 END) AS RESERVAS_CANCELADAS,
+    SUM(CASE WHEN r.ESTADO IN ('PENDIENTE', 'CONFIRMADA') THEN 1 ELSE 0 END) AS RESERVAS_ACTIVAS,
+    SUM(CASE WHEN r.ESTADO = 'COMPLETADA' THEN r.NUMERO_PERSONAS ELSE 0 END) AS TOTAL_VISITANTES_COMPLETADOS,
+    ROUND(AVG(CASE WHEN r.ESTADO = 'COMPLETADA' THEN r.NUMERO_PERSONAS END), 2) AS PROMEDIO_PERSONAS_POR_RESERVA,
+    SUM(CASE WHEN r.ESTADO = 'COMPLETADA' THEN r.COSTO_TOTAL ELSE 0 END) AS INGRESOS_TOTALES
+FROM SENDERO s
+LEFT JOIN RESERVA r ON s.ID_SENDERO = r.ID_SENDERO
+GROUP BY s.ID_SENDERO, s.NOMBRE, s.DIFICULTAD, s.DISTANCIA_KM, s.DURACION_HORAS, s.ESTADO;
+
+-- Vista: Guías con su desempeño
+CREATE OR REPLACE VIEW V_DESEMPENO_GUIAS AS
+SELECT 
+    g.ID_GUIA,
+    g.CEDULA,
+    g.NOMBRE || ' ' || g.APELLIDO AS NOMBRE_COMPLETO,
+    g.EMAIL,
+    g.TELEFONO,
+    g.ESPECIALIDAD,
+    g.ESTADO,
+    g.FECHA_CONTRATACION,
+    g.CALIFICACION_PROMEDIO,
+    COUNT(DISTINCT ag.ID_RESERVA) AS TOTAL_ASIGNACIONES,
+    SUM(CASE WHEN r.ESTADO = 'COMPLETADA' THEN 1 ELSE 0 END) AS TOURS_COMPLETADOS,
+    SUM(CASE WHEN r.ESTADO = 'CANCELADA' THEN 1 ELSE 0 END) AS TOURS_CANCELADOS,
+    COUNT(CASE WHEN ag.CALIFICACION IS NOT NULL THEN 1 END) AS TOTAL_CALIFICACIONES
+FROM GUIA g
+LEFT JOIN ASIGNACION_GUIA ag ON g.ID_GUIA = ag.ID_GUIA
+LEFT JOIN RESERVA r ON ag.ID_RESERVA = r.ID_RESERVA
+GROUP BY g.ID_GUIA, g.CEDULA, g.NOMBRE, g.APELLIDO, g.EMAIL, g.TELEFONO, 
+         g.ESPECIALIDAD, g.ESTADO, g.FECHA_CONTRATACION, g.CALIFICACION_PROMEDIO;
+
+-- Vista: Reservas próximas (siguientes 30 días)
+CREATE OR REPLACE VIEW V_RESERVAS_PROXIMAS AS
+SELECT 
+    r.ID_RESERVA,
+    r.CODIGO_CONFIRMACION,
+    r.FECHA_VISITA,
+    r.HORA_INICIO,
+    r.NUMERO_PERSONAS,
+    r.ESTADO,
+    v.NOMBRE || ' ' || v.APELLIDO AS VISITANTE_NOMBRE,
+    v.TELEFONO AS VISITANTE_TELEFONO,
+    v.EMAIL AS VISITANTE_EMAIL,
+    s.NOMBRE AS SENDERO_NOMBRE,
+    s.DIFICULTAD,
+    g.NOMBRE || ' ' || g.APELLIDO AS GUIA_NOMBRE,
+    TRUNC(r.FECHA_VISITA - SYSDATE) AS DIAS_FALTANTES
+FROM RESERVA r
+JOIN VISITANTE v ON r.ID_VISITANTE = v.ID_VISITANTE
+JOIN SENDERO s ON r.ID_SENDERO = s.ID_SENDERO
+LEFT JOIN ASIGNACION_GUIA ag ON r.ID_RESERVA = ag.ID_RESERVA
+LEFT JOIN GUIA g ON ag.ID_GUIA = g.ID_GUIA
+WHERE r.FECHA_VISITA BETWEEN TRUNC(SYSDATE) AND TRUNC(SYSDATE) + 30
+  AND r.ESTADO IN ('CONFIRMADA', 'PENDIENTE')
+ORDER BY r.FECHA_VISITA, r.HORA_INICIO;
+
+-- =====================================================
+-- SECCIÓN 12: PROCEDIMIENTOS ALMACENADOS
+-- =====================================================
+
+-- Procedimiento: Crear reserva con validaciones completas
+CREATE OR REPLACE PROCEDURE SP_CREAR_RESERVA(
+    p_cedula_visitante  IN VARCHAR2,
+    p_id_sendero        IN NUMBER,
+    p_fecha_visita      IN DATE,
+    p_numero_personas   IN NUMBER,
+    p_hora_inicio       IN VARCHAR2,
+    p_observaciones     IN VARCHAR2 DEFAULT NULL,
+    p_id_reserva        OUT NUMBER,
+    p_codigo_confirmacion OUT VARCHAR2
+) AS
+    v_id_visitante NUMBER;
+    v_disponibilidad NUMBER;
+    v_requiere_guia CHAR(1);
+    v_estado_sendero VARCHAR2(20);
+BEGIN
+    -- Validar fecha
+    IF p_fecha_visita < TRUNC(SYSDATE) THEN
+        RAISE_APPLICATION_ERROR(-20010, 'La fecha de visita debe ser igual o posterior a hoy');
+    END IF;
+    
+    -- Validar número de personas
+    IF p_numero_personas < 1 OR p_numero_personas > 20 THEN
+        RAISE_APPLICATION_ERROR(-20011, 'El número de personas debe estar entre 1 y 20');
+    END IF;
+    
+    -- Buscar visitante
+    BEGIN
+        SELECT ID_VISITANTE INTO v_id_visitante
+        FROM VISITANTE
+        WHERE CEDULA = p_cedula_visitante AND ESTADO = 'ACTIVO';
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            RAISE_APPLICATION_ERROR(-20012, 'Visitante no encontrado o inactivo');
+    END;
+    
+    -- Verificar estado del sendero
+    SELECT ESTADO, REQUIERE_GUIA
+    INTO v_estado_sendero, v_requiere_guia
+    FROM SENDERO
+    WHERE ID_SENDERO = p_id_sendero;
+    
+    IF v_estado_sendero != 'ACTIVO' THEN
+        RAISE_APPLICATION_ERROR(-20013, 
+            'El sendero no está disponible. Estado: ' || v_estado_sendero);
+    END IF;
+    
+    -- Verificar disponibilidad
+    SELECT CUPOS_DISPONIBLES INTO v_disponibilidad
+    FROM V_DISPONIBILIDAD_SENDERO
+    WHERE ID_SENDERO = p_id_sendero
+      AND (FECHA_VISITA = p_fecha_visita OR FECHA_VISITA IS NULL);
+    
+    v_disponibilidad := NVL(v_disponibilidad, 
+        (SELECT CUPO_MAXIMO_DIA FROM SENDERO WHERE ID_SENDERO = p_id_sendero));
+    
+    IF v_disponibilidad < p_numero_personas THEN
+        RAISE_APPLICATION_ERROR(-20014, 
+            'No hay suficientes cupos disponibles. Disponibles: ' || v_disponibilidad);
+    END IF;
+    
+    -- Crear reserva
+    INSERT INTO RESERVA (
+        ID_VISITANTE, ID_SENDERO, FECHA_VISITA, 
+        NUMERO_PERSONAS, HORA_INICIO, ESTADO, OBSERVACIONES
+    ) VALUES (
+        v_id_visitante, p_id_sendero, p_fecha_visita,
+        p_numero_personas, p_hora_inicio, 'PENDIENTE', p_observaciones
+    ) RETURNING ID_RESERVA, CODIGO_CONFIRMACION 
+    INTO p_id_reserva, p_codigo_confirmacion;
+    
+    COMMIT;
+    
+    DBMS_OUTPUT.PUT_LINE('Reserva creada exitosamente. ID: ' || p_id_reserva || 
+                        ', Código: ' || p_codigo_confirmacion);
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END SP_CREAR_RESERVA;
+/
+
+-- Procedimiento: Asignar guía automáticamente
+CREATE OR REPLACE PROCEDURE SP_ASIGNAR_GUIA_AUTO(
+    p_id_reserva IN NUMBER,
+    p_id_guia_asignado OUT NUMBER
+) AS
+    v_id_sendero NUMBER;
+    v_fecha_visita DATE;
+    v_hora_inicio VARCHAR2(5);
+    v_requiere_guia CHAR(1);
+BEGIN
+    -- Obtener información de la reserva
+    SELECT r.ID_SENDERO, r.FECHA_VISITA, r.HORA_INICIO, s.REQUIERE_GUIA
+    INTO v_id_sendero, v_fecha_visita, v_hora_inicio, v_requiere_guia
+    FROM RESERVA r
+    JOIN SENDERO s ON r.ID_SENDERO = s.ID_SENDERO
+    WHERE r.ID_RESERVA = p_id_reserva;
+    
+    IF v_requiere_guia = 'N' THEN
+        RAISE_APPLICATION_ERROR(-20020, 'Este sendero no requiere guía');
+    END IF;
+    
+    -- Buscar guía disponible (priorizar por menor carga y mejor calificación)
+    BEGIN
+        SELECT ID_GUIA INTO p_id_guia_asignado
+        FROM (
+            SELECT g.ID_GUIA,
+                   COUNT(ag.ID_ASIGNACION) AS total_asignaciones,
+                   NVL(g.CALIFICACION_PROMEDIO, 0) AS calificacion
+            FROM GUIA g
+            LEFT JOIN ASIGNACION_GUIA ag ON g.ID_GUIA = ag.ID_GUIA
+            WHERE g.ESTADO = 'ACTIVO'
+              AND NOT EXISTS (
+                  SELECT 1
+                  FROM ASIGNACION_GUIA ag2
+                  JOIN RESERVA r2 ON ag2.ID_RESERVA = r2.ID_RESERVA
+                  WHERE ag2.ID_GUIA = g.ID_GUIA
+                    AND r2.FECHA_VISITA = v_fecha_visita
+                    AND r2.HORA_INICIO = v_hora_inicio
+                    AND r2.ESTADO IN ('CONFIRMADA', 'PENDIENTE')
+              )
+            GROUP BY g.ID_GUIA, g.CALIFICACION_PROMEDIO
+            ORDER BY total_asignaciones ASC, calificacion DESC
+        ) WHERE ROWNUM = 1;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            RAISE_APPLICATION_ERROR(-20021, 
+                'No hay guías disponibles para esta fecha y hora');
+    END;
+    
+    -- Crear asignación
+    INSERT INTO ASIGNACION_GUIA (ID_RESERVA, ID_GUIA)
+    VALUES (p_id_reserva, p_id_guia_asignado);
+    
+    COMMIT;
+    
+    DBMS_OUTPUT.PUT_LINE('Guía asignado exitosamente. ID Guía: ' || p_id_guia_asignado);
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END SP_ASIGNAR_GUIA_AUTO;
+/
+
+-- Procedimiento: Cancelar reserva
+CREATE OR REPLACE PROCEDURE SP_CANCELAR_RESERVA(
     p_id_reserva IN NUMBER,
     p_motivo IN VARCHAR2 DEFAULT NULL
-)
-IS
+) AS
+    v_estado_actual VARCHAR2(20);
     v_fecha_visita DATE;
-    v_horas_anticipacion NUMBER;
 BEGIN
-    -- Obtener fecha de visita
-    SELECT fecha_visita INTO v_fecha_visita
-    FROM reserva
-    WHERE id_reserva = p_id_reserva;
-
-    -- Calcular horas de anticipación
-    v_horas_anticipacion := (v_fecha_visita - SYSDATE) * 24;
-
-    IF v_horas_anticipacion < 12 THEN
-        DBMS_OUTPUT.PUT_LINE('ADVERTENCIA: Cancelación con menos de 12 horas de anticipación');
+    -- Obtener estado actual
+    SELECT ESTADO, FECHA_VISITA
+    INTO v_estado_actual, v_fecha_visita
+    FROM RESERVA
+    WHERE ID_RESERVA = p_id_reserva;
+    
+    -- Validar que pueda cancelarse
+    IF v_estado_actual = 'COMPLETADA' THEN
+        RAISE_APPLICATION_ERROR(-20030, 'No se puede cancelar una reserva completada');
     END IF;
-
+    
+    IF v_estado_actual = 'CANCELADA' THEN
+        RAISE_APPLICATION_ERROR(-20031, 'La reserva ya está cancelada');
+    END IF;
+    
     -- Actualizar estado
-    UPDATE reserva
-    SET estado = 'CANCELADA',
-        observaciones = p_motivo,
-        fecha_modificacion = SYSDATE
-    WHERE id_reserva = p_id_reserva;
-
+    UPDATE RESERVA
+    SET ESTADO = 'CANCELADA',
+        OBSERVACIONES = OBSERVACIONES || ' | CANCELADA: ' || 
+                       NVL(p_motivo, 'Sin motivo especificado') ||
+                       ' (Fecha cancelación: ' || TO_CHAR(SYSDATE, 'DD/MM/YYYY HH24:MI') || ')'
+    WHERE ID_RESERVA = p_id_reserva;
+    
     COMMIT;
+    
     DBMS_OUTPUT.PUT_LINE('Reserva cancelada exitosamente');
-END;
-
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END SP_CANCELAR_RESERVA;
 /
---------------------------------------------------------
---  DDL for Procedure SP_CREAR_RESERVA
---------------------------------------------------------
-set define off;
 
-  CREATE OR REPLACE EDITIONABLE PROCEDURE "PRUEBA"."SP_CREAR_RESERVA" (
-    p_id_visitante IN NUMBER,
-    p_id_sendero IN NUMBER,
-    p_fecha_visita IN DATE,
-    p_numero_personas IN NUMBER,
-    p_hora_inicio IN VARCHAR2,
-    p_id_reserva OUT NUMBER
-)
-IS
-    v_cupo_disponible NUMBER;
+-- Procedimiento: Confirmar reserva
+CREATE OR REPLACE PROCEDURE SP_CONFIRMAR_RESERVA(
+    p_id_reserva IN NUMBER,
+    p_costo_total IN NUMBER DEFAULT NULL
+) AS
+    v_estado_actual VARCHAR2(20);
 BEGIN
-    -- Validar cupo disponible
-    SELECT s.cupo_maximo_dia - NVL(SUM(r.numero_personas), 0)
-    INTO v_cupo_disponible
-    FROM sendero s
-    LEFT JOIN reserva r ON s.id_sendero = r.id_sendero 
-        AND r.fecha_visita = p_fecha_visita
-        AND r.estado IN ('PENDIENTE', 'CONFIRMADA')
-    WHERE s.id_sendero = p_id_sendero
-    GROUP BY s.cupo_maximo_dia;
-
-    IF v_cupo_disponible >= p_numero_personas THEN
-        INSERT INTO reserva (id_visitante, id_sendero, fecha_visita, numero_personas, hora_inicio, estado)
-        VALUES (p_id_visitante, p_id_sendero, p_fecha_visita, p_numero_personas, p_hora_inicio, 'PENDIENTE')
-        RETURNING id_reserva INTO p_id_reserva;
-
-        COMMIT;
-        DBMS_OUTPUT.PUT_LINE('Reserva creada exitosamente. ID: ' || p_id_reserva);
-    ELSE
-        RAISE_APPLICATION_ERROR(-20002, 'No hay cupo suficiente. Disponible: ' || v_cupo_disponible);
+    SELECT ESTADO INTO v_estado_actual
+    FROM RESERVA
+    WHERE ID_RESERVA = p_id_reserva;
+    
+    IF v_estado_actual != 'PENDIENTE' THEN
+        RAISE_APPLICATION_ERROR(-20040, 
+            'Solo se pueden confirmar reservas en estado PENDIENTE. Estado actual: ' || v_estado_actual);
     END IF;
-END;
-
+    
+    UPDATE RESERVA
+    SET ESTADO = 'CONFIRMADA',
+        COSTO_TOTAL = NVL(p_costo_total, COSTO_TOTAL)
+    WHERE ID_RESERVA = p_id_reserva;
+    
+    COMMIT;
+    
+    DBMS_OUTPUT.PUT_LINE('Reserva confirmada exitosamente');
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END SP_CONFIRMAR_RESERVA;
 /
---------------------------------------------------------
---  Constraints for Table MD_PRIVILEGES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_PRIVILEGES" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PRIVILEGES" MODIFY ("SCHEMA_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PRIVILEGES" MODIFY ("PRIVILEGE_NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PRIVILEGES" MODIFY ("PRIVELEGEOBJECTTYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PRIVILEGES" MODIFY ("PRIVELEGE_TYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PRIVILEGES" MODIFY ("NATIVE_SQL" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PRIVILEGES" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PRIVILEGES" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PRIVILEGES" ADD CONSTRAINT "MD_PRIVILEGES_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_ADDITIONAL_PROPERTIES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_ADDITIONAL_PROPERTIES" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_ADDITIONAL_PROPERTIES" MODIFY ("CONNECTION_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_ADDITIONAL_PROPERTIES" MODIFY ("REF_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_ADDITIONAL_PROPERTIES" MODIFY ("REF_TYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_ADDITIONAL_PROPERTIES" MODIFY ("PROP_KEY" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_ADDITIONAL_PROPERTIES" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_ADDITIONAL_PROPERTIES" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_ADDITIONAL_PROPERTIES" ADD CONSTRAINT "MD_ADDITIONAL_PROPERTIES_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_INDEX_DETAILS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_INDEX_DETAILS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_INDEX_DETAILS" MODIFY ("INDEX_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_INDEX_DETAILS" MODIFY ("COLUMN_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_INDEX_DETAILS" MODIFY ("DETAIL_ORDER" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_INDEX_DETAILS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_INDEX_DETAILS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_INDEX_DETAILS" ADD CONSTRAINT "MD_INDEX_DETAILS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_SCHEMAS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_SCHEMAS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SCHEMAS" MODIFY ("CATALOG_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SCHEMAS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SCHEMAS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SCHEMAS" ADD CONSTRAINT "MD_SCHEMAS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_TABLES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_TABLES" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TABLES" MODIFY ("SCHEMA_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TABLES" MODIFY ("TABLE_NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TABLES" MODIFY ("QUALIFIED_NATIVE_NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TABLES" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TABLES" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TABLES" ADD CONSTRAINT "MD_TABLES_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_TRIGGERS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_TRIGGERS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TRIGGERS" MODIFY ("TABLE_OR_VIEW_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TRIGGERS" MODIFY ("TRIGGER_ON_FLAG" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TRIGGERS" MODIFY ("LANGUAGE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TRIGGERS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TRIGGERS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TRIGGERS" ADD CONSTRAINT "MD_TRIGGERS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_GROUP_MEMBERS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_GROUP_MEMBERS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_GROUP_MEMBERS" MODIFY ("GROUP_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_GROUP_MEMBERS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_GROUP_MEMBERS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_GROUP_MEMBERS" ADD CONSTRAINT "MD_GROUP_MEMBERS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_USERS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_USERS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USERS" MODIFY ("SCHEMA_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USERS" MODIFY ("USERNAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USERS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USERS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USERS" ADD CONSTRAINT "MD_USERS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table RESERVA
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."RESERVA" MODIFY ("ID_VISITANTE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."RESERVA" MODIFY ("ID_SENDERO" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."RESERVA" MODIFY ("FECHA_RESERVA" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."RESERVA" MODIFY ("FECHA_VISITA" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."RESERVA" MODIFY ("NUMERO_PERSONAS" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."RESERVA" ADD CHECK (numero_personas > 0 AND numero_personas <= 20) ENABLE;
-  ALTER TABLE "PRUEBA"."RESERVA" ADD CHECK (estado IN ('PENDIENTE', 'CONFIRMADA', 'CANCELADA', 'COMPLETADA')) ENABLE;
-  ALTER TABLE "PRUEBA"."RESERVA" ADD CONSTRAINT "CHK_FECHA_VISITA" CHECK (fecha_visita >= fecha_reserva) ENABLE;
-  ALTER TABLE "PRUEBA"."RESERVA" ADD PRIMARY KEY ("ID_RESERVA")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_GROUP_PRIVILEGES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_GROUP_PRIVILEGES" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_GROUP_PRIVILEGES" MODIFY ("GROUP_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_GROUP_PRIVILEGES" MODIFY ("PRIVILEGE_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_GROUP_PRIVILEGES" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_GROUP_PRIVILEGES" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_GROUP_PRIVILEGES" ADD CONSTRAINT "MD_GROUP_PRIVILEGES_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_PACKAGES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_PACKAGES" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PACKAGES" MODIFY ("SCHEMA_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PACKAGES" MODIFY ("NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PACKAGES" MODIFY ("LANGUAGE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PACKAGES" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PACKAGES" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PACKAGES" ADD CONSTRAINT "MD_PACKAGES_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_PROJECTS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_PROJECTS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PROJECTS" MODIFY ("PROJECT_NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PROJECTS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PROJECTS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PROJECTS" ADD CONSTRAINT "MD_PROJECTS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_REGISTRY
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_REGISTRY" MODIFY ("OBJECT_TYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_REGISTRY" MODIFY ("OBJECT_NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_REGISTRY" ADD CONSTRAINT "MD_REGISTRY_PK" PRIMARY KEY ("OBJECT_TYPE", "OBJECT_NAME")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table SENDERO
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."SENDERO" MODIFY ("NOMBRE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."SENDERO" ADD CHECK (dificultad IN ('FACIL', 'MODERADO', 'DIFICIL')) ENABLE;
-  ALTER TABLE "PRUEBA"."SENDERO" ADD CHECK (duracion_horas > 0) ENABLE;
-  ALTER TABLE "PRUEBA"."SENDERO" ADD CHECK (cupo_maximo_dia > 0) ENABLE;
-  ALTER TABLE "PRUEBA"."SENDERO" ADD CHECK (distancia_km > 0) ENABLE;
-  ALTER TABLE "PRUEBA"."SENDERO" ADD CHECK (estado IN ('ACTIVO', 'INACTIVO')) ENABLE;
-  ALTER TABLE "PRUEBA"."SENDERO" ADD PRIMARY KEY ("ID_SENDERO")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_COLUMNS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_COLUMNS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_COLUMNS" MODIFY ("TABLE_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_COLUMNS" MODIFY ("COLUMN_NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_COLUMNS" MODIFY ("COLUMN_ORDER" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_COLUMNS" MODIFY ("NULLABLE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_COLUMNS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_COLUMNS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_COLUMNS" ADD CONSTRAINT "MD_COLUMNS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
-  ALTER TABLE "PRUEBA"."MD_COLUMNS" ADD CONSTRAINT "MD_COLUMNS_NULLABLE_Y_N" CHECK ((UPPER(NULLABLE) IN ('Y','N'))) ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_FILE_ARTIFACTS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_FILE_ARTIFACTS" MODIFY ("ID" CONSTRAINT "MD_APP_FILE_ART_NONULL" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_FILE_ARTIFACTS" MODIFY ("APPLICATIONFILES_ID" CONSTRAINT "MD_APPL_FILE_FK_NONULL" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_FILE_ARTIFACTS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_FILE_ARTIFACTS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_FILE_ARTIFACTS" ADD CONSTRAINT "MD_FILE_ARTIFACTS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_CATALOGS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_CATALOGS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CATALOGS" MODIFY ("CONNECTION_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CATALOGS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CATALOGS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CATALOGS" ADD CONSTRAINT "MD_CATALOGS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_SEQUENCES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_SEQUENCES" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SEQUENCES" MODIFY ("SCHEMA_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SEQUENCES" MODIFY ("NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SEQUENCES" MODIFY ("SEQ_START" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SEQUENCES" MODIFY ("INCR" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SEQUENCES" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SEQUENCES" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SEQUENCES" MODIFY ("CREATED_BY" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SEQUENCES" ADD CONSTRAINT "MD_SEQUENCES_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table VISITANTE
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."VISITANTE" MODIFY ("CEDULA" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."VISITANTE" MODIFY ("NOMBRE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."VISITANTE" MODIFY ("APELLIDO" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."VISITANTE" MODIFY ("EMAIL" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."VISITANTE" ADD CHECK (estado IN ('ACTIVO', 'INACTIVO')) ENABLE;
-  ALTER TABLE "PRUEBA"."VISITANTE" ADD PRIMARY KEY ("ID_VISITANTE")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS"  ENABLE;
-  ALTER TABLE "PRUEBA"."VISITANTE" ADD UNIQUE ("CEDULA")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS"  ENABLE;
-  ALTER TABLE "PRUEBA"."VISITANTE" ADD UNIQUE ("EMAIL")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_MIGR_WEAKDEP
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_MIGR_WEAKDEP" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_WEAKDEP" MODIFY ("CONNECTION_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_WEAKDEP" MODIFY ("SCHEMA_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_WEAKDEP" MODIFY ("PARENT_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_WEAKDEP" MODIFY ("CHILD_NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_WEAKDEP" MODIFY ("PARENT_TYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_WEAKDEP" MODIFY ("CHILD_TYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_WEAKDEP" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_WEAKDEP" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_WEAKDEP" ADD CONSTRAINT "MIGR_WEAKDEP_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_PARTITIONS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_PARTITIONS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PARTITIONS" MODIFY ("TABLE_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PARTITIONS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PARTITIONS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_PARTITIONS" ADD CONSTRAINT "MD_PARTITIONS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_APPLICATIONFILES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONFILES" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONFILES" MODIFY ("APPLICATIONS_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONFILES" MODIFY ("NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONFILES" MODIFY ("URI" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONFILES" MODIFY ("TYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONFILES" MODIFY ("STATE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONFILES" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONFILES" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONFILES" ADD CONSTRAINT "MD_APPLICATIONFILES_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_CODE_REGEX
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_CODE_REGEX" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CODE_REGEX" MODIFY ("REGEX" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CODE_REGEX" MODIFY ("DESCRIPTION" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table MD_MIGR_PARAMETER
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" MODIFY ("CONNECTION_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" MODIFY ("OBJECT_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" MODIFY ("OBJECT_TYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" MODIFY ("PARAM_EXISTING" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" MODIFY ("PARAM_ORDER" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" MODIFY ("PARAM_NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" MODIFY ("PARAM_TYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" MODIFY ("PARAM_DATA_TYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" MODIFY ("NULLABLE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" ADD CONSTRAINT "MIGR_PARAMETER_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_USER_PRIVILEGES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_USER_PRIVILEGES" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USER_PRIVILEGES" MODIFY ("USER_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USER_PRIVILEGES" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USER_PRIVILEGES" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USER_PRIVILEGES" ADD CONSTRAINT "MD_USER_PRIVILEGES_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MIGR_GENERATION_ORDER
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MIGR_GENERATION_ORDER" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_GENERATION_ORDER" MODIFY ("CONNECTION_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_GENERATION_ORDER" MODIFY ("OBJECT_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_GENERATION_ORDER" MODIFY ("OBJECT_TYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_GENERATION_ORDER" MODIFY ("GENERATION_ORDER" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_GENERATION_ORDER" ADD CONSTRAINT "MIGR_GENERATION_ORDER_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
-  ALTER TABLE "PRUEBA"."MIGR_GENERATION_ORDER" ADD CONSTRAINT "MIGR_GENERATION_ORDER_UK" UNIQUE ("OBJECT_ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table GUIA
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."GUIA" MODIFY ("CEDULA" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."GUIA" MODIFY ("NOMBRE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."GUIA" MODIFY ("APELLIDO" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."GUIA" ADD CHECK (max_personas_grupo > 0) ENABLE;
-  ALTER TABLE "PRUEBA"."GUIA" ADD CHECK (estado IN ('ACTIVO', 'INACTIVO')) ENABLE;
-  ALTER TABLE "PRUEBA"."GUIA" ADD PRIMARY KEY ("ID_GUIA")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS"  ENABLE;
-  ALTER TABLE "PRUEBA"."GUIA" ADD UNIQUE ("CEDULA")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_CONSTRAINTS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINTS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINTS" MODIFY ("TABLE_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINTS" MODIFY ("LANGUAGE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINTS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINTS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINTS" ADD CONSTRAINT "MD_CONSTRAINTS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_MIGR_DEPENDENCY
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_MIGR_DEPENDENCY" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_DEPENDENCY" MODIFY ("CONNECTION_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_DEPENDENCY" MODIFY ("PARENT_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_DEPENDENCY" MODIFY ("CHILD_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_DEPENDENCY" MODIFY ("PARENT_OBJECT_TYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_DEPENDENCY" MODIFY ("CHILD_OBJECT_TYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_DEPENDENCY" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_DEPENDENCY" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_MIGR_DEPENDENCY" ADD CONSTRAINT "MIGR_DEPENDENCY_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_SYNONYMS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_SYNONYMS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SYNONYMS" MODIFY ("SCHEMA_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SYNONYMS" MODIFY ("NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SYNONYMS" MODIFY ("SYNONYM_FOR_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SYNONYMS" MODIFY ("FOR_OBJECT_TYPE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SYNONYMS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SYNONYMS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_SYNONYMS" ADD CONSTRAINT "MD_SYNONYMS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_OTHER_OBJECTS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_OTHER_OBJECTS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_OTHER_OBJECTS" MODIFY ("SCHEMA_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_OTHER_OBJECTS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_OTHER_OBJECTS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_OTHER_OBJECTS" ADD CONSTRAINT "MD_OTHER_OBJECTS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_GROUPS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_GROUPS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_GROUPS" MODIFY ("SCHEMA_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_GROUPS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_GROUPS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_GROUPS" ADD CONSTRAINT "MD_GROUPS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_INDEXES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_INDEXES" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_INDEXES" MODIFY ("TABLE_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_INDEXES" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_INDEXES" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_INDEXES" ADD CONSTRAINT "MD_INDEXES_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_TABLESPACES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_TABLESPACES" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TABLESPACES" MODIFY ("SCHEMA_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TABLESPACES" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TABLESPACES" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_TABLESPACES" ADD CONSTRAINT "MD_TABLESPACES_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_VIEWS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_VIEWS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_VIEWS" MODIFY ("SCHEMA_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_VIEWS" MODIFY ("LANGUAGE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_VIEWS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_VIEWS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_VIEWS" ADD CONSTRAINT "MD_VIEWS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table STAGE_MIGRLOG
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."STAGE_MIGRLOG" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."STAGE_MIGRLOG" MODIFY ("LOG_DATE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."STAGE_MIGRLOG" MODIFY ("SEVERITY" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."STAGE_MIGRLOG" ADD CONSTRAINT "STAGE_MIGRLOG_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table ASIGNACION_GUIA
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."ASIGNACION_GUIA" MODIFY ("ID_RESERVA" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."ASIGNACION_GUIA" MODIFY ("ID_GUIA" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."ASIGNACION_GUIA" ADD PRIMARY KEY ("ID_ASIGNACION")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS"  ENABLE;
-  ALTER TABLE "PRUEBA"."ASIGNACION_GUIA" ADD UNIQUE ("ID_RESERVA")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MIGRLOG
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MIGRLOG" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGRLOG" MODIFY ("LOG_DATE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGRLOG" MODIFY ("SEVERITY" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGRLOG" ADD CONSTRAINT "MIGRLOG_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MIGR_DATATYPE_TRANSFORM_MAP
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_MAP" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_MAP" MODIFY ("PROJECT_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_MAP" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_MAP" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_MAP" ADD CONSTRAINT "MIGR_DATATYPE_TRANSFORM_M_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table HORARIO_DISPONIBLE
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."HORARIO_DISPONIBLE" MODIFY ("ID_SENDERO" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."HORARIO_DISPONIBLE" MODIFY ("HORA_INICIO" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."HORARIO_DISPONIBLE" MODIFY ("HORA_FIN" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."HORARIO_DISPONIBLE" ADD CHECK (cupo_horario > 0) ENABLE;
-  ALTER TABLE "PRUEBA"."HORARIO_DISPONIBLE" ADD PRIMARY KEY ("ID_HORARIO")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_APPLICATIONS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONS" MODIFY ("PROJECT_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONS" ADD CONSTRAINT "MD_APPLICATIONS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_DERIVATIVES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_DERIVATIVES" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_DERIVATIVES" MODIFY ("SRC_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_DERIVATIVES" MODIFY ("DERIVED_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_DERIVATIVES" MODIFY ("DERIVED_CONNECTION_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_DERIVATIVES" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_DERIVATIVES" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_DERIVATIVES" ADD CONSTRAINT "MIGRDER_CHK" CHECK (ENABLED = 'Y' OR ENABLED = 'y' OR ENABLED = 'N' OR  ENABLED = 'n') ENABLE;
-  ALTER TABLE "PRUEBA"."MD_DERIVATIVES" ADD CONSTRAINT "MIGRDREIVATIVES_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MIGR_DATATYPE_TRANSFORM_RULE
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE" MODIFY ("MAP_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE" MODIFY ("SOURCE_DATA_TYPE_NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE" MODIFY ("TARGET_DATA_TYPE_NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE" ADD CONSTRAINT "MIGR_DATATYPE_TRANSFORM_R_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_CONNECTIONS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_CONNECTIONS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONNECTIONS" MODIFY ("PROJECT_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONNECTIONS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONNECTIONS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONNECTIONS" ADD CONSTRAINT "MD_CONNECTIONS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_CONSTRAINT_DETAILS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINT_DETAILS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINT_DETAILS" MODIFY ("CONSTRAINT_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINT_DETAILS" MODIFY ("DETAIL_ORDER" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINT_DETAILS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINT_DETAILS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINT_DETAILS" ADD CONSTRAINT "MD_CONSTRAINT_DETAILS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_REPOVERSIONS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_REPOVERSIONS" MODIFY ("REVISION" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table MD_STORED_PROGRAMS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_STORED_PROGRAMS" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_STORED_PROGRAMS" MODIFY ("SCHEMA_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_STORED_PROGRAMS" MODIFY ("LANGUAGE" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_STORED_PROGRAMS" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_STORED_PROGRAMS" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_STORED_PROGRAMS" ADD CONSTRAINT "MD_STORED_PROGRAMS_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Constraints for Table MD_USER_DEFINED_DATA_TYPES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_USER_DEFINED_DATA_TYPES" MODIFY ("ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USER_DEFINED_DATA_TYPES" MODIFY ("SCHEMA_ID_FK" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USER_DEFINED_DATA_TYPES" MODIFY ("DATA_TYPE_NAME" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USER_DEFINED_DATA_TYPES" MODIFY ("DEFINITION" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USER_DEFINED_DATA_TYPES" MODIFY ("NATIVE_SQL" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USER_DEFINED_DATA_TYPES" MODIFY ("SECURITY_GROUP_ID" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USER_DEFINED_DATA_TYPES" MODIFY ("CREATED_ON" NOT NULL ENABLE);
-  ALTER TABLE "PRUEBA"."MD_USER_DEFINED_DATA_TYPES" ADD CONSTRAINT "MD_USER_DEFINED_DATA_TYPES_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  TABLESPACE "USERS"  ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table ASIGNACION_GUIA
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."ASIGNACION_GUIA" ADD CONSTRAINT "FK_ASIGNACION_RESERVA" FOREIGN KEY ("ID_RESERVA")
-	  REFERENCES "PRUEBA"."RESERVA" ("ID_RESERVA") ON DELETE CASCADE ENABLE;
-  ALTER TABLE "PRUEBA"."ASIGNACION_GUIA" ADD CONSTRAINT "FK_ASIGNACION_GUIA" FOREIGN KEY ("ID_GUIA")
-	  REFERENCES "PRUEBA"."GUIA" ("ID_GUIA") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table HORARIO_DISPONIBLE
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."HORARIO_DISPONIBLE" ADD CONSTRAINT "FK_HORARIO_SENDERO" FOREIGN KEY ("ID_SENDERO")
-	  REFERENCES "PRUEBA"."SENDERO" ("ID_SENDERO") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_ADDITIONAL_PROPERTIES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_ADDITIONAL_PROPERTIES" ADD CONSTRAINT "MD_ADDITIONAL_PROPERTIES__FK1" FOREIGN KEY ("CONNECTION_ID_FK")
-	  REFERENCES "PRUEBA"."MD_CONNECTIONS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_APPLICATIONFILES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONFILES" ADD CONSTRAINT "MD_FILE_APP_FK" FOREIGN KEY ("APPLICATIONS_ID_FK")
-	  REFERENCES "PRUEBA"."MD_APPLICATIONS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_APPLICATIONS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_APPLICATIONS" ADD CONSTRAINT "MD_APP_PROJ_FK" FOREIGN KEY ("PROJECT_ID_FK")
-	  REFERENCES "PRUEBA"."MD_PROJECTS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_CATALOGS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_CATALOGS" ADD CONSTRAINT "MD_CATALOGS_MD_CONNECTION_FK1" FOREIGN KEY ("CONNECTION_ID_FK")
-	  REFERENCES "PRUEBA"."MD_CONNECTIONS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_COLUMNS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_COLUMNS" ADD CONSTRAINT "MD_COLUMNS_MD_TABLES_FK1" FOREIGN KEY ("TABLE_ID_FK")
-	  REFERENCES "PRUEBA"."MD_TABLES" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_CONNECTIONS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_CONNECTIONS" ADD CONSTRAINT "MD_CONNECTIONS_MD_PROJECT_FK1" FOREIGN KEY ("PROJECT_ID_FK")
-	  REFERENCES "PRUEBA"."MD_PROJECTS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_CONSTRAINT_DETAILS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINT_DETAILS" ADD CONSTRAINT "MD_CONSTRAINT_DETAILS_MD__FK2" FOREIGN KEY ("COLUMN_ID_FK")
-	  REFERENCES "PRUEBA"."MD_COLUMNS" ("ID") ON DELETE CASCADE ENABLE;
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINT_DETAILS" ADD CONSTRAINT "MD_CONSTRAINT_DETAILS_MD__FK1" FOREIGN KEY ("CONSTRAINT_ID_FK")
-	  REFERENCES "PRUEBA"."MD_CONSTRAINTS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_CONSTRAINTS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_CONSTRAINTS" ADD CONSTRAINT "MD_CONSTRAINTS_MD_TABLES_FK1" FOREIGN KEY ("TABLE_ID_FK")
-	  REFERENCES "PRUEBA"."MD_TABLES" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_DERIVATIVES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_DERIVATIVES" ADD CONSTRAINT "MD_DERIVATIVES_MD_CONNECT_FK1" FOREIGN KEY ("DERIVED_CONNECTION_ID_FK")
-	  REFERENCES "PRUEBA"."MD_CONNECTIONS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_FILE_ARTIFACTS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_FILE_ARTIFACTS" ADD CONSTRAINT "MD_ARTIFACT_FILE_FK" FOREIGN KEY ("APPLICATIONFILES_ID")
-	  REFERENCES "PRUEBA"."MD_APPLICATIONFILES" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_GROUP_MEMBERS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_GROUP_MEMBERS" ADD CONSTRAINT "MD_GROUPMEMBERS_MD_USERS_FK1" FOREIGN KEY ("USER_ID_FK")
-	  REFERENCES "PRUEBA"."MD_USERS" ("ID") ON DELETE CASCADE ENABLE;
-  ALTER TABLE "PRUEBA"."MD_GROUP_MEMBERS" ADD CONSTRAINT "MD_GROUPMEMBERS_MD_GROUPS_FK2" FOREIGN KEY ("GROUP_MEMBER_ID_FK")
-	  REFERENCES "PRUEBA"."MD_GROUPS" ("ID") ON DELETE CASCADE ENABLE;
-  ALTER TABLE "PRUEBA"."MD_GROUP_MEMBERS" ADD CONSTRAINT "MD_GROUPMEMBERS_MD_GROUPS_FK1" FOREIGN KEY ("GROUP_ID_FK")
-	  REFERENCES "PRUEBA"."MD_GROUPS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_GROUP_PRIVILEGES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_GROUP_PRIVILEGES" ADD CONSTRAINT "MD_GROUP_PRIVILEGES_MD_GR_FK1" FOREIGN KEY ("GROUP_ID_FK")
-	  REFERENCES "PRUEBA"."MD_GROUPS" ("ID") ON DELETE CASCADE ENABLE;
-  ALTER TABLE "PRUEBA"."MD_GROUP_PRIVILEGES" ADD CONSTRAINT "MD_GROUP_PRIVILEGES_MD_PR_FK1" FOREIGN KEY ("PRIVILEGE_ID_FK")
-	  REFERENCES "PRUEBA"."MD_PRIVILEGES" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_GROUPS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_GROUPS" ADD CONSTRAINT "MD_GROUPS_MD_SCHEMAS_FK1" FOREIGN KEY ("SCHEMA_ID_FK")
-	  REFERENCES "PRUEBA"."MD_SCHEMAS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_INDEX_DETAILS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_INDEX_DETAILS" ADD CONSTRAINT "MD_INDEX_DETAILS_MD_COLUM_FK1" FOREIGN KEY ("COLUMN_ID_FK")
-	  REFERENCES "PRUEBA"."MD_COLUMNS" ("ID") ON DELETE CASCADE ENABLE;
-  ALTER TABLE "PRUEBA"."MD_INDEX_DETAILS" ADD CONSTRAINT "MD_INDEX_DETAILS_MD_INDEX_FK1" FOREIGN KEY ("INDEX_ID_FK")
-	  REFERENCES "PRUEBA"."MD_INDEXES" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_INDEXES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_INDEXES" ADD CONSTRAINT "MD_INDEXES_MD_TABLES_FK1" FOREIGN KEY ("TABLE_ID_FK")
-	  REFERENCES "PRUEBA"."MD_TABLES" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_MIGR_DEPENDENCY
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_MIGR_DEPENDENCY" ADD CONSTRAINT "MIGR_DEPENDENCY_FK" FOREIGN KEY ("CONNECTION_ID_FK")
-	  REFERENCES "PRUEBA"."MD_CONNECTIONS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_MIGR_PARAMETER
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_MIGR_PARAMETER" ADD CONSTRAINT "MIGR_PARAMETER_FK" FOREIGN KEY ("CONNECTION_ID_FK")
-	  REFERENCES "PRUEBA"."MD_CONNECTIONS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_MIGR_WEAKDEP
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_MIGR_WEAKDEP" ADD CONSTRAINT "MIGR_WEAKDEP_FK2" FOREIGN KEY ("SCHEMA_ID_FK")
-	  REFERENCES "PRUEBA"."MD_SCHEMAS" ("ID") ON DELETE CASCADE ENABLE;
-  ALTER TABLE "PRUEBA"."MD_MIGR_WEAKDEP" ADD CONSTRAINT "MIGR_WEAKDEP_FK1" FOREIGN KEY ("CONNECTION_ID_FK")
-	  REFERENCES "PRUEBA"."MD_CONNECTIONS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_OTHER_OBJECTS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_OTHER_OBJECTS" ADD CONSTRAINT "MD_OTHER_OBJECTS_MD_SCHEM_FK1" FOREIGN KEY ("SCHEMA_ID_FK")
-	  REFERENCES "PRUEBA"."MD_SCHEMAS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_PACKAGES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_PACKAGES" ADD CONSTRAINT "MD_PACKAGES_MD_SCHEMAS_FK1" FOREIGN KEY ("SCHEMA_ID_FK")
-	  REFERENCES "PRUEBA"."MD_SCHEMAS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_PARTITIONS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_PARTITIONS" ADD CONSTRAINT "MD_PARTITIONS_MD_TABLES_FK1" FOREIGN KEY ("TABLE_ID_FK")
-	  REFERENCES "PRUEBA"."MD_TABLES" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_PRIVILEGES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_PRIVILEGES" ADD CONSTRAINT "MD_PRIVILEGES_MD_SCHEMAS_FK1" FOREIGN KEY ("SCHEMA_ID_FK")
-	  REFERENCES "PRUEBA"."MD_SCHEMAS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_SCHEMAS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_SCHEMAS" ADD CONSTRAINT "MD_SCHEMAS_MD_CATALOGS_FK1" FOREIGN KEY ("CATALOG_ID_FK")
-	  REFERENCES "PRUEBA"."MD_CATALOGS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_SEQUENCES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_SEQUENCES" ADD CONSTRAINT "MD_SEQUENCES_MD_SCHEMAS_FK1" FOREIGN KEY ("SCHEMA_ID_FK")
-	  REFERENCES "PRUEBA"."MD_SCHEMAS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_STORED_PROGRAMS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_STORED_PROGRAMS" ADD CONSTRAINT "MD_STORED_PROGRAMS_MD_SCH_FK1" FOREIGN KEY ("SCHEMA_ID_FK")
-	  REFERENCES "PRUEBA"."MD_SCHEMAS" ("ID") ON DELETE CASCADE ENABLE;
-  ALTER TABLE "PRUEBA"."MD_STORED_PROGRAMS" ADD CONSTRAINT "MD_STORED_PROGRAMS_MD_PAC_FK1" FOREIGN KEY ("PACKAGE_ID_FK")
-	  REFERENCES "PRUEBA"."MD_PACKAGES" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_SYNONYMS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_SYNONYMS" ADD CONSTRAINT "MD_SYNONYMS_MD_SCHEMAS_FK1" FOREIGN KEY ("SCHEMA_ID_FK")
-	  REFERENCES "PRUEBA"."MD_SCHEMAS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_TABLES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_TABLES" ADD CONSTRAINT "MD_TABLES_MD_SCHEMAS_FK1" FOREIGN KEY ("SCHEMA_ID_FK")
-	  REFERENCES "PRUEBA"."MD_SCHEMAS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_TABLESPACES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_TABLESPACES" ADD CONSTRAINT "MD_TABLESPACES_MD_SCHEMAS_FK1" FOREIGN KEY ("SCHEMA_ID_FK")
-	  REFERENCES "PRUEBA"."MD_SCHEMAS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_USER_DEFINED_DATA_TYPES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_USER_DEFINED_DATA_TYPES" ADD CONSTRAINT "MD_USER_DEFINED_DATA_TYPE_FK1" FOREIGN KEY ("SCHEMA_ID_FK")
-	  REFERENCES "PRUEBA"."MD_SCHEMAS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_USER_PRIVILEGES
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_USER_PRIVILEGES" ADD CONSTRAINT "MD_USER_PRIVILEGES_MD_PRI_FK1" FOREIGN KEY ("PRIVILEGE_ID_FK")
-	  REFERENCES "PRUEBA"."MD_PRIVILEGES" ("ID") ON DELETE CASCADE ENABLE;
-  ALTER TABLE "PRUEBA"."MD_USER_PRIVILEGES" ADD CONSTRAINT "MD_USER_PRIVILEGES_MD_USE_FK1" FOREIGN KEY ("USER_ID_FK")
-	  REFERENCES "PRUEBA"."MD_USERS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_USERS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_USERS" ADD CONSTRAINT "MD_USERS_MD_SCHEMAS_FK1" FOREIGN KEY ("SCHEMA_ID_FK")
-	  REFERENCES "PRUEBA"."MD_SCHEMAS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MD_VIEWS
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MD_VIEWS" ADD CONSTRAINT "MD_VIEWS_MD_SCHEMAS_FK1" FOREIGN KEY ("SCHEMA_ID_FK")
-	  REFERENCES "PRUEBA"."MD_SCHEMAS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MIGR_DATATYPE_TRANSFORM_MAP
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_MAP" ADD CONSTRAINT "MIGR_DATATYPE_TRANSFORM_M_FK1" FOREIGN KEY ("PROJECT_ID_FK")
-	  REFERENCES "PRUEBA"."MD_PROJECTS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MIGR_DATATYPE_TRANSFORM_RULE
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MIGR_DATATYPE_TRANSFORM_RULE" ADD CONSTRAINT "MIGR_DATATYPE_TRANSFORM_R_FK1" FOREIGN KEY ("MAP_ID_FK")
-	  REFERENCES "PRUEBA"."MIGR_DATATYPE_TRANSFORM_MAP" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MIGR_GENERATION_ORDER
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MIGR_GENERATION_ORDER" ADD CONSTRAINT "MIGR_GENERATION_ORDER_MD__FK1" FOREIGN KEY ("CONNECTION_ID_FK")
-	  REFERENCES "PRUEBA"."MD_CONNECTIONS" ("ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table MIGRLOG
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."MIGRLOG" ADD CONSTRAINT "MIGR_MIGRLOG_FK" FOREIGN KEY ("PARENT_LOG_ID")
-	  REFERENCES "PRUEBA"."MIGRLOG" ("ID") ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table RESERVA
---------------------------------------------------------
-
-  ALTER TABLE "PRUEBA"."RESERVA" ADD CONSTRAINT "FK_RESERVA_VISITANTE" FOREIGN KEY ("ID_VISITANTE")
-	  REFERENCES "PRUEBA"."VISITANTE" ("ID_VISITANTE") ON DELETE CASCADE ENABLE;
-  ALTER TABLE "PRUEBA"."RESERVA" ADD CONSTRAINT "FK_RESERVA_SENDERO" FOREIGN KEY ("ID_SENDERO")
-	  REFERENCES "PRUEBA"."SENDERO" ("ID_SENDERO") ON DELETE CASCADE ENABLE;
+
+-- Procedimiento: Completar reserva
+CREATE OR REPLACE PROCEDURE SP_COMPLETAR_RESERVA(
+    p_id_reserva IN NUMBER
+) AS
+    v_estado_actual VARCHAR2(20);
+BEGIN
+    SELECT ESTADO INTO v_estado_actual
+    FROM RESERVA
+    WHERE ID_RESERVA = p_id_reserva;
+    
+    IF v_estado_actual != 'CONFIRMADA' THEN
+        RAISE_APPLICATION_ERROR(-20050, 
+            'Solo se pueden completar reservas en estado CONFIRMADA');
+    END IF;
+    
+    UPDATE RESERVA
+    SET ESTADO = 'COMPLETADA'
+    WHERE ID_RESERVA = p_id_reserva;
+    
+    COMMIT;
+    
+    DBMS_OUTPUT.PUT_LINE('Reserva completada exitosamente');
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END SP_COMPLETAR_RESERVA;
+/
+
+-- =====================================================
+-- SECCIÓN 13: FUNCIONES ÚTILES
+-- =====================================================
+
+-- Función: Obtener cupos disponibles para un sendero en una fecha
+CREATE OR REPLACE FUNCTION FN_CUPOS_DISPONIBLES(
+    p_id_sendero IN NUMBER,
+    p_fecha_visita IN DATE
+) RETURN NUMBER IS
+    v_cupo_maximo NUMBER;
+    v_reservados NUMBER;
+BEGIN
+    SELECT CUPO_MAXIMO_DIA INTO v_cupo_maximo
+    FROM SENDERO
+    WHERE ID_SENDERO = p_id_sendero;
+    
+    SELECT NVL(SUM(NUMERO_PERSONAS), 0) INTO v_reservados
+    FROM RESERVA
+    WHERE ID_SENDERO = p_id_sendero
+      AND FECHA_VISITA = p_fecha_visita
+      AND ESTADO IN ('CONFIRMADA', 'PENDIENTE');
+    
+    RETURN (v_cupo_maximo - v_reservados);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN 0;
+    WHEN OTHERS THEN
+        RETURN -1;
+END FN_CUPOS_DISPONIBLES;
+/
+
+-- Función: Verificar si un guía está disponible
+CREATE OR REPLACE FUNCTION FN_GUIA_DISPONIBLE(
+    p_id_guia IN NUMBER,
+    p_fecha IN DATE,
+    p_hora IN VARCHAR2
+) RETURN NUMBER IS
+    v_conflictos NUMBER;
+    v_estado VARCHAR2(20);
+BEGIN
+    -- Verificar estado
+    SELECT ESTADO INTO v_estado
+    FROM GUIA
+    WHERE ID_GUIA = p_id_guia;
+    
+    IF v_estado != 'ACTIVO' THEN
+        RETURN 0;
+    END IF;
+    
+    -- Verificar conflictos
+    SELECT COUNT(*) INTO v_conflictos
+    FROM ASIGNACION_GUIA ag
+    JOIN RESERVA r ON ag.ID_RESERVA = r.ID_RESERVA
+    WHERE ag.ID_GUIA = p_id_guia
+      AND r.FECHA_VISITA = p_fecha
+      AND r.HORA_INICIO = p_hora
+      AND r.ESTADO IN ('CONFIRMADA', 'PENDIENTE');
+    
+    RETURN CASE WHEN v_conflictos = 0 THEN 1 ELSE 0 END;
+EXCEPTION
+    WHEN OTHERS THEN
+        RETURN 0;
+END FN_GUIA_DISPONIBLE;
+/
+
+-- =====================================================
+-- SECCIÓN 14: ROLES Y SEGURIDAD
+-- =====================================================
+
+-- Crear roles
+CREATE ROLE ROL_ADMIN_PARQUE;
+CREATE ROLE ROL_GUIA;
+CREATE ROLE ROL_RECEPCIONISTA;
+CREATE ROLE ROL_VISITANTE_WEB;
+
+-- Permisos para Administrador (acceso completo)
+GRANT ALL ON VISITANTE TO ROL_ADMIN_PARQUE;
+GRANT ALL ON SENDERO TO ROL_ADMIN_PARQUE;
+GRANT ALL ON RESERVA TO ROL_ADMIN_PARQUE;
+GRANT ALL ON GUIA TO ROL_ADMIN_PARQUE;
+GRANT ALL ON ASIGNACION_GUIA TO ROL_ADMIN_PARQUE;
+GRANT ALL ON HORARIO_DISPONIBLE TO ROL_ADMIN_PARQUE;
+
+GRANT SELECT ON V_DISPONIBILIDAD_SENDERO TO ROL_ADMIN_PARQUE;
+GRANT SELECT ON V_RESERVAS_COMPLETAS TO ROL_ADMIN_PARQUE;
+GRANT SELECT ON V_ESTADISTICAS_SENDERO TO ROL_ADMIN_PARQUE;
+GRANT SELECT ON V_DESEMPENO_GUIAS TO ROL_ADMIN_PARQUE;
+GRANT SELECT ON V_RESERVAS_PROXIMAS TO ROL_ADMIN_PARQUE;
+
+GRANT EXECUTE ON SP_CREAR_RESERVA TO ROL_ADMIN_PARQUE;
+GRANT EXECUTE ON SP_ASIGNAR_GUIA_AUTO TO ROL_ADMIN_PARQUE;
+GRANT EXECUTE ON SP_CANCELAR_RESERVA TO ROL_ADMIN_PARQUE;
+GRANT EXECUTE ON SP_CONFIRMAR_RESERVA TO ROL_ADMIN_PARQUE;
+GRANT EXECUTE ON SP_COMPLETAR_RESERVA TO ROL_ADMIN_PARQUE;
+
+-- Permisos para Guías (consulta de sus asignaciones)
+GRANT SELECT ON ASIGNACION_GUIA TO ROL_GUIA;
+GRANT SELECT ON RESERVA TO ROL_GUIA;
+GRANT SELECT ON VISITANTE TO ROL_GUIA;
+GRANT SELECT ON SENDERO TO ROL_GUIA;
+GRANT SELECT ON V_RESERVAS_COMPLETAS TO ROL_GUIA;
+GRANT UPDATE (OBSERVACIONES_GUIA, HORA_INICIO_REAL, HORA_FIN_REAL, CALIFICACION) 
+    ON ASIGNACION_GUIA TO ROL_GUIA;
+
+-- Permisos para Recepcionistas
+GRANT SELECT, INSERT, UPDATE ON RESERVA TO ROL_RECEPCIONISTA;
+GRANT SELECT, INSERT, UPDATE ON VISITANTE TO ROL_RECEPCIONISTA;
+GRANT SELECT ON SENDERO TO ROL_RECEPCIONISTA;
+GRANT SELECT ON GUIA TO ROL_RECEPCIONISTA;
+GRANT SELECT, INSERT ON ASIGNACION_GUIA TO ROL_RECEPCIONISTA;
+GRANT SELECT ON HORARIO_DISPONIBLE TO ROL_RECEPCIONISTA;
+
+GRANT SELECT ON V_DISPONIBILIDAD_SENDERO TO ROL_RECEPCIONISTA;
+GRANT SELECT ON V_RESERVAS_COMPLETAS TO ROL_RECEPCIONISTA;
+GRANT SELECT ON V_RESERVAS_PROXIMAS TO ROL_RECEPCIONISTA;
+
+GRANT EXECUTE ON SP_CREAR_RESERVA TO ROL_RECEPCIONISTA;
+GRANT EXECUTE ON SP_ASIGNAR_GUIA_AUTO TO ROL_RECEPCIONISTA;
+GRANT EXECUTE ON SP_CANCELAR_RESERVA TO ROL_RECEPCIONISTA;
+GRANT EXECUTE ON SP_CONFIRMAR_RESERVA TO ROL_RECEPCIONISTA;
+GRANT EXECUTE ON FN_CUPOS_DISPONIBLES TO ROL_RECEPCIONISTA;
+GRANT EXECUTE ON FN_GUIA_DISPONIBLE TO ROL_RECEPCIONISTA;
+
+-- Permisos para Sistema Web (aplicación pública)
+GRANT SELECT ON SENDERO TO ROL_VISITANTE_WEB;
+GRANT SELECT ON HORARIO_DISPONIBLE TO ROL_VISITANTE_WEB;
+GRANT SELECT, INSERT ON RESERVA TO ROL_VISITANTE_WEB;
+GRANT SELECT, INSERT, UPDATE ON VISITANTE TO ROL_VISITANTE_WEB;
+
+GRANT SELECT ON V_DISPONIBILIDAD_SENDERO TO ROL_VISITANTE_WEB;
+GRANT EXECUTE ON SP_CREAR_RESERVA TO ROL_VISITANTE_WEB;
+GRANT EXECUTE ON FN_CUPOS_DISPONIBLES TO ROL_VISITANTE_WEB;
+
+-- =====================================================
+-- SECCIÓN 15: DATOS DE PRUEBA
+-- =====================================================
+
+-- Insertar Senderos
+INSERT INTO SENDERO (NOMBRE, DESCRIPCION, DIFICULTAD, DISTANCIA_KM, DURACION_HORAS, CUPO_MAXIMO_DIA, REQUIERE_GUIA) 
+VALUES ('Sendero del Bosque Encantado', 'Recorrido por bosque nativo con flora y fauna local', 'FACIL', 3.5, 2.0, 30, 'N');
+
+INSERT INTO SENDERO (NOMBRE, DESCRIPCION, DIFICULTAD, DISTANCIA_KM, DURACION_HORAS, CUPO_MAXIMO_DIA, REQUIERE_GUIA) 
+VALUES ('Cascada Los Tres Saltos', 'Ruta hacia cascadas impresionantes', 'MODERADO', 5.8, 3.5, 25, 'S');
+
+INSERT INTO SENDERO (NOMBRE, DESCRIPCION, DIFICULTAD, DISTANCIA_KM, DURACION_HORAS, CUPO_MAXIMO_DIA, REQUIERE_GUIA) 
+VALUES ('Cumbre del Mirador', 'Ascenso a la cima con vista panorámica', 'DIFICIL', 8.2, 5.0, 15, 'S');
+
+INSERT INTO SENDERO (NOMBRE, DESCRIPCION, DIFICULTAD, DISTANCIA_KM, DURACION_HORAS, CUPO_MAXIMO_DIA, REQUIERE_GUIA) 
+VALUES ('Laguna Azul', 'Caminata familiar alrededor de la laguna', 'FACIL', 2.0, 1.5, 40, 'N');
+
+-- Insertar Horarios Disponibles
+INSERT INTO HORARIO_DISPONIBLE (ID_SENDERO, DIA_SEMANA, HORA_INICIO, HORA_FIN, CUPO_POR_HORARIO) 
+VALUES (1, 'LUNES', '08:00', '10:00', 15);
+INSERT INTO HORARIO_DISPONIBLE (ID_SENDERO, DIA_SEMANA, HORA_INICIO, HORA_FIN, CUPO_POR_HORARIO) 
+VALUES (1, 'LUNES', '14:00', '16:00', 15);
+
+INSERT INTO HORARIO_DISPONIBLE (ID_SENDERO, DIA_SEMANA, HORA_INICIO, HORA_FIN, CUPO_POR_HORARIO) 
+VALUES (2, 'MARTES', '09:00', '12:30', 12);
+INSERT INTO HORARIO_DISPONIBLE (ID_SENDERO, DIA_SEMANA, HORA_INICIO, HORA_FIN, CUPO_POR_HORARIO) 
+VALUES (2, 'JUEVES', '09:00', '12:30', 13);
+
+INSERT INTO HORARIO_DISPONIBLE (ID_SENDERO, DIA_SEMANA, HORA_INICIO, HORA_FIN, CUPO_POR_HORARIO) 
+VALUES (3, 'SABADO', '07:00', '12:00', 15);
+
+INSERT INTO HORARIO_DISPONIBLE (ID_SENDERO, DIA_SEMANA, HORA_INICIO, HORA_FIN, CUPO_POR_HORARIO) 
+VALUES (4, 'DOMINGO', '10:00', '11:30', 20);
+INSERT INTO HORARIO_DISPONIBLE (ID_SENDERO, DIA_SEMANA, HORA_INICIO, HORA_FIN, CUPO_POR_HORARIO) 
+VALUES (4, 'DOMINGO', '15:00', '16:30', 20);
+
+-- Insertar Guías
+INSERT INTO GUIA (CEDULA, NOMBRE, APELLIDO, EMAIL, TELEFONO, ESPECIALIDAD) 
+VALUES ('1234567890', 'Carlos', 'Rodríguez', 'carlos.rodriguez@parque.com', '3001234567', 'Ornitología y Botánica');
+
+INSERT INTO GUIA (CEDULA, NOMBRE, APELLIDO, EMAIL, TELEFONO, ESPECIALIDAD) 
+VALUES ('0987654321', 'María', 'González', 'maria.gonzalez@parque.com', '3109876543', 'Geología y Senderismo de Montaña');
+
+INSERT INTO GUIA (CEDULA, NOMBRE, APELLIDO, EMAIL, TELEFONO, ESPECIALIDAD) 
+VALUES ('1122334455', 'Pedro', 'Martínez', 'pedro.martinez@parque.com', '3201122334', 'Fotografía de Naturaleza');
+
+-- Insertar Visitantes de prueba
+INSERT INTO VISITANTE (CEDULA, NOMBRE, APELLIDO, EMAIL, TELEFONO, FECHA_NACIMIENTO) 
+VALUES ('52123456', 'Ana', 'Pérez', 'ana.perez@email.com', '3151234567', TO_DATE('1990-05-15', 'YYYY-MM-DD'));
+
+INSERT INTO VISITANTE (CEDULA, NOMBRE, APELLIDO, EMAIL, TELEFONO, FECHA_NACIMIENTO) 
+VALUES ('52234567', 'Luis', 'Ramírez', 'luis.ramirez@email.com', '3162345678', TO_DATE('1985-08-22', 'YYYY-MM-DD'));
+
+INSERT INTO VISITANTE (CEDULA, NOMBRE, APELLIDO, EMAIL, TELEFONO, FECHA_NACIMIENTO) 
+VALUES ('52345678', 'Laura', 'Torres', 'laura.torres@email.com', '3173456789', TO_DATE('1995-12-10', 'YYYY-MM-DD'));
+
+COMMIT;
+
+-- =====================================================
+-- SCRIPT COMPLETO - FIN
+-- =====================================================
+
+-- Mensaje de confirmación
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('==============================================');
+    DBMS_OUTPUT.PUT_LINE('SCRIPT COMPLETADO EXITOSAMENTE');
+    DBMS_OUTPUT.PUT_LINE('==============================================');
+    DBMS_OUTPUT.PUT_LINE('Tablas creadas: 6');
+    DBMS_OUTPUT.PUT_LINE('Triggers creados: 11');
+    DBMS_OUTPUT.PUT_LINE('Vistas creadas: 5');
+    DBMS_OUTPUT.PUT_LINE('Procedimientos: 5');
+    DBMS_OUTPUT.PUT_LINE('Funciones: 2');
+    DBMS_OUTPUT.PUT_LINE('Roles: 4');
+    DBMS_OUTPUT.PUT_LINE('==============================================');
+END;
+/
