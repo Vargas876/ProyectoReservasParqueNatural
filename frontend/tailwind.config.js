@@ -8,6 +8,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        border: '#e5e7eb', // Color agregado para border-border
         primary: {
           50: '#f0fdf4',
           100: '#dcfce7',
@@ -110,4 +111,3 @@ export default {
   },
   plugins: [],
 }
-  
