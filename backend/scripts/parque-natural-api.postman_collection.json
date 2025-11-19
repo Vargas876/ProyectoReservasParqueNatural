@@ -1,0 +1,938 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "Sistema Reservas Parque Natural",
+		"description": "Colección completa de endpoints para el Sistema de Reservas del Parque Natural",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Visitantes",
+			"item": [
+				{
+					"name": "Listar Todos los Visitantes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/visitante/findAll",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["visitante", "findAll"]
+						}
+					}
+				},
+				{
+					"name": "Crear Visitante",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cedula\": \"1234567890\",\n    \"nombre\": \"Juan\",\n    \"apellido\": \"Pérez\",\n    \"telefono\": \"3001234567\",\n    \"email\": \"juan.perez@email.com\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/visitante/save",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["visitante", "save"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Visitante por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/visitante/findById/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["visitante", "findById", "1"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Visitante por Cédula",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/visitante/findByCedula/1234567890",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["visitante", "findByCedula", "1234567890"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Visitante por Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/visitante/findByEmail?email=juan.perez@email.com",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["visitante", "findByEmail"],
+							"query": [
+								{
+									"key": "email",
+									"value": "juan.perez@email.com"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Listar Visitantes por Estado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/visitante/findByEstado/ACTIVO",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["visitante", "findByEstado", "ACTIVO"]
+						}
+					}
+				},
+				{
+					"name": "Actualizar Visitante",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cedula\": \"1234567890\",\n    \"nombre\": \"Juan Carlos\",\n    \"apellido\": \"Pérez\",\n    \"telefono\": \"3009876543\",\n    \"email\": \"juan.perez@email.com\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/visitante/update/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["visitante", "update", "1"]
+						}
+					}
+				},
+				{
+					"name": "Eliminar Visitante",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/visitante/delete/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["visitante", "delete", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Senderos",
+			"item": [
+				{
+					"name": "Listar Todos los Senderos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/sendero/findAll",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["sendero", "findAll"]
+						}
+					}
+				},
+				{
+					"name": "Listar Senderos Activos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/sendero/findAllActivos",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["sendero", "findAllActivos"]
+						}
+					}
+				},
+				{
+					"name": "Crear Sendero",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Cascada El Paraíso\",\n    \"descripcion\": \"Hermosa cascada rodeada de vegetación exuberante\",\n    \"dificultad\": \"FACIL\",\n    \"duracionHoras\": 2.5,\n    \"cupoMaximoDia\": 30,\n    \"distanciaKm\": 3.5\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/sendero/save",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["sendero", "save"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Sendero por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/sendero/findById/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["sendero", "findById", "1"]
+						}
+					}
+				},
+				{
+					"name": "Listar Senderos por Dificultad",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/sendero/findByDificultad/FACIL",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["sendero", "findByDificultad", "FACIL"]
+						}
+					}
+				},
+				{
+					"name": "Consultar Disponibilidad de Sendero",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/sendero/disponibilidad/1?fecha=2025-10-15",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["sendero", "disponibilidad", "1"],
+							"query": [
+								{
+									"key": "fecha",
+									"value": "2025-10-15"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Actualizar Sendero",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Cascada El Paraíso\",\n    \"descripcion\": \"Hermosa cascada con zona de camping\",\n    \"dificultad\": \"FACIL\",\n    \"duracionHoras\": 3.0,\n    \"cupoMaximoDia\": 35,\n    \"distanciaKm\": 3.5\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/sendero/update/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["sendero", "update", "1"]
+						}
+					}
+				},
+				{
+					"name": "Eliminar Sendero",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/sendero/delete/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["sendero", "delete", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Guías",
+			"item": [
+				{
+					"name": "Listar Todos los Guías",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/guia/findAll",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["guia", "findAll"]
+						}
+					}
+				},
+				{
+					"name": "Listar Guías Activos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/guia/findAllActivos",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["guia", "findAllActivos"]
+						}
+					}
+				},
+				{
+					"name": "Crear Guía",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cedula\": \"1234567890\",\n    \"nombre\": \"Carlos\",\n    \"apellido\": \"Rodríguez\",\n    \"telefono\": \"3001234567\",\n    \"email\": \"carlos.rodriguez@parque.com\",\n    \"especialidades\": \"Flora,Fauna\",\n    \"maxPersonasGrupo\": 15\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/guia/save",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["guia", "save"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Guía por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/guia/findById/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["guia", "findById", "1"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Guía por Especialidad",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/guia/findByEspecialidad?especialidad=Flora",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["guia", "findByEspecialidad"],
+							"query": [
+								{
+									"key": "especialidad",
+									"value": "Flora"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Ver Agenda de Guía",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/guia/agenda/1?fecha=2025-10-15",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["guia", "agenda", "1"],
+							"query": [
+								{
+									"key": "fecha",
+									"value": "2025-10-15"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Actualizar Guía",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cedula\": \"1234567890\",\n    \"nombre\": \"Carlos\",\n    \"apellido\": \"Rodríguez\",\n    \"telefono\": \"3009876543\",\n    \"email\": \"carlos.rodriguez@parque.com\",\n    \"especialidades\": \"Flora,Fauna,Aves\",\n    \"maxPersonasGrupo\": 20\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/guia/update/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["guia", "update", "1"]
+						}
+					}
+				},
+				{
+					"name": "Eliminar Guía",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/guia/delete/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["guia", "delete", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Reservas",
+			"item": [
+				{
+					"name": "Listar Todas las Reservas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/reserva/findAll",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["reserva", "findAll"]
+						}
+					}
+				},
+				{
+					"name": "Crear Reserva",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"visitante\": {\n        \"idVisitante\": 1\n    },\n    \"sendero\": {\n        \"idSendero\": 1\n    },\n    \"fechaVisita\": \"2025-10-15\",\n    \"numeroPersonas\": 2,\n    \"horaInicio\": \"08:00\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/reserva/save",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["reserva", "save"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Reserva por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/reserva/findById/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["reserva", "findById", "1"]
+						}
+					}
+				},
+				{
+					"name": "Listar Reservas por Visitante",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/reserva/findByVisitante/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["reserva", "findByVisitante", "1"]
+						}
+					}
+				},
+				{
+					"name": "Listar Reservas por Sendero",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/reserva/findBySendero/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["reserva", "findBySendero", "1"]
+						}
+					}
+				},
+				{
+					"name": "Listar Reservas por Estado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/reserva/findByEstado/CONFIRMADA",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["reserva", "findByEstado", "CONFIRMADA"]
+						}
+					}
+				},
+				{
+					"name": "Listar Reservas sin Guía",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/reserva/sinGuia",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["reserva", "sinGuia"]
+						}
+					}
+				},
+				{
+					"name": "Actualizar Reserva",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"visitante\": {\n        \"idVisitante\": 1\n    },\n    \"sendero\": {\n        \"idSendero\": 1\n    },\n    \"fechaVisita\": \"2025-10-20\",\n    \"numeroPersonas\": 3,\n    \"horaInicio\": \"14:00\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/reserva/update/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["reserva", "update", "1"]
+						}
+					}
+				},
+				{
+					"name": "Cancelar Reserva",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/reserva/cancelar/1?motivo=Cambio de planes",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["reserva", "cancelar", "1"],
+							"query": [
+								{
+									"key": "motivo",
+									"value": "Cambio de planes"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Eliminar Reserva",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/reserva/delete/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["reserva", "delete", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Asignaciones",
+			"item": [
+				{
+					"name": "Listar Todas las Asignaciones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/asignacion/findAll",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["asignacion", "findAll"]
+						}
+					}
+				},
+				{
+					"name": "Asignar Guía a Reserva",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reserva\": {\n        \"idReserva\": 1\n    },\n    \"guia\": {\n        \"idGuia\": 1\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/asignacion/save",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["asignacion", "save"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Asignación por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/asignacion/findById/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["asignacion", "findById", "1"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Asignación por Reserva",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/asignacion/findByReserva/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["asignacion", "findByReserva", "1"]
+						}
+					}
+				},
+				{
+					"name": "Listar Asignaciones por Guía",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/asignacion/findByGuia/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["asignacion", "findByGuia", "1"]
+						}
+					}
+				},
+				{
+					"name": "Listar Asignaciones por Fecha",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/asignacion/findByFecha?fecha=2025-10-15",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["asignacion", "findByFecha"],
+							"query": [
+								{
+									"key": "fecha",
+									"value": "2025-10-15"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Listar Asignaciones por Guía y Fecha",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/asignacion/findByGuiaAndFecha?idGuia=1&fecha=2025-10-15",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["asignacion", "findByGuiaAndFecha"],
+							"query": [
+								{
+									"key": "idGuia",
+									"value": "1"
+								},
+								{
+									"key": "fecha",
+									"value": "2025-10-15"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Iniciar Recorrido",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/asignacion/iniciar/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["asignacion", "iniciar", "1"]
+						}
+					}
+				},
+				{
+					"name": "Finalizar Recorrido",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/asignacion/finalizar/1?observaciones=Recorrido exitoso, grupo muy participativo",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["asignacion", "finalizar", "1"],
+							"query": [
+								{
+									"key": "observaciones",
+									"value": "Recorrido exitoso, grupo muy participativo"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Actualizar Asignación",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reserva\": {\n        \"idReserva\": 1\n    },\n    \"guia\": {\n        \"idGuia\": 2\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/asignacion/update/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["asignacion", "update", "1"]
+						}
+					}
+				},
+				{
+					"name": "Eliminar Asignación",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/asignacion/delete/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["asignacion", "delete", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Horarios",
+			"item": [
+				{
+					"name": "Listar Todos los Horarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/horario/findAll",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["horario", "findAll"]
+						}
+					}
+				},
+				{
+					"name": "Crear Horario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sendero\": {\n        \"idSendero\": 1\n    },\n    \"horaInicio\": \"08:00\",\n    \"horaFin\": \"10:30\",\n    \"cupoHorario\": 15,\n    \"diasSemana\": \"L,M,MI,J,V,S,D\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/horario/save",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["horario", "save"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Horario por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/horario/findById/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["horario", "findById", "1"]
+						}
+					}
+				},
+				{
+					"name": "Listar Horarios por Sendero",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/horario/findBySendero/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["horario", "findBySendero", "1"]
+						}
+					}
+				},
+				{
+					"name": "Listar Horarios por Sendero y Día",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/horario/findBySenderoAndDia?idSendero=1&dia=L",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["horario", "findBySenderoAndDia"],
+							"query": [
+								{
+									"key": "idSendero",
+									"value": "1"
+								},
+								{
+									"key": "dia",
+									"value": "L"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Actualizar Horario",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+                            "raw": "{\n    \"sendero\": {\n        \"idSendero\": 1\n    },\n    \"horaInicio\": \"09:00\",\n    \"horaFin\": \"11:30\",\n    \"cupoHorario\": 20,\n    \"diasSemana\": \"L,M,MI,J,V\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/horario/update/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["horario", "update", "1"]
+						}
+					}
+				},
+				{
+					"name": "Eliminar Horario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/horario/delete/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["horario", "delete", "1"]
+						}
+					}
+				}
+			]
+		}
+	]
+}

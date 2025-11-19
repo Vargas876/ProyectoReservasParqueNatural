@@ -7,10 +7,21 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Frontend
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+frontend/.vite
+frontend/*.local
+
+# Backend
+backend/target
+backend/.mvn
+backend/mvnw
+backend/mvnw.cmd
+backend/.classpath
+backend/.project
+backend/.settings
 
 # Editor directories and files
 .vscode/*
@@ -27,3 +38,8 @@ dist-ssr
 .env
 .env.local
 .env.production
+.env.development
+
+# OS
+Thumbs.db
+.DS_Store
