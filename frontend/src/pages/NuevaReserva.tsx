@@ -1,429 +1,597 @@
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { MainLayout } from '../components/layout/MainLayout';
+import { guiasApi } from '../api/guiasApi';
+import { reservasApi } from '../api/reservasApi';
+import { senderosApi } from '../api/senderosApi';
 import { Button } from '../components/common/Button';
 import { Card } from '../components/common/Card';
 import { Loading } from '../components/common/Loading';
-import { useSendero } from '../hooks/useSenderos';
-import { useCrearReserva, useDisponibilidad } from '../hooks/useReservas';
-import { visitantesApi } from '../api/visitantesApi';
-import { formatDate } from '../utils/formatters';
-import type { Visitante } from '../types/visitante.types';
+import { MainLayout } from '../components/layout/MainLayout';
 import { useToast } from '../contexts/ToastContext';
-
-const reservaSchema = z.object({
-  cedula: z.string().min(1, 'La cédula es obligatoria'),
-  nombre: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
-  apellido: z.string().min(2, 'El apellido debe tener al menos 2 caracteres'),
-  email: z.string().email('Email inválido'),
-  telefono: z.string().min(7, 'El teléfono debe tener al menos 7 dígitos'),
-  fechaVisita: z.string().min(1, 'La fecha de visita es obligatoria'),
-  horaInicio: z.string().min(1, 'La hora de inicio es obligatoria'),
-  numeroPersonas: z.coerce.number().min(1, 'Mínimo 1 persona').max(20, 'Máximo 20 personas'),
-  observaciones: z.string().optional(),
-});
-
-type ReservaFormData = z.infer<typeof reservaSchema>;
+import type { Guia } from '../types/guia.types';
+import type { ReservaRequest } from '../types/reserva.types';
+import type { Sendero } from '../types/sendero.types';
 
 const NuevaReserva: React.FC = () => {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const senderoId = searchParams.get('sendero');
-  const idSendero = senderoId ? parseInt(senderoId, 10) : 0;
-
-  const { data: sendero, isLoading: loadingSendero } = useSendero(idSendero);
-  const crearReserva = useCrearReserva();
-  const [visitanteExistente, setVisitanteExistente] = useState<Visitante | null>(null);
-  const [buscandoVisitante, setBuscandoVisitante] = useState(false);
+  const navigate = useNavigate();
   const { showToast } = useToast();
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<ReservaFormData>({
-    resolver: zodResolver(reservaSchema),
-    defaultValues: {
-      numeroPersonas: 1,
-    },
+  // Estados del formulario
+  const [senderos, setSenderos] = useState<Sendero[]>([]);
+  const [guiasDisponibles, setGuiasDisponibles] = useState<Guia[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [enviando, setEnviando] = useState(false);
+
+  // NUEVO: Estados para horarios disponibles
+  const [horariosDisponibles, setHorariosDisponibles] = useState<Array<{horaInicio: string, horaFin: string}>>([]);
+  const [cargandoHorarios, setCargandoHorarios] = useState(false);
+
+  // Estados del formulario
+  const [formData, setFormData] = useState<ReservaRequest>({
+    cedulaVisitante: '',
+    idSendero: Number(searchParams.get('sendero')) || 0,
+    fechaVisita: '',
+    numeroPersonas: 1,
+    horaInicio: '',
+    observaciones: '',
+    idGuia: undefined,
+    nombreVisitante: '',
+    apellidoVisitante: '',
+    emailVisitante: '',
+    telefonoVisitante: '',
   });
 
-  const fechaVisita = watch('fechaVisita');
-  const numeroPersonas = watch('numeroPersonas');
-
-  const { data: disponibilidad, isLoading: loadingDisponibilidad } = useDisponibilidad(
-    idSendero,
-    fechaVisita || ''
-  );
+  // Estado para selección de guía
+  const [modoAsignacion, setModoAsignacion] = useState<'automatico' | 'manual'>('automatico');
+  const [senderoSeleccionado, setSenderoSeleccionado] = useState<Sendero | null>(null);
 
   useEffect(() => {
-    if (!senderoId || isNaN(idSendero)) {
-      navigate('/senderos');
-    }
-  }, [senderoId, idSendero, navigate]);
+    fetchSenderos();
+  }, []);
 
-  const buscarVisitante = async (cedula: string) => {
-    if (!cedula || cedula.length < 5) {
-      setVisitanteExistente(null);
+  // MODIFICADO: Cargar horarios cuando cambia sendero o fecha
+  useEffect(() => {
+    if (formData.idSendero && formData.fechaVisita) {
+      fetchHorariosDisponibles();
+    } else {
+      setHorariosDisponibles([]);
+      setFormData({ ...formData, horaInicio: '' });
+    }
+  }, [formData.idSendero, formData.fechaVisita]);
+
+  // MODIFICADO: Cargar guías solo cuando hay hora seleccionada
+  useEffect(() => {
+    if (formData.idSendero && formData.fechaVisita && formData.horaInicio) {
+      fetchGuiasDisponibles();
+    }
+  }, [formData.idSendero, formData.fechaVisita, formData.horaInicio]);
+
+  const fetchSenderos = async () => {
+    try {
+      const data = await senderosApi.findActivos();
+      setSenderos(data);
+      
+      if (formData.idSendero) {
+        const sendero = data.find(s => s.idSendero === formData.idSendero);
+        setSenderoSeleccionado(sendero || null);
+      }
+    } catch (error) {
+      showToast('Error al cargar senderos', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // NUEVA FUNCIÓN: Cargar horarios disponibles
+  const fetchHorariosDisponibles = async () => {
+    setCargandoHorarios(true);
+    try {
+      const horarios = await reservasApi.getHorariosDisponibles(
+        formData.idSendero,
+        formData.fechaVisita
+      );
+      setHorariosDisponibles(horarios);
+      
+      // Limpiar hora seleccionada si ya no está disponible
+      if (formData.horaInicio) {
+        const horaValida = horarios.some((h: any) => h.horaInicio === formData.horaInicio);
+        if (!horaValida) {
+          setFormData({ ...formData, horaInicio: '' });
+        }
+      }
+      
+      // Mostrar advertencia si no hay horarios
+      if (horarios.length === 0) {
+        showToast('No hay horarios disponibles para esta fecha. Selecciona otra fecha.', 'warning');
+      }
+    } catch (error) {
+      console.error('Error al cargar horarios disponibles:', error);
+      setHorariosDisponibles([]);
+      showToast('Error al cargar horarios disponibles', 'error');
+    } finally {
+      setCargandoHorarios(false);
+    }
+  };
+
+  const fetchGuiasDisponibles = async () => {
+    try {
+      const guias = await guiasApi.getDisponibles(
+        formData.idSendero,
+        formData.fechaVisita,
+        formData.horaInicio
+      );
+      setGuiasDisponibles(guias);
+    } catch (error) {
+      console.error('Error al cargar guías disponibles:', error);
+      setGuiasDisponibles([]);
+    }
+  };
+
+  const handleSenderoChange = (idSendero: number) => {
+    const sendero = senderos.find(s => s.idSendero === idSendero);
+    setSenderoSeleccionado(sendero || null);
+    setFormData({ ...formData, idSendero, horaInicio: '' });
+    setHorariosDisponibles([]);
+  };
+
+  const handleFechaChange = (fecha: string) => {
+    setFormData({ ...formData, fechaVisita: fecha, horaInicio: '' });
+    setHorariosDisponibles([]);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validaciones
+    if (!formData.cedulaVisitante.trim()) {
+      showToast('La cédula es obligatoria', 'error');
+      return;
+    }
+    
+    if (!formData.idSendero) {
+      showToast('Selecciona un sendero', 'error');
+      return;
+    }
+    
+    if (!formData.fechaVisita) {
+      showToast('Selecciona una fecha', 'error');
       return;
     }
 
-    setBuscandoVisitante(true);
-    try {
-      const visitante = await visitantesApi.getByCedula(cedula);
-      setVisitanteExistente(visitante);
-      setValue('nombre', visitante.nombre);
-      setValue('apellido', visitante.apellido);
-      setValue('email', visitante.email);
-      setValue('telefono', visitante.telefono);
-    } catch (error) {
-      setVisitanteExistente(null);
-    } finally {
-      setBuscandoVisitante(false);
+    // NUEVA VALIDACIÓN: Verificar horarios disponibles
+    if (horariosDisponibles.length === 0) {
+      showToast('No hay horarios disponibles para la fecha seleccionada. Por favor elige otra fecha.', 'error');
+      return;
     }
-  };
 
-  const onSubmit = async (data: ReservaFormData) => {
-    if (!sendero) return;
+    if (!formData.horaInicio) {
+      showToast('Selecciona una hora de inicio', 'error');
+      return;
+    }
 
+    // Validar que la hora seleccionada está en los horarios disponibles
+    const horaValida = horariosDisponibles.some((h: any) => h.horaInicio === formData.horaInicio);
+    if (!horaValida) {
+      showToast('La hora seleccionada no está disponible. Por favor elige otra hora.', 'error');
+      return;
+    }
+    const fechaSeleccionada = new Date(formData.fechaVisita);
+  const ahora = new Date();
+  const diferenciaHoras = (fechaSeleccionada.getTime() - ahora.getTime()) / (1000 * 60 * 60);
+  
+  if (diferenciaHoras < 24) {
+    showToast('La reserva debe hacerse con mínimo 24 horas de anticipación', 'error');
+    return;
+  }
+  
+    // Validar guía en modo manual
+    if (modoAsignacion === 'manual' && !formData.idGuia) {
+      showToast('Selecciona un guía', 'error');
+      return;
+    }
+  
+    setEnviando(true);
+  
     try {
-      // Primero, obtener o crear el visitante
-      let visitante: Visitante;
+      let response;
       
-      if (visitanteExistente) {
-        visitante = visitanteExistente;
-      } else {
-        // Crear nuevo visitante
-        try {
-          visitante = await visitantesApi.create({
-            cedula: data.cedula,
-            nombre: data.nombre,
-            apellido: data.apellido,
-            email: data.email,
-            telefono: data.telefono,
-          });
-        } catch (error: any) {
-          // Si falla, intentar obtener por cédula (puede que ya exista)
-          try {
-            visitante = await visitantesApi.getByCedula(data.cedula);
-            // Actualizar datos si es necesario
-            visitante = await visitantesApi.update(visitante.idVisitante, {
-              nombre: data.nombre,
-              apellido: data.apellido,
-              email: data.email,
-              telefono: data.telefono,
-            });
-          } catch (err) {
-            throw new Error('Error al crear o actualizar el visitante');
-          }
+      if (modoAsignacion === 'automatico') {
+        // Asignación automática
+        response = await reservasApi.createConGuiaAutomatico(formData);
+        
+        if (response.guiaAsignado) {
+          showToast(
+            `¡Reserva creada! Guía asignado: ${response.guiaAsignado.nombre}`, 
+            'success'
+          );
+        } else {
+          showToast('¡Reserva creada! Se asignará un guía próximamente', 'success');
         }
+      } else {
+        // Asignación manual
+        response = await reservasApi.createConGuiaManual(formData);
+        showToast('¡Reserva creada con el guía seleccionado!', 'success');
       }
-
-      // Construir el objeto Reserva como lo espera el backend
-      const reservaData = {
-        visitante: {
-          idVisitante: visitante.idVisitante,
-        },
-        sendero: {
-          idSendero: sendero.idSendero,
-        },
-        fechaVisita: data.fechaVisita,
-        horaInicio: data.horaInicio,
-        numeroPersonas: data.numeroPersonas,
-        observaciones: data.observaciones || null,
-      };
-
-      const reserva = await crearReserva.mutateAsync(reservaData);
-
-      showToast('Reserva creada exitosamente', 'success');
-      // El backend no devuelve codigoConfirmacion directamente, necesitamos obtenerlo
-      navigate(`/reservas/confirmacion?codigo=${reserva.idReserva}`);
+  
+      // Redirigir a confirmación
+      const codigo = response.codigoConfirmacion || `RES-${response.idReserva}`;
+      navigate(`/reservas/confirmacion?codigo=${codigo}`);
+      
     } catch (error: any) {
       console.error('Error al crear reserva:', error);
-      let errorMessage = 'Error al crear la reserva';
+      console.error('Datos del error:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
       
-      if (error?.response?.status === 400) {
-        errorMessage = error?.response?.data?.message || 'Datos inválidos. Verifica la información ingresada.';
-      } else if (error?.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error?.message) {
-        errorMessage = error.message;
+      // Intentar obtener el mensaje de error más descriptivo
+      let mensaje = 'Error al crear la reserva. Verifica los datos e intenta nuevamente.';
+      
+      if (error.response?.data) {
+        // Priorizar mensaje específico, luego error genérico
+        mensaje = error.response.data.message || 
+                 error.response.data.error || 
+                 mensaje;
+      } else if (error.message) {
+        mensaje = error.message;
       }
       
-      showToast(errorMessage, 'error');
+      showToast(mensaje, 'error');
+    } finally {
+      setEnviando(false);
     }
   };
 
-  const fechaMinima = new Date();
-  fechaMinima.setDate(fechaMinima.getDate() + 1);
-  const fechaMinimaStr = fechaMinima.toISOString().split('T')[0];
-
-  if (loadingSendero) {
+  if (loading) {
     return (
       <MainLayout>
-        <Loading message="Cargando información del sendero..." />
+        <Loading message="Cargando formulario..." />
       </MainLayout>
     );
   }
-
-  if (!sendero) {
-    return (
-      <MainLayout>
-        <div className="container mx-auto px-4 py-8">
-          <Card>
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Sendero no encontrado</h2>
-              <Button onClick={() => navigate('/senderos')}>Volver a Senderos</Button>
-            </div>
-          </Card>
-        </div>
-      </MainLayout>
-    );
-  }
-
-  const cuposDisponibles = disponibilidad?.cuposDisponibles ?? sendero.cupoMaximoDia;
-  const hayCupo = numeroPersonas <= cuposDisponibles;
 
   return (
     <MainLayout>
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="mb-6">
-          <button
-            onClick={() => navigate(-1)}
-            className="text-primary-600 hover:text-primary-700 mb-4 flex items-center"
-          >
-            ← Volver
-          </button>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Nueva Reserva</h1>
-          <p className="text-gray-600">Completa el formulario para reservar tu sendero</p>
-        </div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+              Nueva Reserva
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              Completa el formulario para reservar tu visita
+            </p>
+          </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Card>
-            <h3 className="font-semibold text-gray-800 mb-2">{sendero.nombre}</h3>
-            <p className="text-sm text-gray-600 mb-3">{sendero.descripcion}</p>
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center text-gray-700">
-                <span className="mr-2">📏</span>
-                <span>{sendero.distanciaKm} km</span>
-              </div>
-              <div className="flex items-center text-gray-700">
-                <span className="mr-2">⏱️</span>
-                <span>{sendero.duracionHoras} hrs</span>
-              </div>
-              <div className="flex items-center text-gray-700">
-                <span className="mr-2">👥</span>
-                <span>Cupo: {sendero.cupoMaximoDia} personas/día</span>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="md:col-span-2">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Datos del Visitante</h2>
-                
-                <div className="mb-4">
-                  <label htmlFor="cedula" className="block text-sm font-medium text-gray-700 mb-1">
-                    Cédula *
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      id="cedula"
-                      type="text"
-                      {...register('cedula')}
-                      onBlur={(e) => buscarVisitante(e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                      placeholder="Ingresa tu cédula"
-                    />
-                    {buscandoVisitante && (
-                      <div className="flex items-center">
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-600"></div>
-                      </div>
-                    )}
-                  </div>
-                  {errors.cedula && (
-                    <p className="mt-1 text-sm text-red-600">{errors.cedula.message}</p>
-                  )}
-                  {visitanteExistente && (
-                    <p className="mt-1 text-sm text-green-600">
-                      ✓ Visitante encontrado: {visitanteExistente.nombre} {visitanteExistente.apellido}
-                    </p>
-                  )}
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Información del Visitante */}
+            <Card>
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+                Información del Visitante
+              </h2>
+              <div className="space-y-4">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  Si el visitante no está registrado, completa todos los campos para crearlo automáticamente.
+                </p>
+                <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Cédula *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.cedulaVisitante}
+                      onChange={(e) => setFormData({ ...formData, cedulaVisitante: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      required
+                      placeholder="Ej: 1234567890"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Nombre *
                     </label>
                     <input
-                      id="nombre"
                       type="text"
-                      {...register('nombre')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      value={formData.nombreVisitante || ''}
+                      onChange={(e) => setFormData({ ...formData, nombreVisitante: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      placeholder="Nombre del visitante"
                     />
-                    {errors.nombre && (
-                      <p className="mt-1 text-sm text-red-600">{errors.nombre.message}</p>
-                    )}
                   </div>
-
                   <div>
-                    <label htmlFor="apellido" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Apellido *
                     </label>
                     <input
-                      id="apellido"
                       type="text"
-                      {...register('apellido')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      value={formData.apellidoVisitante || ''}
+                      onChange={(e) => setFormData({ ...formData, apellidoVisitante: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      placeholder="Apellido del visitante"
                     />
-                    {errors.apellido && (
-                      <p className="mt-1 text-sm text-red-600">{errors.apellido.message}</p>
-                    )}
                   </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4 mt-4">
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Email *
                     </label>
                     <input
-                      id="email"
                       type="email"
-                      {...register('email')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      value={formData.emailVisitante || ''}
+                      onChange={(e) => setFormData({ ...formData, emailVisitante: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      placeholder="email@ejemplo.com"
                     />
-                    {errors.email && (
-                      <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-                    )}
                   </div>
-
                   <div>
-                    <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 mb-1">
-                      Teléfono *
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Teléfono
                     </label>
                     <input
-                      id="telefono"
                       type="tel"
-                      {...register('telefono')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      value={formData.telefonoVisitante || ''}
+                      onChange={(e) => setFormData({ ...formData, telefonoVisitante: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      placeholder="Ej: 3001234567"
                     />
-                    {errors.telefono && (
-                      <p className="mt-1 text-sm text-red-600">{errors.telefono.message}</p>
-                    )}
                   </div>
                 </div>
               </div>
+            </Card>
 
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Detalles de la Reserva</h2>
-                
-                <div className="grid md:grid-cols-2 gap-4">
+            {/* Selección de Sendero */}
+            <Card>
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+                Sendero y Fecha
+              </h2>
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Sendero *
+                  </label>
+                  <select
+                    value={formData.idSendero}
+                    onChange={(e) => handleSenderoChange(Number(e.target.value))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    required
+                  >
+                    <option value="">Selecciona un sendero</option>
+                    {senderos.map((sendero) => (
+                      <option key={sendero.idSendero} value={sendero.idSendero}>
+                        {sendero.nombre} - {sendero.dificultad} ({sendero.duracionHoras}h)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {senderoSeleccionado && (
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                    <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">
+                      Detalles del Sendero
+                    </h3>
+                    <div className="grid md:grid-cols-3 gap-4 text-sm text-blue-800 dark:text-blue-200">
+                      <div>📏 Distancia: {senderoSeleccionado.distanciaKm} km</div>
+                      <div>⏱️ Duración: {senderoSeleccionado.duracionHoras} hrs</div>
+                      <div>👥 Cupo: {senderoSeleccionado.cupoMaximoDia} personas/día</div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="fechaVisita" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Fecha de Visita *
                     </label>
                     <input
-                      id="fechaVisita"
                       type="date"
-                      min={fechaMinimaStr}
-                      {...register('fechaVisita')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      value={formData.fechaVisita}
+                      onChange={(e) => handleFechaChange(e.target.value)}
+                      min={new Date(Date.now() + 86400000).toISOString().split('T')[0]} // +1 día
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      required
                     />
-                    {errors.fechaVisita && (
-                      <p className="mt-1 text-sm text-red-600">{errors.fechaVisita.message}</p>
-                    )}
-                    {fechaVisita && loadingDisponibilidad && (
-                      <p className="mt-1 text-sm text-gray-500">Verificando disponibilidad...</p>
-                    )}
-                    {fechaVisita && disponibilidad && (
-                      <p className={`mt-1 text-sm ${hayCupo ? 'text-green-600' : 'text-red-600'}`}>
-                        {hayCupo
-                          ? `✓ ${cuposDisponibles} cupos disponibles`
-                          : `✗ Solo ${cuposDisponibles} cupos disponibles`}
-                      </p>
-                    )}
                   </div>
 
+                  {/* SECCIÓN MODIFICADA: Hora de inicio con validación */}
                   <div>
-                    <label htmlFor="horaInicio" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Hora de Inicio *
                     </label>
-                    <input
-                      id="horaInicio"
-                      type="time"
-                      {...register('horaInicio')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    />
-                    {errors.horaInicio && (
-                      <p className="mt-1 text-sm text-red-600">{errors.horaInicio.message}</p>
+                    
+                    {!formData.fechaVisita ? (
+                      <div className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                        <span className="text-gray-500">Selecciona primero una fecha</span>
+                      </div>
+                    ) : cargandoHorarios ? (
+                      <div className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                        <span className="text-gray-500">Cargando horarios...</span>
+                      </div>
+                    ) : horariosDisponibles.length === 0 ? (
+                      <div className="w-full px-4 py-2 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-yellow-900/20">
+                        <span className="text-yellow-800 dark:text-yellow-200">
+                          ⚠️ No hay horarios disponibles para esta fecha
+                        </span>
+                      </div>
+                    ) : (
+                      <>
+                        <select
+                          value={formData.horaInicio}
+                          onChange={(e) => setFormData({ ...formData, horaInicio: e.target.value })}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                          required
+                        >
+                          <option value="">Selecciona una hora</option>
+                          {horariosDisponibles.map((horario: any, index) => (
+                            <option key={index} value={horario.horaInicio}>
+                              {horario.horaInicio} - {horario.horaFin}
+                            </option>
+                          ))}
+                        </select>
+                        <p className="mt-2 text-sm text-green-600 dark:text-green-400">
+                          ✓ {horariosDisponibles.length} horario(s) disponible(s)
+                        </p>
+                      </>
                     )}
                   </div>
                 </div>
 
-                <div className="mt-4">
-                  <label htmlFor="numeroPersonas" className="block text-sm font-medium text-gray-700 mb-1">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Número de Personas *
                   </label>
                   <input
-                    id="numeroPersonas"
                     type="number"
+                    value={formData.numeroPersonas}
+                    onChange={(e) => setFormData({ ...formData, numeroPersonas: Number(e.target.value) })}
                     min="1"
                     max="20"
-                    {...register('numeroPersonas')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    required
                   />
-                  {errors.numeroPersonas && (
-                    <p className="mt-1 text-sm text-red-600">{errors.numeroPersonas.message}</p>
-                  )}
-                  {numeroPersonas > cuposDisponibles && (
-                    <p className="mt-1 text-sm text-red-600">
-                      El número de personas excede los cupos disponibles
-                    </p>
-                  )}
                 </div>
+              </div>
+            </Card>
 
-                <div className="mt-4">
-                  <label htmlFor="observaciones" className="block text-sm font-medium text-gray-700 mb-1">
-                    Observaciones (opcional)
+            {/* Selección de Guía */}
+            <Card>
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+                Asignación de Guía Turístico
+              </h2>
+
+              {/* Selector de modo */}
+              <div className="mb-6">
+                <div className="flex gap-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setModoAsignacion('automatico');
+                      setFormData({ ...formData, idGuia: undefined });
+                    }}
+                    className={`flex-1 py-3 px-4 rounded-lg border-2 transition-all ${
+                      modoAsignacion === 'automatico'
+                        ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
+                        : 'border-gray-300 dark:border-gray-600 hover:border-primary-400'
+                    }`}
+                  >
+                    <div className="font-semibold mb-1">🤖 Asignación Automática</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      El sistema asignará el mejor guía disponible
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setModoAsignacion('manual')}
+                    className={`flex-1 py-3 px-4 rounded-lg border-2 transition-all ${
+                      modoAsignacion === 'manual'
+                        ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
+                        : 'border-gray-300 dark:border-gray-600 hover:border-primary-400'
+                    }`}
+                  >
+                    <div className="font-semibold mb-1">👤 Selección Manual</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      Elige tú mismo el guía turístico
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Selección manual de guía */}
+              {modoAsignacion === 'manual' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Selecciona un Guía *
                   </label>
-                  <textarea
-                    id="observaciones"
-                    {...register('observaciones')}
-                    rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    placeholder="Alguna observación especial..."
-                  />
-                </div>
-              </div>
 
-              <div className="flex gap-4 pt-4">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => navigate(-1)}
-                  disabled={isSubmitting}
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  type="submit"
-                  isLoading={isSubmitting}
-                  disabled={!hayCupo || isSubmitting}
-                  fullWidth
-                >
-                  Confirmar Reserva
-                </Button>
-              </div>
-            </form>
-          </Card>
+                  {!formData.horaInicio ? (
+                    <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                      <p className="text-gray-600 dark:text-gray-400">
+                        Selecciona primero la fecha y hora para ver guías disponibles.
+                      </p>
+                    </div>
+                  ) : guiasDisponibles.length === 0 ? (
+                    <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+                      <p className="text-yellow-800 dark:text-yellow-200">
+                        No hay guías disponibles para esta fecha y hora. Prueba con otro horario o usa asignación automática.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {guiasDisponibles.map((guia) => (
+                        <button
+                          key={guia.idGuia}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, idGuia: guia.idGuia })}
+                          className={`p-4 border-2 rounded-lg text-left transition-all ${
+                            formData.idGuia === guia.idGuia
+                              ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                              : 'border-gray-300 dark:border-gray-600 hover:border-primary-400'
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center flex-shrink-0">
+                              <span className="text-lg font-bold text-primary-600 dark:text-primary-400">
+                                {guia.nombre.charAt(0)}{guia.apellido.charAt(0)}
+                              </span>
+                            </div>
+                            <div className="flex-1">
+                              <div className="font-semibold text-gray-900 dark:text-white">
+                                {guia.nombre} {guia.apellido}
+                              </div>
+                              {guia.especialidades && (
+                                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                  {guia.especialidades}
+                                </div>
+                              )}
+                            </div>
+                            {formData.idGuia === guia.idGuia && (
+                              <svg className="w-6 h-6 text-primary-600 dark:text-primary-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </Card>
+
+            {/* Observaciones */}
+            <Card>
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+                Observaciones (Opcional)
+              </h2>
+              <textarea
+                value={formData.observaciones}
+                onChange={(e) => setFormData({ ...formData, observaciones: e.target.value })}
+                rows={4}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                placeholder="Alguna solicitud especial o comentario..."
+              />
+            </Card>
+
+            {/* Botones */}
+            <div className="flex gap-4 justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => navigate('/senderos')}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                isLoading={enviando}
+                disabled={enviando || horariosDisponibles.length === 0}
+              >
+                {enviando ? 'Creando Reserva...' : 'Crear Reserva'}
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
     </MainLayout>
@@ -431,4 +599,3 @@ const NuevaReserva: React.FC = () => {
 };
 
 export default NuevaReserva;
-

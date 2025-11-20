@@ -4,14 +4,14 @@ import { senderosApi } from '../api/senderosApi';
 export const useSenderos = () => {
   return useQuery({
     queryKey: ['senderos'],
-    queryFn: senderosApi.getAll,
+    queryFn: senderosApi.findAll, 
   });
 };
 
 export const useSenderosActivos = () => {
   return useQuery({
     queryKey: ['senderos', 'activos'],
-    queryFn: senderosApi.getActivos,
+    queryFn: senderosApi.findActivos, 
   });
 };
 

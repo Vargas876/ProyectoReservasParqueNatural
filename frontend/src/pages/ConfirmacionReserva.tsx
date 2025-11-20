@@ -7,7 +7,8 @@ import { Button } from '../components/common/Button';
 const ConfirmacionReserva: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const codigo = searchParams.get('codigo');
+  // Aceptar tanto 'codigo' como 'id' para compatibilidad
+  const codigo = searchParams.get('codigo') || searchParams.get('id');
 
   return (
     <MainLayout>

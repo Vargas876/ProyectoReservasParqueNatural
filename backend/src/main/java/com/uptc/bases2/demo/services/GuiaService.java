@@ -1,5 +1,6 @@
 package com.uptc.bases2.demo.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public class GuiaService {
     }
     
     public List<Guia> findByEspecialidad(String especialidad) {
-        return guiaRepository.findByEspecialidad(especialidad);
+        return guiaRepository.findByEspecialidades(especialidad);
     }
     
     public Guia save(Guia guia) {
@@ -89,5 +90,14 @@ public class GuiaService {
     
     public boolean existsById(Long id) {
         return guiaRepository.existsById(id);
+    }
+   
+    public List<Guia> findDisponibles(Long idSendero, String fechaVisita, String horaInicio) {
+        try {
+            LocalDate fecha = LocalDate.parse(fechaVisita);
+            return guiaRepository.findGuiasDisponibles(fecha, horaInicio);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al buscar guías disponibles: " + e.getMessage(), e);
+        }
     }
 }

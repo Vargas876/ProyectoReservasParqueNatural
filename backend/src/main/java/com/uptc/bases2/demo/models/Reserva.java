@@ -2,11 +2,12 @@ package com.uptc.bases2.demo.models;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,12 +27,14 @@ public class Reserva {
     @Column(name = "id_reserva")
     private Long idReserva;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_visitante", nullable = false)
+    @JsonIgnoreProperties({"reservas", "hibernateLazyInitializer", "handler"})
     private Visitante visitante;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_sendero", nullable = false)
+    @JsonIgnoreProperties({"reservas", "horarios", "hibernateLazyInitializer", "handler"})
     private Sendero sendero;
     
     @Column(name = "fecha_reserva", nullable = false)
@@ -47,7 +50,7 @@ public class Reserva {
     private String horaInicio;
     
     @Column(name = "estado", length = 20)
-    private String estado; // PENDIENTE, CONFIRMADA, CANCELADA, COMPLETADA
+    private String estado;
     
     @Column(name = "observaciones", length = 500)
     private String observaciones;
@@ -58,8 +61,8 @@ public class Reserva {
     @Column(name = "fecha_modificacion")
     private LocalDate fechaModificacion;
     
-    @OneToOne(mappedBy = "reserva", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @OneToOne(mappedBy = "reserva", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    // ⬆️ QUITÉ @JsonIgnore y agregué fetch = FetchType.EAGER
     private AsignacionGuia asignacion;
 
     // Constructores
@@ -80,7 +83,7 @@ public class Reserva {
         this.horaInicio = horaInicio;
     }
 
-    // Getters y Setters
+    // Getters y Setters (sin cambios)
     public Long getIdReserva() {
         return idReserva;
     }

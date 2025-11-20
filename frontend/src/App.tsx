@@ -1,11 +1,13 @@
 import { Route, Routes } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
-import Home from './pages/Home';
-import Senderos from './pages/Senderos';
-import NuevaReserva from './pages/NuevaReserva';
 import ConfirmacionReserva from './pages/ConfirmacionReserva';
 import ConsultarReserva from './pages/ConsultarReserva';
-import NotFound from './pages/NotFound';
+import Dashboard from './pages/Dashboard';
+import Guias from './pages/Guias';
+import Home from './pages/Home';
+import MisReservas from './pages/MisReservas';
+import NuevaReserva from './pages/NuevaReserva';
+import ReservasGuia from './pages/ReservasGuia'; // ← NUEVO
+import Senderos from './pages/Senderos';
 
 function App() {
   return (
@@ -15,8 +17,10 @@ function App() {
       <Route path="/reservas/nueva" element={<NuevaReserva />} />
       <Route path="/reservas/consultar" element={<ConsultarReserva />} />
       <Route path="/reservas/confirmacion" element={<ConfirmacionReserva />} />
+      <Route path="/mis-reservas" element={<MisReservas />} />
+      <Route path="/guias" element={<Guias />} />
+      <Route path="/guias/:idGuia/reservas" element={<ReservasGuia />} /> {/* ← NUEVO */}
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

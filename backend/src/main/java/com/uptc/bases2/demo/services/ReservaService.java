@@ -1,8 +1,14 @@
 package com.uptc.bases2.demo.services;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +19,10 @@ import com.uptc.bases2.demo.models.Sendero;
 import com.uptc.bases2.demo.repository.ReservaRepository;
 import com.uptc.bases2.demo.repository.SenderoRepository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+
 @Service
 public class ReservaService {
     
@@ -21,6 +31,12 @@ public class ReservaService {
     
     @Autowired
     private SenderoRepository senderoRepository;
+    
+    @Autowired
+    private HorarioDisponibleService horarioDisponibleService;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
     
     public List<Reserva> findAll() {
         return reservaRepository.findAll();
@@ -56,6 +72,83 @@ public class ReservaService {
         Integer cupoUsado = reservaRepository.countPersonasBySenderoAndFecha(idSendero, fecha);
         
         return sendero.getCupoMaximoDia() - cupoUsado;
+    }
+    
+    public List<Map<String, String>> getHorariosDisponibles(Long senderoId, LocalDate fecha) {
+        // Obtener el día de la semana en español y en mayúsculas
+        String diaSemana = fecha.getDayOfWeek()
+                .getDisplayName(TextStyle.FULL, new Locale("es", "ES"))
+                .toUpperCase();
+        
+        // Query corregida con el nombre correcto de la tabla
+        String sql = "SELECT h.HORA_INICIO, h.HORA_FIN " +
+                     "FROM HORARIO_DISPONIBLE h " +
+                     "WHERE h.ID_SENDERO = :senderoId " +
+                     "AND UPPER(h.DIA_SEMANA) = :diaSemana " +
+                     "AND h.ESTADO = 'ACTIVO' " +
+                     "ORDER BY h.HORA_INICIO";
+        
+        try {
+            Query query = entityManager.createNativeQuery(sql);
+            query.setParameter("senderoId", senderoId);
+            query.setParameter("diaSemana", diaSemana);
+            
+            @SuppressWarnings("unchecked")
+            List<Object[]> resultados = query.getResultList();
+            
+            // Si no hay horarios para este día, verificar si el sendero tiene horarios en general
+            // Si no tiene ningún horario, crear horarios por defecto
+            if (resultados.isEmpty()) {
+                List<com.uptc.bases2.demo.models.HorarioDisponible> horariosGenerales = 
+                    horarioDisponibleService.findBySenderoId(senderoId);
+                
+                if (horariosGenerales.isEmpty()) {
+                    // No hay horarios para este sendero, crear horarios por defecto
+                    try {
+                        horarioDisponibleService.crearHorariosPorDefecto(senderoId);
+                        // Volver a consultar después de crear los horarios
+                        query = entityManager.createNativeQuery(sql);
+                        query.setParameter("senderoId", senderoId);
+                        query.setParameter("diaSemana", diaSemana);
+                        resultados = query.getResultList();
+                    } catch (Exception e) {
+                        System.err.println("Error al crear horarios por defecto: " + e.getMessage());
+                        // Continuar con lista vacía si falla la creación
+                    }
+                }
+            }
+            
+            List<Map<String, String>> horarios = new ArrayList<>();
+            
+            for (Object[] resultado : resultados) {
+                Map<String, String> horario = new HashMap<>();
+                
+                // Convertir a String de forma segura
+                String horaInicio = resultado[0] != null ? resultado[0].toString() : "";
+                String horaFin = resultado[1] != null ? resultado[1].toString() : "";
+                
+                // Si viene como timestamp, extraer solo HH:mm
+                if (horaInicio.length() > 5) {
+                    horaInicio = horaInicio.substring(0, 5);
+                }
+                if (horaFin.length() > 5) {
+                    horaFin = horaFin.substring(0, 5);
+                }
+                
+                horario.put("horaInicio", horaInicio);
+                horario.put("horaFin", horaFin);
+                horario.put("diaSemana", diaSemana);
+                
+                horarios.add(horario);
+            }
+            
+            return horarios;
+        } catch (Exception e) {
+            // Log del error para debug
+            System.err.println("Error al obtener horarios: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
     
     public Reserva save(Reserva reserva) {
@@ -103,6 +196,22 @@ public class ReservaService {
             }
         }
         
+        // Verificar y crear horarios por defecto si no existen (para evitar error del trigger)
+        try {
+            Long idSendero = reserva.getSendero().getIdSendero();
+            List<com.uptc.bases2.demo.models.HorarioDisponible> horarios = 
+                horarioDisponibleService.findBySenderoId(idSendero);
+            
+            // Si no hay horarios, crear horarios por defecto automáticamente
+            if (horarios.isEmpty()) {
+                horarioDisponibleService.crearHorariosPorDefecto(idSendero);
+            }
+        } catch (Exception e) {
+            // Si falla la creación de horarios, continuar de todas formas
+            // El trigger modificado debería permitir la reserva si no hay horarios
+            System.err.println("Advertencia: No se pudieron crear horarios por defecto: " + e.getMessage());
+        }
+        
         return reservaRepository.save(reserva);
     }
     
@@ -148,5 +257,12 @@ public class ReservaService {
     
     public boolean existsById(Long id) {
         return reservaRepository.existsById(id);
+    }
+    public List<Reserva> findByGuiaId(Long idGuia) {
+        return reservaRepository.findByGuiaId(idGuia);
+    }
+    
+    public List<Reserva> findByVisitanteCedula(String cedula) {
+        return reservaRepository.findByVisitanteCedula(cedula);
     }
 }

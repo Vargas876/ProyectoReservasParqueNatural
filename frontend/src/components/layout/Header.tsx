@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Logo } from '../common/Logo';
 import { useTheme } from '../../contexts/ThemeContext';
+import { Logo } from '../common/Logo';
 
 interface NavLinkProps {
   to: string;
@@ -39,13 +39,16 @@ export const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
-  const navItems = [
-    { to: '/', label: 'Inicio' },
-    { to: '/senderos', label: 'Senderos' },
-    { to: '/reservas/nueva', label: 'Reservar' },
-    { to: '/reservas/consultar', label: 'Consultar' },
-    { to: '/dashboard', label: 'Dashboard' },
-  ];
+ // En Header.tsx, agrega estos items al navItems:
+const navItems = [
+  { to: '/', label: 'Inicio' },
+  { to: '/senderos', label: 'Senderos' },
+  { to: '/guias', label: 'Guías' },
+  { to: '/reservas/nueva', label: 'Reservar' },
+  { to: '/mis-reservas', label: 'Mis Reservas' },
+  { to: '/reservas/consultar', label: 'Consultar' },
+  { to: '/dashboard', label: 'Dashboard' },
+];
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 shadow-sm">

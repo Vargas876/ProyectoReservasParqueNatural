@@ -5,7 +5,7 @@ import type { ReservaRequest } from '../types/reserva.types';
 export const useReservas = () => {
   return useQuery({
     queryKey: ['reservas'],
-    queryFn: reservasApi.getAll,
+    queryFn: reservasApi.findAll,
   });
 };
 
@@ -23,7 +23,7 @@ export const useCrearReserva = () => {
 export const useDisponibilidad = (idSendero: number, fecha: string) => {
   return useQuery({
     queryKey: ['disponibilidad', idSendero, fecha],
-    queryFn: () => reservasApi.verificarDisponibilidad(idSendero, fecha),
+    queryFn: () => reservasApi.getHorariosDisponibles(idSendero, fecha),
     enabled: !!(idSendero && fecha),
   });
 };

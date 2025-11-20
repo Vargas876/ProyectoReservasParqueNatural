@@ -81,4 +81,37 @@ public class HorarioDisponibleController {
         }
         return ResponseEntity.notFound().build();
     }
+    
+    /**
+     * Endpoint para crear horarios por defecto para un sendero
+     * POST /horario/crear-por-defecto/{idSendero}
+     * Crea horarios de 06:00 a 17:00 para todos los días de la semana si el sendero no tiene horarios
+     */
+    @PostMapping("/crear-por-defecto/{idSendero}")
+    public ResponseEntity<?> crearHorariosPorDefecto(@PathVariable Long idSendero) {
+        try {
+            int creados = horarioService.crearHorariosPorDefecto(idSendero);
+            
+            if (creados == 0) {
+                return ResponseEntity.ok(java.util.Map.of(
+                    "mensaje", "El sendero ya tiene horarios definidos",
+                    "horariosCreados", 0
+                ));
+            }
+            
+            return ResponseEntity.ok(java.util.Map.of(
+                "mensaje", "Horarios por defecto creados exitosamente",
+                "horariosCreados", creados,
+                "idSendero", idSendero
+            ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(java.util.Map.of(
+                "error", e.getMessage()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(java.util.Map.of(
+                "error", "Error al crear horarios: " + e.getMessage()
+            ));
+        }
+    }
 }

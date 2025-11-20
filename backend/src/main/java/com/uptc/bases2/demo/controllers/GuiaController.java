@@ -121,4 +121,15 @@ public class GuiaController {
         }
         return ResponseEntity.notFound().build();
     }
+   
+    
+   
+    
+    @GetMapping("/disponibles")
+    public List<Guia> getGuiasDisponibles(
+            @RequestParam Long senderoId,
+            @RequestParam String fecha,
+            @RequestParam String horaInicio) {
+        return guiaService.findDisponibles(senderoId, fecha, horaInicio);
+    }
 }

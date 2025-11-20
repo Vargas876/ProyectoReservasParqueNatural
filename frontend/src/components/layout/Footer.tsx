@@ -14,9 +14,9 @@ export const Footer: React.FC = () => {
     ],
     informacion: [
       { to: '/dashboard', label: 'Dashboard' },
-      { to: '#', label: 'Sobre Nosotros' },
-      { to: '#', label: 'Contacto' },
-      { to: '#', label: 'Términos y Condiciones' },
+      { to: '/sobre-nosotros', label: 'Sobre Nosotros' },
+      { to: '/contacto', label: 'Contacto' },
+      { to: '/terminos', label: 'Términos y Condiciones' },
     ],
   };
 
@@ -54,8 +54,8 @@ export const Footer: React.FC = () => {
           <div>
             <h3 className="font-display font-semibold text-white mb-4">Información</h3>
             <ul className="space-y-2">
-              {footerLinks.informacion.map((link) => (
-                <li key={link.to}>
+              {footerLinks.informacion.map((link, index) => (
+                <li key={`${link.to}-${index}`}>
                   <Link
                     to={link.to}
                     className="text-sm text-gray-400 hover:text-primary-400 transition-colors"

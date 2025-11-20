@@ -3,8 +3,11 @@ package com.uptc.bases2.demo.models;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,10 +29,12 @@ public class AsignacionGuia {
     
     @OneToOne
     @JoinColumn(name = "id_reserva", nullable = false, unique = true)
+    @JsonIgnoreProperties("asignacion") // Evita referencia circular
     private Reserva reserva;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) // Asegurar que carga el guía
     @JoinColumn(name = "id_guia", nullable = false)
+    @JsonIgnoreProperties({"asignaciones", "hibernateLazyInitializer", "handler"}) // Evita problemas de serialización
     private Guia guia;
     
     @Column(name = "fecha_asignacion")
@@ -55,7 +60,7 @@ public class AsignacionGuia {
         this.guia = guia;
     }
 
-    // Getters y Setters
+    // Getters y Setters (sin cambios)
     public Long getIdAsignacion() {
         return idAsignacion;
     }

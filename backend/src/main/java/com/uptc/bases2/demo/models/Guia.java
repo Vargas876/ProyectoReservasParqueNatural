@@ -40,15 +40,17 @@ public class Guia {
     @Column(name = "email", length = 100)
     private String email;
     
-    @Column(name = "especialidades", length = 200)
+    // CAMBIO AQUÍ: especialidad en lugar de especialidades
+    @Column(name = "especialidad", length = 200)
     private String especialidades;
     
     @Column(name = "max_personas_grupo")
     private Integer maxPersonasGrupo;
     
     @Column(name = "estado", length = 10)
-    private String estado; // ACTIVO, INACTIVO
+    private String estado;
     
+    // CAMBIO AQUÍ: fecha_ingreso en lugar de fecha_contratacion
     @Column(name = "fecha_ingreso")
     private LocalDate fechaIngreso;
     

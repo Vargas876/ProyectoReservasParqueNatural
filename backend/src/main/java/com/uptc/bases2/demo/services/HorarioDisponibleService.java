@@ -5,15 +5,21 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.uptc.bases2.demo.models.HorarioDisponible;
+import com.uptc.bases2.demo.models.Sendero;
 import com.uptc.bases2.demo.repository.HorarioDisponibleRepository;
+import com.uptc.bases2.demo.repository.SenderoRepository;
 
 @Service
 public class HorarioDisponibleService {
     
     @Autowired
     private HorarioDisponibleRepository horarioRepository;
+    
+    @Autowired
+    private SenderoRepository senderoRepository;
     
     public List<HorarioDisponible> findAll() {
         return horarioRepository.findAll();
@@ -82,5 +88,50 @@ public class HorarioDisponibleService {
     
     public boolean existsById(Long id) {
         return horarioRepository.existsById(id);
+    }
+    
+    /**
+     * Crea horarios por defecto para un sendero si no tiene horarios definidos
+     * Crea horarios de 06:00 a 17:00 para todos los días de la semana
+     */
+    @Transactional
+    public int crearHorariosPorDefecto(Long idSendero) {
+        // Verificar si el sendero existe
+        Optional<Sendero> senderoOpt = senderoRepository.findById(idSendero);
+        if (senderoOpt.isEmpty()) {
+            throw new IllegalArgumentException("Sendero no encontrado");
+        }
+        
+        // Verificar si ya tiene horarios
+        List<HorarioDisponible> horariosExistentes = horarioRepository.findBySenderoId(idSendero);
+        if (!horariosExistentes.isEmpty()) {
+            return 0; // Ya tiene horarios, no crear
+        }
+        
+        // Días de la semana en español (como los espera el trigger)
+        String[] diasSemana = {"LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOMINGO"};
+        int creados = 0;
+        
+        Sendero sendero = senderoOpt.get();
+        
+        // Crear un horario de 06:00 a 17:00 para cada día
+        for (String dia : diasSemana) {
+            HorarioDisponible horario = new HorarioDisponible();
+            horario.setSendero(sendero);
+            horario.setHoraInicio("06:00");
+            horario.setHoraFin("17:00");
+            horario.setCupoHorario(50); // Cupo por defecto
+            horario.setDiasSemana(dia); // Se mapea a DIA_SEMANA en la BD
+            
+            try {
+                horarioRepository.save(horario);
+                creados++;
+            } catch (Exception e) {
+                // Si falla, continuar con el siguiente
+                System.err.println("Error al crear horario para " + dia + ": " + e.getMessage());
+            }
+        }
+        
+        return creados;
     }
 }

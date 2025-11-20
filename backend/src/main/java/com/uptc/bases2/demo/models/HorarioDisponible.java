@@ -33,8 +33,8 @@ public class HorarioDisponible {
     @Column(name = "cupo_horario")
     private Integer cupoHorario;
     
-    @Column(name = "dias_semana", length = 20)
-    private String diasSemana; // L,M,MI,J,V,S,D
+    @Column(name = "DIA_SEMANA", length = 20)
+    private String diasSemana; // LUNES, MARTES, MIERCOLES, etc.
 
     // Constructores
     public HorarioDisponible() {
