@@ -54,7 +54,8 @@ public class HorarioDisponibleService {
             throw new IllegalArgumentException("La hora de fin es obligatoria");
         }
         
-        if (horario.getCupoHorario() == null || horario.getCupoHorario() <= 0) {
+        // ⬇️ CAMBIO: getCupoHorario() → getCupoPorHorario()
+        if (horario.getCupoPorHorario() == null || horario.getCupoPorHorario() <= 0) {
             throw new IllegalArgumentException("El cupo debe ser mayor a 0");
         }
         
@@ -120,8 +121,10 @@ public class HorarioDisponibleService {
             horario.setSendero(sendero);
             horario.setHoraInicio("06:00");
             horario.setHoraFin("17:00");
-            horario.setCupoHorario(50); // Cupo por defecto
-            horario.setDiasSemana(dia); // Se mapea a DIA_SEMANA en la BD
+            // ⬇️ CAMBIO: setCupoHorario() → setCupoPorHorario()
+            horario.setCupoPorHorario(50); // Cupo por defecto
+            // ⬇️ CAMBIO: setDiasSemana() → setDiaSemana()
+            horario.setDiaSemana(dia); // Se mapea a DIA_SEMANA en la BD
             
             try {
                 horarioRepository.save(horario);

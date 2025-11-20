@@ -11,42 +11,38 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "horario_disponible")
+@Table(name = "HORARIO_DISPONIBLE")
 public class HorarioDisponible {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_horario_disponible")
-    @SequenceGenerator(name = "seq_horario_disponible", sequenceName = "seq_horario_disponible", allocationSize = 1)
-    @Column(name = "id_horario")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_horario")
+    @SequenceGenerator(name = "seq_horario", sequenceName = "SEQ_HORARIO", allocationSize = 1)
+    @Column(name = "ID_HORARIO")
     private Long idHorario;
     
     @ManyToOne
-    @JoinColumn(name = "id_sendero", nullable = false)
+    @JoinColumn(name = "ID_SENDERO", nullable = false)
     private Sendero sendero;
     
-    @Column(name = "hora_inicio", nullable = false, length = 5)
+    @Column(name = "DIA_SEMANA", length = 20)
+    private String diaSemana;
+    
+    @Column(name = "HORA_INICIO", nullable = false, length = 5)
     private String horaInicio;
     
-    @Column(name = "hora_fin", nullable = false, length = 5)
+    @Column(name = "HORA_FIN", nullable = false, length = 5)
     private String horaFin;
     
-    @Column(name = "cupo_horario")
-    private Integer cupoHorario;
+    // ⬇️ AQUÍ ESTÁ EL CAMBIO IMPORTANTE
+    @Column(name = "CUPO_POR_HORARIO")  // ← Cambiar de "CUPO_HORARIO" a "CUPO_POR_HORARIO"
+    private Integer cupoPorHorario;
     
-    @Column(name = "DIA_SEMANA", length = 20)
-    private String diasSemana; // LUNES, MARTES, MIERCOLES, etc.
+    @Column(name = "ESTADO", length = 20)
+    private String estado;
 
     // Constructores
     public HorarioDisponible() {
-        this.diasSemana = "L,M,MI,J,V,S,D";
-    }
-    
-    public HorarioDisponible(Sendero sendero, String horaInicio, String horaFin, Integer cupoHorario) {
-        this();
-        this.sendero = sendero;
-        this.horaInicio = horaInicio;
-        this.horaFin = horaFin;
-        this.cupoHorario = cupoHorario;
+        this.estado = "ACTIVO";
     }
 
     // Getters y Setters
@@ -66,6 +62,14 @@ public class HorarioDisponible {
         this.sendero = sendero;
     }
 
+    public String getDiaSemana() {
+        return diaSemana;
+    }
+
+    public void setDiaSemana(String diaSemana) {
+        this.diaSemana = diaSemana;
+    }
+
     public String getHoraInicio() {
         return horaInicio;
     }
@@ -82,29 +86,30 @@ public class HorarioDisponible {
         this.horaFin = horaFin;
     }
 
-    public Integer getCupoHorario() {
-        return cupoHorario;
+    public Integer getCupoPorHorario() {
+        return cupoPorHorario;
     }
 
-    public void setCupoHorario(Integer cupoHorario) {
-        this.cupoHorario = cupoHorario;
+    public void setCupoPorHorario(Integer cupoPorHorario) {
+        this.cupoPorHorario = cupoPorHorario;
     }
 
-    public String getDiasSemana() {
-        return diasSemana;
+    public String getEstado() {
+        return estado;
     }
 
-    public void setDiasSemana(String diasSemana) {
-        this.diasSemana = diasSemana;
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     @Override
     public String toString() {
         return "HorarioDisponible{" +
                 "idHorario=" + idHorario +
+                ", diaSemana='" + diaSemana + '\'' +
                 ", horaInicio='" + horaInicio + '\'' +
                 ", horaFin='" + horaFin + '\'' +
-                ", cupoHorario=" + cupoHorario +
+                ", estado='" + estado + '\'' +
                 '}';
     }
 }

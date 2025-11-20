@@ -80,6 +80,12 @@ public class ReservaService {
                 .getDisplayName(TextStyle.FULL, new Locale("es", "ES"))
                 .toUpperCase();
         
+        // ⬇️ AGREGAR ESTE LOG PARA DEBUG
+        System.out.println("=== DEBUG HORARIOS ===");
+        System.out.println("Fecha recibida: " + fecha);
+        System.out.println("Día de la semana calculado: " + diaSemana);
+        System.out.println("Sendero ID: " + senderoId);
+        
         // Query corregida con el nombre correcto de la tabla
         String sql = "SELECT h.HORA_INICIO, h.HORA_FIN " +
                      "FROM HORARIO_DISPONIBLE h " +
@@ -88,6 +94,9 @@ public class ReservaService {
                      "AND h.ESTADO = 'ACTIVO' " +
                      "ORDER BY h.HORA_INICIO";
         
+        System.out.println("SQL Query: " + sql);
+        System.out.println("Parámetros: senderoId=" + senderoId + ", diaSemana=" + diaSemana);
+        
         try {
             Query query = entityManager.createNativeQuery(sql);
             query.setParameter("senderoId", senderoId);
@@ -95,6 +104,9 @@ public class ReservaService {
             
             @SuppressWarnings("unchecked")
             List<Object[]> resultados = query.getResultList();
+            
+            System.out.println("Resultados encontrados: " + resultados.size());
+            
             
             // Si no hay horarios para este día, verificar si el sendero tiene horarios en general
             // Si no tiene ningún horario, crear horarios por defecto
