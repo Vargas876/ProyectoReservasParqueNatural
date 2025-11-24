@@ -1,117 +1,96 @@
 package com.uptc.bases2.demo.controllers;
 
+import com.uptc.bases2.demo.models.dto.request.HorarioRequestDTO;
+import com.uptc.bases2.demo.models.dto.response.ApiResponseDTO;
+import com.uptc.bases2.demo.models.dto.response.HorarioResponseDTO;
+import com.uptc.bases2.demo.services.interfaces.HorarioDisponibleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.uptc.bases2.demo.models.HorarioDisponible;
-import com.uptc.bases2.demo.services.HorarioDisponibleService;
-
+/**
+ * Controlador para gestión de horarios disponibles
+ */
 @RestController
-@RequestMapping("/horario")
+@RequestMapping("/horarios")
+@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = "Horarios", description = "Gestión de horarios disponibles por sendero")
 public class HorarioDisponibleController {
 
     @Autowired
     private HorarioDisponibleService horarioService;
-    
-    @GetMapping("/findAll")
-    public List<HorarioDisponible> getAllHorarios() {
-        return horarioService.findAll();
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Crear nuevo horario", 
+               description = "Crea un horario validando que no haya solapamiento")
+    public ResponseEntity<HorarioResponseDTO> crear(@Valid @RequestBody HorarioRequestDTO request) {
+        HorarioResponseDTO horario = horarioService.crear(request);
+        return new ResponseEntity<>(horario, HttpStatus.CREATED);
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<HorarioDisponible> createHorario(@RequestBody HorarioDisponible horario) {
-        try {
-            HorarioDisponible nuevoHorario = horarioService.save(horario);
-            return ResponseEntity.ok(nuevoHorario);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Obtener horario por ID")
+    public ResponseEntity<HorarioResponseDTO> obtenerPorId(@PathVariable Long id) {
+        HorarioResponseDTO horario = horarioService.obtenerPorId(id);
+        return ResponseEntity.ok(horario);
     }
 
-    @GetMapping("/findById/{id}")
-    public ResponseEntity<HorarioDisponible> getHorarioById(@PathVariable Long id) {
-        return horarioService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/sendero/{senderoId}")
+    @Operation(summary = "Obtener horarios de un sendero (público)")
+    public ResponseEntity<List<HorarioResponseDTO>> obtenerPorSendero(@PathVariable Long senderoId) {
+        List<HorarioResponseDTO> horarios = horarioService.obtenerPorSendero(senderoId);
+        return ResponseEntity.ok(horarios);
     }
-    
-    @GetMapping("/findBySendero/{idSendero}")
-    public List<HorarioDisponible> getHorariosBySendero(@PathVariable Long idSendero) {
-        return horarioService.findBySenderoId(idSendero);
+
+    @GetMapping("/sendero/{senderoId}/activos")
+    @Operation(summary = "Obtener horarios activos de un sendero")
+    public ResponseEntity<List<HorarioResponseDTO>> obtenerActivosPorSendero(@PathVariable Long senderoId) {
+        List<HorarioResponseDTO> horarios = horarioService.obtenerActivosPorSendero(senderoId);
+        return ResponseEntity.ok(horarios);
     }
-    
-    @GetMapping("/findBySenderoAndDia")
-    public List<HorarioDisponible> getHorariosBySenderoAndDia(
-            @RequestParam Long idSendero, 
-            @RequestParam String dia) {
-        return horarioService.findBySenderoAndDia(idSendero, dia);
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Actualizar horario")
+    public ResponseEntity<HorarioResponseDTO> actualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody HorarioRequestDTO request) {
+        
+        HorarioResponseDTO horario = horarioService.actualizar(id, request);
+        return ResponseEntity.ok(horario);
     }
-    
-    @PutMapping("/update/{id}")
-    public ResponseEntity<HorarioDisponible> updateHorario(
-            @PathVariable Long id, 
-            @RequestBody HorarioDisponible horario) {
-        try {
-            HorarioDisponible updatedHorario = horarioService.update(id, horario);
-            if (updatedHorario != null) {
-                return ResponseEntity.ok(updatedHorario);
-            }
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+
+    @PatchMapping("/{id}/activar")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Activar horario")
+    public ResponseEntity<ApiResponseDTO<Void>> activar(@PathVariable Long id) {
+        horarioService.activar(id);
+        return ResponseEntity.ok(ApiResponseDTO.success("Horario activado exitosamente"));
     }
-    
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> deleteHorario(@PathVariable Long id) {
-        boolean deleted = horarioService.deleteById(id);
-        if (deleted) {
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.notFound().build();
+
+    @PatchMapping("/{id}/desactivar")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Desactivar horario")
+    public ResponseEntity<ApiResponseDTO<Void>> desactivar(@PathVariable Long id) {
+        horarioService.desactivar(id);
+        return ResponseEntity.ok(ApiResponseDTO.success("Horario desactivado exitosamente"));
     }
-    
-    /**
-     * Endpoint para crear horarios por defecto para un sendero
-     * POST /horario/crear-por-defecto/{idSendero}
-     * Crea horarios de 06:00 a 17:00 para todos los días de la semana si el sendero no tiene horarios
-     */
-    @PostMapping("/crear-por-defecto/{idSendero}")
-    public ResponseEntity<?> crearHorariosPorDefecto(@PathVariable Long idSendero) {
-        try {
-            int creados = horarioService.crearHorariosPorDefecto(idSendero);
-            
-            if (creados == 0) {
-                return ResponseEntity.ok(java.util.Map.of(
-                    "mensaje", "El sendero ya tiene horarios definidos",
-                    "horariosCreados", 0
-                ));
-            }
-            
-            return ResponseEntity.ok(java.util.Map.of(
-                "mensaje", "Horarios por defecto creados exitosamente",
-                "horariosCreados", creados,
-                "idSendero", idSendero
-            ));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(java.util.Map.of(
-                "error", e.getMessage()
-            ));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(java.util.Map.of(
-                "error", "Error al crear horarios: " + e.getMessage()
-            ));
-        }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Eliminar horario (lógico)")
+    public ResponseEntity<ApiResponseDTO<Void>> eliminar(@PathVariable Long id) {
+        horarioService.eliminar(id);
+        return ResponseEntity.ok(ApiResponseDTO.success("Horario eliminado exitosamente"));
     }
 }

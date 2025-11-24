@@ -1,44 +1,65 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# Frontend
-frontend/node_modules
-frontend/dist
-frontend/dist-ssr
-frontend/.vite
-frontend/*.local
+# IDE - IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+.idea_modules/
 
-# Backend
-backend/target
-**/.mvn/
-**/mvnw
-**/mvnw.cmd
-backend/.classpath
-backend/.project
-backend/.settings
+# IDE - Eclipse
+.settings/
+.classpath
+.project
+bin/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# IDE - VS Code
+.vscode/
+*.code-workspace
 
 # Environment variables
 .env
 .env.local
 .env.production
-.env.development
+application-prod.properties
+
+# Logs
+logs/
+*.log
+*.log.*
 
 # OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# Package files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# JVM crash logs
+hs_err_pid*
+replay_pid*
+
+# Spring Boot
+spring-boot-devtools.properties

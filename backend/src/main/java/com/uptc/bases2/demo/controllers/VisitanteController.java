@@ -1,89 +1,99 @@
 package com.uptc.bases2.demo.controllers;
 
-import java.util.List;
-
+import com.uptc.bases2.demo.models.dto.request.VisitanteRequestDTO;
+import com.uptc.bases2.demo.models.dto.response.ApiResponseDTO;
+import com.uptc.bases2.demo.models.dto.response.VisitanteResponseDTO;
+import com.uptc.bases2.demo.services.interfaces.VisitanteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-import com.uptc.bases2.demo.models.Visitante;
-import com.uptc.bases2.demo.services.VisitanteService;
+import java.util.List;
 
+/**
+ * Controlador para gestión de visitantes
+ */
 @RestController
-@RequestMapping("/visitante")
+@RequestMapping("/visitantes")
+@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = "Visitantes", description = "Gestión de visitantes del parque")
 public class VisitanteController {
 
     @Autowired
     private VisitanteService visitanteService;
-    
-    @GetMapping("/findAll")
-    public List<Visitante> getAllVisitantes() {
-        return visitanteService.findAll();
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VISITANTE')")
+    @Operation(summary = "Obtener visitante por ID")
+    public ResponseEntity<VisitanteResponseDTO> obtenerPorId(@PathVariable Long id) {
+        VisitanteResponseDTO visitante = visitanteService.obtenerPorId(id);
+        return ResponseEntity.ok(visitante);
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<Visitante> createVisitante(@RequestBody Visitante visitante) {
-        try {
-            Visitante nuevoVisitante = visitanteService.save(visitante);
-            return ResponseEntity.ok(nuevoVisitante);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @GetMapping("/email/{email}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Buscar visitante por email")
+    public ResponseEntity<VisitanteResponseDTO> obtenerPorEmail(@PathVariable String email) {
+        VisitanteResponseDTO visitante = visitanteService.obtenerPorEmail(email);
+        return ResponseEntity.ok(visitante);
     }
 
-    @GetMapping("/findById/{id}")
-    public ResponseEntity<Visitante> getVisitanteById(@PathVariable Long id) {
-        return visitanteService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Listar todos los visitantes")
+    public ResponseEntity<List<VisitanteResponseDTO>> obtenerTodos() {
+        List<VisitanteResponseDTO> visitantes = visitanteService.obtenerTodos();
+        return ResponseEntity.ok(visitantes);
     }
-    
-    @GetMapping("/findByCedula/{cedula}")
-    public ResponseEntity<Visitante> getVisitanteByCedula(@PathVariable String cedula) {
-        return visitanteService.findByCedula(cedula)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+
+    @GetMapping("/activos")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Listar visitantes activos")
+    public ResponseEntity<List<VisitanteResponseDTO>> obtenerActivos() {
+        List<VisitanteResponseDTO> visitantes = visitanteService.obtenerActivos();
+        return ResponseEntity.ok(visitantes);
     }
-    
-    @GetMapping("/findByEmail")
-    public ResponseEntity<Visitante> getVisitanteByEmail(@RequestParam String email) {
-        return visitanteService.findByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VISITANTE')")
+    @Operation(summary = "Actualizar datos del visitante")
+    public ResponseEntity<VisitanteResponseDTO> actualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody VisitanteRequestDTO request) {
+        
+        VisitanteResponseDTO visitante = visitanteService.actualizar(id, request);
+        return ResponseEntity.ok(visitante);
     }
-    
-    @GetMapping("/findByEstado/{estado}")
-    public List<Visitante> getVisitantesByEstado(@PathVariable String estado) {
-        return visitanteService.findByEstado(estado);
+
+    @PatchMapping("/{id}/estado")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Cambiar estado del visitante")
+    public ResponseEntity<ApiResponseDTO<Void>> cambiarEstado(
+            @PathVariable Long id,
+            @RequestParam String nuevoEstado) {
+        
+        visitanteService.cambiarEstado(id, nuevoEstado);
+        return ResponseEntity.ok(ApiResponseDTO.success("Estado actualizado exitosamente"));
     }
-    
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Visitante> updateVisitante(@PathVariable Long id, @RequestBody Visitante visitante) {
-        try {
-            Visitante updatedVisitante = visitanteService.update(id, visitante);
-            if (updatedVisitante != null) {
-                return ResponseEntity.ok(updatedVisitante);
-            }
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Eliminar visitante (lógico)")
+    public ResponseEntity<ApiResponseDTO<Void>> eliminar(@PathVariable Long id) {
+        visitanteService.eliminar(id);
+        return ResponseEntity.ok(ApiResponseDTO.success("Visitante eliminado exitosamente"));
     }
-    
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> deleteVisitante(@PathVariable Long id) {
-        boolean deleted = visitanteService.deleteById(id);
-        if (deleted) {
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.notFound().build();
+
+    @GetMapping("/{id}/puede-reservar")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VISITANTE')")
+    @Operation(summary = "Verificar si puede hacer más reservas")
+    public ResponseEntity<ApiResponseDTO<Boolean>> puedeHacerReserva(@PathVariable Long id) {
+        boolean puede = visitanteService.puedeHacerReserva(id);
+        return ResponseEntity.ok(ApiResponseDTO.success("Verificación exitosa", puede));
     }
 }

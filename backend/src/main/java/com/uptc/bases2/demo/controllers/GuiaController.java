@@ -1,135 +1,127 @@
 package com.uptc.bases2.demo.controllers;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.uptc.bases2.demo.models.dto.request.GuiaRequestDTO;
+import com.uptc.bases2.demo.models.dto.response.AgendaGuiaResponseDTO;
+import com.uptc.bases2.demo.models.dto.response.ApiResponseDTO;
+import com.uptc.bases2.demo.models.dto.response.GuiaResponseDTO;
+import com.uptc.bases2.demo.services.interfaces.GuiaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-import com.uptc.bases2.demo.models.AsignacionGuia;
-import com.uptc.bases2.demo.models.Guia;
-import com.uptc.bases2.demo.services.AsignacionGuiaService;
-import com.uptc.bases2.demo.services.GuiaService;
+import java.time.LocalDate;
+import java.util.List;
 
+/**
+ * Controlador para gestión de guías
+ */
 @RestController
-@RequestMapping("/guia")
+@RequestMapping("/guias")
+@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = "Guías", description = "Gestión de guías turísticos")
 public class GuiaController {
 
     @Autowired
     private GuiaService guiaService;
-    
-    @Autowired
-    private AsignacionGuiaService asignacionService;
-    
-    @GetMapping("/findAll")
-    public List<Guia> getAllGuias() {
-        return guiaService.findAll();
-    }
-    
-    @GetMapping("/findAllActivos")
-    public List<Guia> getAllGuiasActivos() {
-        return guiaService.findAllActivos();
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Crear nuevo guía")
+    public ResponseEntity<GuiaResponseDTO> crear(@Valid @RequestBody GuiaRequestDTO request) {
+        GuiaResponseDTO guia = guiaService.crear(request);
+        return new ResponseEntity<>(guia, HttpStatus.CREATED);
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<Guia> createGuia(@RequestBody Guia guia) {
-        try {
-            Guia nuevoGuia = guiaService.save(guia);
-            return ResponseEntity.ok(nuevoGuia);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GUIA')")
+    @Operation(summary = "Obtener guía por ID")
+    public ResponseEntity<GuiaResponseDTO> obtenerPorId(@PathVariable Long id) {
+        GuiaResponseDTO guia = guiaService.obtenerPorId(id);
+        return ResponseEntity.ok(guia);
     }
 
-    @GetMapping("/findById/{id}")
-    public ResponseEntity<Guia> getGuiaById(@PathVariable Long id) {
-        return guiaService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Listar todos los guías")
+    public ResponseEntity<List<GuiaResponseDTO>> obtenerTodos() {
+        List<GuiaResponseDTO> guias = guiaService.obtenerTodos();
+        return ResponseEntity.ok(guias);
     }
-    
-    @GetMapping("/findByCedula/{cedula}")
-    public ResponseEntity<Guia> getGuiaByCedula(@PathVariable String cedula) {
-        return guiaService.findByCedula(cedula)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+
+    @GetMapping("/activos")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Listar guías activos")
+    public ResponseEntity<List<GuiaResponseDTO>> obtenerActivos() {
+        List<GuiaResponseDTO> guias = guiaService.obtenerActivos();
+        return ResponseEntity.ok(guias);
     }
-    
-    @GetMapping("/findByEstado/{estado}")
-    public List<Guia> getGuiasByEstado(@PathVariable String estado) {
-        return guiaService.findByEstado(estado);
-    }
-    
-    @GetMapping("/findByEspecialidad")
-    public List<Guia> getGuiasByEspecialidad(@RequestParam String especialidad) {
-        return guiaService.findByEspecialidad(especialidad);
-    }
-    
-    @GetMapping("/agenda/{id}")
-    public ResponseEntity<Map<String, Object>> getAgenda(
-            @PathVariable Long id, 
-            @RequestParam(required = false) String fecha) {
-        try {
-            LocalDate fechaConsulta = fecha != null ? LocalDate.parse(fecha) : LocalDate.now();
-            
-            return guiaService.findById(id).map(guia -> {
-                List<AsignacionGuia> asignaciones = asignacionService.findByGuiaAndFecha(id, fechaConsulta);
-                
-                Map<String, Object> response = new HashMap<>();
-                response.put("idGuia", guia.getIdGuia());
-                response.put("nombreGuia", guia.getNombre() + " " + guia.getApellido());
-                response.put("fecha", fechaConsulta.toString());
-                response.put("asignaciones", asignaciones);
-                response.put("totalAsignaciones", asignaciones.size());
-                
-                return ResponseEntity.ok(response);
-            }).orElse(ResponseEntity.notFound().build());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-    
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Guia> updateGuia(@PathVariable Long id, @RequestBody Guia guia) {
-        try {
-            Guia updatedGuia = guiaService.update(id, guia);
-            if (updatedGuia != null) {
-                return ResponseEntity.ok(updatedGuia);
-            }
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-    
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> deleteGuia(@PathVariable Long id) {
-        boolean deleted = guiaService.deleteById(id);
-        if (deleted) {
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.notFound().build();
-    }
-   
-    
-   
-    
+
     @GetMapping("/disponibles")
-    public List<Guia> getGuiasDisponibles(
-            @RequestParam Long senderoId,
-            @RequestParam String fecha,
-            @RequestParam String horaInicio) {
-        return guiaService.findDisponibles(senderoId, fecha, horaInicio);
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Obtener guías disponibles para una fecha")
+    public ResponseEntity<List<GuiaResponseDTO>> obtenerDisponibles(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+        
+        List<GuiaResponseDTO> guias = guiaService.obtenerDisponiblesPorFecha(fecha);
+        return ResponseEntity.ok(guias);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Actualizar datos del guía")
+    public ResponseEntity<GuiaResponseDTO> actualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody GuiaRequestDTO request) {
+        
+        GuiaResponseDTO guia = guiaService.actualizar(id, request);
+        return ResponseEntity.ok(guia);
+    }
+
+    @PatchMapping("/{id}/estado")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Cambiar estado del guía")
+    public ResponseEntity<ApiResponseDTO<Void>> cambiarEstado(
+            @PathVariable Long id,
+            @RequestParam String nuevoEstado) {
+        
+        guiaService.cambiarEstado(id, nuevoEstado);
+        return ResponseEntity.ok(ApiResponseDTO.success("Estado actualizado exitosamente"));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Eliminar guía (lógico)")
+    public ResponseEntity<ApiResponseDTO<Void>> eliminar(@PathVariable Long id) {
+        guiaService.eliminar(id);
+        return ResponseEntity.ok(ApiResponseDTO.success("Guía eliminado exitosamente"));
+    }
+
+    @GetMapping("/{id}/agenda")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GUIA')")
+    @Operation(summary = "Obtener agenda del guía por fecha")
+    public ResponseEntity<AgendaGuiaResponseDTO> obtenerAgenda(
+            @PathVariable Long id,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+        
+        AgendaGuiaResponseDTO agenda = guiaService.obtenerAgenda(id, fecha);
+        return ResponseEntity.ok(agenda);
+    }
+
+    @GetMapping("/{id}/puede-tomar-recorrido")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Verificar si puede tomar más recorridos en una fecha")
+    public ResponseEntity<ApiResponseDTO<Boolean>> puedeTomarRecorrido(
+            @PathVariable Long id,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+        
+        boolean puede = guiaService.puedeTomarRecorrido(id, fecha);
+        return ResponseEntity.ok(ApiResponseDTO.success("Verificación exitosa", puede));
     }
 }

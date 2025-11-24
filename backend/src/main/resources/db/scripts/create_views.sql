@@ -1,0 +1,223 @@
+-- ============================================================================
+-- Script: create_views.sql (CORREGIDO)
+-- Descripción: Vistas para reportes y consultas frecuentes
+-- ============================================================================
+
+SET SERVEROUTPUT ON;
+
+PROMPT Iniciando creación de vistas...
+
+-- ============================================================================
+-- VISTA: Información completa de reservas
+-- ============================================================================
+CREATE OR REPLACE VIEW V_RESERVAS_COMPLETAS AS
+SELECT 
+    r.ID_RESERVA,
+    r.FECHA_RESERVA,
+    r.FECHA_VISITA,
+    r.NUMERO_PERSONAS,
+    r.HORA_INICIO,
+    r.ESTADO AS ESTADO_RESERVA,
+    r.OBSERVACIONES,
+    -- Datos del visitante
+    v.ID_USUARIO AS ID_VISITANTE,
+    u_vis.NOMBRE || ' ' || u_vis.APELLIDO AS NOMBRE_VISITANTE,
+    u_vis.EMAIL AS EMAIL_VISITANTE,
+    u_vis.TELEFONO AS TELEFONO_VISITANTE,
+    v.NUMERO_VISITAS AS VISITAS_VISITANTE,
+    -- Datos del sendero
+    s.ID_SENDERO,
+    s.NOMBRE AS NOMBRE_SENDERO,
+    s.DIFICULTAD,
+    s.DURACION_HORAS,
+    s.DISTANCIA_KM,
+    -- Datos del guía (si existe)
+    ag.ID_GUIA,
+    u_guia.NOMBRE || ' ' || u_guia.APELLIDO AS NOMBRE_GUIA,
+    u_guia.TELEFONO AS TELEFONO_GUIA,
+    ag.HORA_INICIO_REAL,
+    ag.HORA_FIN_REAL,
+    ag.OBSERVACIONES_GUIA
+FROM RESERVA r
+INNER JOIN VISITANTE v ON r.ID_VISITANTE = v.ID_USUARIO
+INNER JOIN USUARIO u_vis ON v.ID_USUARIO = u_vis.ID_USUARIO
+INNER JOIN SENDERO s ON r.ID_SENDERO = s.ID_SENDERO
+LEFT JOIN ASIGNACION_GUIA ag ON r.ID_RESERVA = ag.ID_RESERVA
+LEFT JOIN GUIA g ON ag.ID_GUIA = g.ID_USUARIO
+LEFT JOIN USUARIO u_guia ON g.ID_USUARIO = u_guia.ID_USUARIO;
+
+PROMPT Vista V_RESERVAS_COMPLETAS creada.
+
+-- ============================================================================
+-- VISTA: Estadísticas de senderos
+-- ============================================================================
+CREATE OR REPLACE VIEW V_ESTADISTICAS_SENDEROS AS
+SELECT 
+    s.ID_SENDERO,
+    s.NOMBRE,
+    s.DIFICULTAD,
+    s.ESTADO,
+    COUNT(r.ID_RESERVA) AS TOTAL_RESERVAS,
+    COUNT(CASE WHEN r.ESTADO = 'COMPLETADA' THEN 1 END) AS RESERVAS_COMPLETADAS,
+    COUNT(CASE WHEN r.ESTADO = 'CANCELADA' THEN 1 END) AS RESERVAS_CANCELADAS,
+    NVL(SUM(CASE WHEN r.ESTADO IN ('PENDIENTE', 'CONFIRMADA') THEN r.NUMERO_PERSONAS ELSE 0 END), 0) AS PERSONAS_PROXIMAS,
+    NVL(SUM(CASE WHEN r.ESTADO = 'COMPLETADA' THEN r.NUMERO_PERSONAS ELSE 0 END), 0) AS PERSONAS_ATENDIDAS
+FROM SENDERO s
+LEFT JOIN RESERVA r ON s.ID_SENDERO = r.ID_SENDERO
+GROUP BY s.ID_SENDERO, s.NOMBRE, s.DIFICULTAD, s.ESTADO;
+
+PROMPT Vista V_ESTADISTICAS_SENDEROS creada.
+
+-- ============================================================================
+-- VISTA: Estadísticas de guías
+-- ============================================================================
+CREATE OR REPLACE VIEW V_ESTADISTICAS_GUIAS AS
+SELECT 
+    g.ID_USUARIO AS ID_GUIA,
+    u.NOMBRE || ' ' || u.APELLIDO AS NOMBRE_COMPLETO,
+    u.EMAIL,
+    u.ESTADO,
+    g.ESPECIALIDADES,
+    g.MAX_PERSONAS_GRUPO,
+    g.NUMERO_RECORRIDOS,
+    g.CALIFICACION_PROMEDIO,
+    COUNT(ag.ID_ASIGNACION) AS TOTAL_ASIGNACIONES,
+    COUNT(CASE WHEN ag.HORA_FIN_REAL IS NOT NULL THEN 1 END) AS RECORRIDOS_FINALIZADOS,
+    COUNT(CASE WHEN ag.INCIDENCIAS = 1 THEN 1 END) AS RECORRIDOS_CON_INCIDENCIAS,
+    ROUND(AVG(ag.CALIFICACION_VISITANTE), 2) AS CALIFICACION_PROMEDIO_CALCULADA
+FROM GUIA g
+INNER JOIN USUARIO u ON g.ID_USUARIO = u.ID_USUARIO
+LEFT JOIN ASIGNACION_GUIA ag ON g.ID_USUARIO = ag.ID_GUIA
+GROUP BY g.ID_USUARIO, u.NOMBRE, u.APELLIDO, u.EMAIL, u.ESTADO, 
+         g.ESPECIALIDADES, g.MAX_PERSONAS_GRUPO, g.NUMERO_RECORRIDOS, g.CALIFICACION_PROMEDIO;
+
+PROMPT Vista V_ESTADISTICAS_GUIAS creada.
+
+-- ============================================================================
+-- VISTA: Cupos disponibles por sendero y fecha (próximos 30 días) - CORREGIDA
+-- ============================================================================
+CREATE OR REPLACE VIEW V_CUPOS_DISPONIBLES AS
+WITH FECHAS AS (
+    SELECT TRUNC(SYSDATE) + LEVEL - 1 AS FECHA
+    FROM DUAL
+    CONNECT BY LEVEL <= 30
+),
+SENDEROS_ACTIVOS AS (
+    SELECT ID_SENDERO, NOMBRE, CUPO_MAXIMO_DIA
+    FROM SENDERO
+    WHERE ESTADO = 'ACTIVO'
+)
+SELECT 
+    sa.ID_SENDERO,
+    sa.NOMBRE AS NOMBRE_SENDERO,
+    f.FECHA,
+    sa.CUPO_MAXIMO_DIA,
+    NVL(SUM(r.NUMERO_PERSONAS), 0) AS PERSONAS_RESERVADAS,
+    sa.CUPO_MAXIMO_DIA - NVL(SUM(r.NUMERO_PERSONAS), 0) AS CUPO_DISPONIBLE
+FROM SENDEROS_ACTIVOS sa
+CROSS JOIN FECHAS f
+LEFT JOIN RESERVA r ON sa.ID_SENDERO = r.ID_SENDERO 
+    AND r.FECHA_VISITA = f.FECHA
+    AND r.ESTADO IN ('PENDIENTE', 'CONFIRMADA')
+GROUP BY sa.ID_SENDERO, sa.NOMBRE, sa.CUPO_MAXIMO_DIA, f.FECHA
+ORDER BY sa.NOMBRE, f.FECHA;
+
+PROMPT Vista V_CUPOS_DISPONIBLES creada.
+
+-- ============================================================================
+-- VISTA: Reservas pendientes de asignación de guía
+-- ============================================================================
+CREATE OR REPLACE VIEW V_RESERVAS_SIN_GUIA AS
+SELECT 
+    r.ID_RESERVA,
+    r.FECHA_VISITA,
+    r.HORA_INICIO,
+    r.NUMERO_PERSONAS,
+    u.NOMBRE || ' ' || u.APELLIDO AS NOMBRE_VISITANTE,
+    u.TELEFONO AS TELEFONO_VISITANTE,
+    s.NOMBRE AS NOMBRE_SENDERO,
+    s.DIFICULTAD
+FROM RESERVA r
+INNER JOIN VISITANTE v ON r.ID_VISITANTE = v.ID_USUARIO
+INNER JOIN USUARIO u ON v.ID_USUARIO = u.ID_USUARIO
+INNER JOIN SENDERO s ON r.ID_SENDERO = s.ID_SENDERO
+LEFT JOIN ASIGNACION_GUIA ag ON r.ID_RESERVA = ag.ID_RESERVA
+WHERE r.ESTADO = 'CONFIRMADA'
+  AND ag.ID_ASIGNACION IS NULL
+ORDER BY r.FECHA_VISITA, r.HORA_INICIO;
+
+PROMPT Vista V_RESERVAS_SIN_GUIA creada.
+
+-- ============================================================================
+-- VISTA: Agenda diaria de guías
+-- ============================================================================
+CREATE OR REPLACE VIEW V_AGENDA_GUIAS AS
+SELECT 
+    g.ID_USUARIO AS ID_GUIA,
+    u.NOMBRE || ' ' || u.APELLIDO AS NOMBRE_GUIA,
+    r.FECHA_VISITA,
+    r.HORA_INICIO,
+    s.NOMBRE AS NOMBRE_SENDERO,
+    r.NUMERO_PERSONAS,
+    r.ESTADO AS ESTADO_RESERVA,
+    ag.HORA_INICIO_REAL,
+    ag.HORA_FIN_REAL,
+    CASE 
+        WHEN ag.HORA_FIN_REAL IS NOT NULL THEN 'FINALIZADO'
+        WHEN ag.HORA_INICIO_REAL IS NOT NULL THEN 'EN_CURSO'
+        ELSE 'PENDIENTE'
+    END AS ESTADO_RECORRIDO
+FROM ASIGNACION_GUIA ag
+INNER JOIN GUIA g ON ag.ID_GUIA = g.ID_USUARIO
+INNER JOIN USUARIO u ON g.ID_USUARIO = u.ID_USUARIO
+INNER JOIN RESERVA r ON ag.ID_RESERVA = r.ID_RESERVA
+INNER JOIN SENDERO s ON r.ID_SENDERO = s.ID_SENDERO
+ORDER BY r.FECHA_VISITA DESC, r.HORA_INICIO;
+
+PROMPT Vista V_AGENDA_GUIAS creada.
+
+-- ============================================================================
+-- VISTA: Top visitantes más activos
+-- ============================================================================
+CREATE OR REPLACE VIEW V_TOP_VISITANTES AS
+SELECT 
+    v.ID_USUARIO,
+    u.NOMBRE || ' ' || u.APELLIDO AS NOMBRE_COMPLETO,
+    u.EMAIL,
+    v.NUMERO_VISITAS,
+    v.PUNTUACION_PROMEDIO,
+    COUNT(r.ID_RESERVA) AS TOTAL_RESERVAS,
+    COUNT(CASE WHEN r.ESTADO = 'COMPLETADA' THEN 1 END) AS RESERVAS_COMPLETADAS,
+    COUNT(CASE WHEN r.ESTADO = 'CANCELADA' THEN 1 END) AS RESERVAS_CANCELADAS,
+    ROUND(COUNT(CASE WHEN r.ESTADO = 'COMPLETADA' THEN 1 END) * 100.0 / 
+          NULLIF(COUNT(r.ID_RESERVA), 0), 2) AS PORCENTAJE_COMPLETADAS
+FROM VISITANTE v
+INNER JOIN USUARIO u ON v.ID_USUARIO = u.ID_USUARIO
+LEFT JOIN RESERVA r ON v.ID_USUARIO = r.ID_VISITANTE
+WHERE u.ESTADO = 'ACTIVO'
+GROUP BY v.ID_USUARIO, u.NOMBRE, u.APELLIDO, u.EMAIL, v.NUMERO_VISITAS, v.PUNTUACION_PROMEDIO
+ORDER BY v.NUMERO_VISITAS DESC;
+
+PROMPT Vista V_TOP_VISITANTES creada.
+
+-- ============================================================================
+-- VISTA: Reporte mensual de reservas
+-- ============================================================================
+CREATE OR REPLACE VIEW V_REPORTE_MENSUAL AS
+SELECT 
+    TO_CHAR(r.FECHA_VISITA, 'YYYY-MM') AS MES,
+    COUNT(r.ID_RESERVA) AS TOTAL_RESERVAS,
+    COUNT(CASE WHEN r.ESTADO = 'COMPLETADA' THEN 1 END) AS COMPLETADAS,
+    COUNT(CASE WHEN r.ESTADO = 'CANCELADA' THEN 1 END) AS CANCELADAS,
+    COUNT(CASE WHEN r.ESTADO = 'NO_ASISTIO' THEN 1 END) AS NO_ASISTIERON,
+    SUM(r.NUMERO_PERSONAS) AS TOTAL_PERSONAS,
+    ROUND(AVG(r.NUMERO_PERSONAS), 2) AS PROMEDIO_PERSONAS_RESERVA
+FROM RESERVA r
+GROUP BY TO_CHAR(r.FECHA_VISITA, 'YYYY-MM')
+ORDER BY MES DESC;
+
+PROMPT Vista V_REPORTE_MENSUAL creada.
+
+PROMPT ============================================================
+PROMPT Todas las vistas creadas exitosamente.
+PROMPT ============================================================

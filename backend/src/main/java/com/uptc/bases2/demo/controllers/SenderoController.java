@@ -1,119 +1,113 @@
 package com.uptc.bases2.demo.controllers;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.uptc.bases2.demo.models.dto.request.SenderoRequestDTO;
+import com.uptc.bases2.demo.models.dto.response.ApiResponseDTO;
+import com.uptc.bases2.demo.models.dto.response.SenderoResponseDTO;
+import com.uptc.bases2.demo.services.interfaces.SenderoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-import com.uptc.bases2.demo.models.Sendero;
-import com.uptc.bases2.demo.services.ReservaService;
-import com.uptc.bases2.demo.services.SenderoService;
+import java.time.LocalDate;
+import java.util.List;
 
+/**
+ * Controlador para gestión de senderos
+ */
 @RestController
-@RequestMapping("/sendero")
+@RequestMapping("/senderos")
+@Tag(name = "Senderos", description = "Gestión de senderos del parque")
 public class SenderoController {
 
     @Autowired
     private SenderoService senderoService;
-    
-    @Autowired
-    private ReservaService reservaService;
-    
-    @GetMapping("/findAll")
-    public List<Sendero> getAllSenderos() {
-        return senderoService.findAll();
-    }
-    
-    @GetMapping("/findAllActivos")
-    public List<Sendero> getAllSenderosActivos() {
-        return senderoService.findAllActivos();
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Crear nuevo sendero")
+    public ResponseEntity<SenderoResponseDTO> crear(@Valid @RequestBody SenderoRequestDTO request) {
+        SenderoResponseDTO sendero = senderoService.crear(request);
+        return new ResponseEntity<>(sendero, HttpStatus.CREATED);
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<Sendero> createSendero(@RequestBody Sendero sendero) {
-        try {
-            Sendero nuevoSendero = senderoService.save(sendero);
-            return ResponseEntity.ok(nuevoSendero);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @GetMapping("/{id}")
+    @Operation(summary = "Obtener sendero por ID")
+    public ResponseEntity<SenderoResponseDTO> obtenerPorId(@PathVariable Long id) {
+        SenderoResponseDTO sendero = senderoService.obtenerPorId(id);
+        return ResponseEntity.ok(sendero);
     }
 
-    @GetMapping("/findById/{id}")
-    public ResponseEntity<Sendero> getSenderoById(@PathVariable Long id) {
-        return senderoService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping
+    @Operation(summary = "Listar todos los senderos")
+    public ResponseEntity<List<SenderoResponseDTO>> obtenerTodos() {
+        List<SenderoResponseDTO> senderos = senderoService.obtenerTodos();
+        return ResponseEntity.ok(senderos);
     }
-    
-    @GetMapping("/findByEstado/{estado}")
-    public List<Sendero> getSenderosByEstado(@PathVariable String estado) {
-        return senderoService.findByEstado(estado);
+
+    @GetMapping("/activos")
+    @Operation(summary = "Listar senderos activos (público)")
+    public ResponseEntity<List<SenderoResponseDTO>> obtenerActivos() {
+        List<SenderoResponseDTO> senderos = senderoService.obtenerActivos();
+        return ResponseEntity.ok(senderos);
     }
-    
-    @GetMapping("/findByDificultad/{dificultad}")
-    public List<Sendero> getSenderosByDificultad(@PathVariable String dificultad) {
-        return senderoService.findByDificultad(dificultad);
+
+    @GetMapping("/disponibles")
+    @Operation(summary = "Obtener senderos disponibles para una fecha")
+    public ResponseEntity<List<SenderoResponseDTO>> obtenerDisponibles(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+        
+        List<SenderoResponseDTO> senderos = senderoService.obtenerDisponibles(fecha);
+        return ResponseEntity.ok(senderos);
     }
-    
-    @GetMapping("/disponibilidad/{id}")
-    public ResponseEntity<Map<String, Object>> getDisponibilidad(
-            @PathVariable Long id, 
-            @RequestParam String fecha) {
-        try {
-            LocalDate fechaVisita = LocalDate.parse(fecha);
-            
-            return senderoService.findById(id).map(sendero -> {
-                Integer cupoDisponible = reservaService.getCupoDisponible(id, fechaVisita);
-                Integer cupoUsado = sendero.getCupoMaximoDia() - cupoDisponible;
-                
-                Map<String, Object> response = new HashMap<>();
-                response.put("idSendero", sendero.getIdSendero());
-                response.put("nombreSendero", sendero.getNombre());
-                response.put("fecha", fecha);
-                response.put("cupoMaximo", sendero.getCupoMaximoDia());
-                response.put("cupoUsado", cupoUsado);
-                response.put("cupoDisponible", cupoDisponible);
-                response.put("disponible", cupoDisponible > 0);
-                
-                return ResponseEntity.ok(response);
-            }).orElse(ResponseEntity.notFound().build());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Actualizar sendero")
+    public ResponseEntity<SenderoResponseDTO> actualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody SenderoRequestDTO request) {
+        
+        SenderoResponseDTO sendero = senderoService.actualizar(id, request);
+        return ResponseEntity.ok(sendero);
     }
-    
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Sendero> updateSendero(@PathVariable Long id, @RequestBody Sendero sendero) {
-        try {
-            Sendero updatedSendero = senderoService.update(id, sendero);
-            if (updatedSendero != null) {
-                return ResponseEntity.ok(updatedSendero);
-            }
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+
+    @PatchMapping("/{id}/estado")
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Cambiar estado del sendero")
+    public ResponseEntity<ApiResponseDTO<Void>> cambiarEstado(
+            @PathVariable Long id,
+            @RequestParam String nuevoEstado) {
+        
+        senderoService.cambiarEstado(id, nuevoEstado);
+        return ResponseEntity.ok(ApiResponseDTO.success("Estado actualizado exitosamente"));
     }
-    
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> deleteSendero(@PathVariable Long id) {
-        boolean deleted = senderoService.deleteById(id);
-        if (deleted) {
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.notFound().build();
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Eliminar sendero (lógico)")
+    public ResponseEntity<ApiResponseDTO<Void>> eliminar(@PathVariable Long id) {
+        senderoService.eliminar(id);
+        return ResponseEntity.ok(ApiResponseDTO.success("Sendero eliminado exitosamente"));
+    }
+
+    @GetMapping("/{id}/cupo-disponible")
+    @Operation(summary = "Calcular cupo disponible para una fecha")
+    public ResponseEntity<ApiResponseDTO<Integer>> calcularCupoDisponible(
+            @PathVariable Long id,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+        
+        Integer cupo = senderoService.calcularCupoDisponible(id, fecha);
+        return ResponseEntity.ok(ApiResponseDTO.success("Cupo calculado", cupo));
     }
 }
